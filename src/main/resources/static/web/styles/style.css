@@ -41,35 +41,40 @@
           background-color: rgb(0, 255, 34);
         }*/
 
+
+
 	.table {
-	  margin: 50px;
-	  display: flex;
-	  justify-content: space-around;
+
+		margin: 50px;
+		display: flex;
+		justify-content: space-around;
+
 	}
 
+
 	td {
-	  height: 30px;
-	  width: 30px;
-	  border: 1px solid rgb(7, 5, 5);
+		height: 30px;
+		width: 30px;
+		border: 1px solid rgb(7, 5, 5);
 	}
 
 	.marked {
-	  background-color: rgb(0, 255, 34);
+		background-color: rgb(0, 255, 34);
 	}
 
 	.salvo {
-	  background-color: red;
+		background-color: red;
 	}
 
 	.bingoSalvo {
-	  background-color: blue;
+		background-color: blue;
 	}
 
 	.header {
-	  display: flex;
-	  justify-content: space-around;
+		display: flex;
+		justify-content: space-around;
 	}
 
 	.header child {
-	  width: 20%;
+		width: 20%;
 	}
