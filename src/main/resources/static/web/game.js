@@ -9,7 +9,7 @@ function paramObj(search) {
   var obj = {};
   var reg = /(?:[?&]([^?&#=]+)(?:=([^&#]*))?)(?:#.*)?/g;
 
-  search.replace(reg, function(match, param, val) {
+  search.replace(reg, function (match, param, val) {
     obj[decodeURIComponent(param)] =
       val === undefined ? "" : decodeURIComponent(val);
   });
@@ -18,7 +18,7 @@ function paramObj(search) {
 }
 
 function loadJsonData(param) {
-  $.getJSON("/api/game_view/" + param, function(data_json) {
+  $.getJSON("/api/game_view/" + param, function (data_json) {
     var data = data_json;
     loadJsonShipData(param, data);
     loadJsonSalvoData(param, data);
@@ -30,12 +30,12 @@ function loadJsonData(param) {
 function fetching(param) {
   site = "/api/game_view/" + param;
   var fetchConfig = fetch(this.site, {
-    method: "GET"
-  })
-    .then(function(res) {
+      method: "GET"
+    })
+    .then(function (res) {
       if (res.ok) return res.json();
     })
-    .then(function(json) {
+    .then(function (json) {
       data = json;
       games = data;
       createTable();
@@ -47,7 +47,7 @@ function fetching(param) {
       bingoSalvos(playerLocations);
       console.log(games);
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.log(error);
     });
 }
@@ -166,13 +166,16 @@ function salvos() {
     .getElementById("opponentTable")
     .getElementsByTagName("td");
   var salvoLocations = [];
+  var turn = [];
   for (i = 0; i < games.salvos.length; i++) {
+    turn.push(games.salvos[i].turn);
     for (y = 0; y < games.salvos[i].locations.length; y++) {
       salvoLocations.push(games.salvos[i].locations[y]);
 
+      console.log(turn);
+      console.log(salvoLocations);
       for (z = 0; z < cells.length; z++) {
         if (salvoLocations.includes(cells[z].id)) {
-          var id = cells[z].id;
           cells[z].setAttribute("class", "salvo");
           cells[z].innerHTML = games.salvos[i].turn;
         }
@@ -180,6 +183,41 @@ function salvos() {
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*gridBoard();
 function gridBoard() {
