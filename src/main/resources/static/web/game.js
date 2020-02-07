@@ -38,13 +38,13 @@ function fetching(param) {
     .then(function(json) {
       data = json;
       games = data;
-      createTable();
-      createTable2();
+      createTable("playerTable");
+      createTable("opponentTable");
       //gridBoard();
       markShips();
       checkPlayer(param);
       salvos();
-      //bingoSalvos(playerLocations);
+      bingoSalvos(playerLocations);
       console.log(games);
     })
     .catch(function(error) {
@@ -74,7 +74,7 @@ function checkPlayer(param) {
   document.getElementById("opponent").innerHTML = opponent;
 }
 
-function createTable() {
+function createTable(table) {
   for (i = 0; i < rows.length; i++) {
     var newRow = document.createElement("tr");
     for (y = 0; y < columns.length; y++) {
@@ -87,26 +87,11 @@ function createTable() {
         newRow.insertCell;
       }
     }
-    document.getElementById("playerTable").appendChild(newRow);
+    document.getElementById(table).appendChild(newRow);
   }
 }
 
-function createTable2() {
-  for (i = 0; i < rows.length; i++) {
-    var newRow = document.createElement("tr");
-    for (y = 0; y < columns.length; y++) {
-      newCell = newRow.insertCell(y);
-      if (i == 0 || y == 0) {
-        newCell.innerHTML = rows[i] + columns[y];
-        newRow.insertCell;
-      } else {
-        newCell.setAttribute("id", rows[i] + columns[y]);
-        newRow.insertCell;
-      }
-    }
-    document.getElementById("opponentTable").appendChild(newRow);
-  }
-}
+
 var playerLocations = [];
 
 function markShips() {
@@ -120,13 +105,13 @@ function markShips() {
 
   for (z = 0; z < cells.length; z++) {
     if (playerLocations.includes(cells[z].id)) {
-      var id = cells[z].id;
+      //var id = cells[z].id;
       cells[z].setAttribute("class", "marked");
     }
   }
 }
 
-/* function bingoSalvos(playerLocations) {
+ function bingoSalvos(playerLocations) {
   var cells = document
     .getElementById("opponentTable")
     .getElementsByTagName("td");
@@ -137,7 +122,7 @@ function markShips() {
       opponentSalvo.push(opponents[i].locations[y]);
     }
   }
-  //console.log(opponents[0].locations.length);
+  console.log(opponents[0].locations.length);
   console.log(opponentSalvo);
   console.log(playerLocations);
   const objMap = {};
@@ -154,41 +139,50 @@ function markShips() {
   var cells = document.getElementById("playerTable").getElementsByTagName("td");
 
   for (z = 0; z < cells.length; z++) {
-    if (hit.includes(cells[z].id)) {
-      var id = cells[z].id;
+    if (hit == cells[z].id) {
       cells[z].setAttribute("class", "bingoSalvo");
     }
   }
-} */
+} 
 
 
 function salvos() {
   var cells = document
     .getElementById("opponentTable")
     .getElementsByTagName("td");
-  var salvoLocations = [];
-  /* if (games.salvos[0][0].player_id !== playerId) {
-    var salvos = games.salvos[0];
-  } else {
-    var salvos = games.salvos[1];
-  } */
+  //var salvoLocations = []; 
+  
   for (i = 0; i < games.salvos.length; i++) {
     for (y = 0; y < games.salvos[i].locations.length; y++) {
       for (z = 0; z < cells.length; z++) {
         if (games.salvos[i].locations[y] == cells[z].id) {
           cells[z].innerHTML = games.salvos[i].turn;
-
-          //salvoLocations.push(salvos[i].locations[y]);
-
-          /*  if (salvoLocations.includes(cells[z].id)) {
-             cells[z].setAttribute("class", "salvo");
-             cells[z].innerHTML = salvos[i].turn;
-           } */
+          cells[z].setAttribute("class", "salvo");
+          
         }
       }
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*gridBoard();
 function gridBoard() {
   var gridNumbers = ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
