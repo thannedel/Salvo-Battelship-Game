@@ -9,7 +9,7 @@ function paramObj(search) {
   var obj = {};
   var reg = /(?:[?&]([^?&#=]+)(?:=([^&#]*))?)(?:#.*)?/g;
 
-  search.replace(reg, function (match, param, val) {
+  search.replace(reg, function(match, param, val) {
     obj[decodeURIComponent(param)] =
       val === undefined ? "" : decodeURIComponent(val);
   });
@@ -18,7 +18,7 @@ function paramObj(search) {
 }
 
 function loadJsonData(param) {
-  $.getJSON("/api/game_view/" + param, function (data_json) {
+  $.getJSON("/api/game_view/" + param, function(data_json) {
     var data = data_json;
     loadJsonShipData(param, data);
     loadJsonSalvoData(param, data);
@@ -30,12 +30,12 @@ function loadJsonData(param) {
 function fetching(param) {
   site = "/api/game_view/" + param;
   var fetchConfig = fetch(this.site, {
-      method: "GET"
-    })
-    .then(function (res) {
+    method: "GET"
+  })
+    .then(function(res) {
       if (res.ok) return res.json();
     })
-    .then(function (json) {
+    .then(function(json) {
       data = json;
       games = data;
       createTable();
@@ -44,10 +44,10 @@ function fetching(param) {
       markShips();
       checkPlayer(param);
       salvos();
-      bingoSalvos(playerLocations);
+      //bingoSalvos(playerLocations);
       console.log(games);
     })
-    .catch(function (error) {
+    .catch(function(error) {
       console.log(error);
     });
 }
@@ -126,7 +126,7 @@ function markShips() {
   }
 }
 
-function bingoSalvos(playerLocations) {
+/* function bingoSalvos(playerLocations) {
   var cells = document
     .getElementById("opponentTable")
     .getElementsByTagName("td");
@@ -159,66 +159,36 @@ function bingoSalvos(playerLocations) {
       cells[z].setAttribute("class", "bingoSalvo");
     }
   }
-}
+} */
+
 
 function salvos() {
   var cells = document
     .getElementById("opponentTable")
     .getElementsByTagName("td");
   var salvoLocations = [];
-  var turn = [];
+  /* if (games.salvos[0][0].player_id !== playerId) {
+    var salvos = games.salvos[0];
+  } else {
+    var salvos = games.salvos[1];
+  } */
   for (i = 0; i < games.salvos.length; i++) {
-    turn.push(games.salvos[i].turn);
     for (y = 0; y < games.salvos[i].locations.length; y++) {
-      salvoLocations.push(games.salvos[i].locations[y]);
-
-      console.log(turn);
-      console.log(salvoLocations);
       for (z = 0; z < cells.length; z++) {
-        if (salvoLocations.includes(cells[z].id)) {
-          cells[z].setAttribute("class", "salvo");
+        if (games.salvos[i].locations[y] == cells[z].id) {
           cells[z].innerHTML = games.salvos[i].turn;
+
+          //salvoLocations.push(salvos[i].locations[y]);
+
+          /*  if (salvoLocations.includes(cells[z].id)) {
+             cells[z].setAttribute("class", "salvo");
+             cells[z].innerHTML = salvos[i].turn;
+           } */
         }
       }
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*gridBoard();
 function gridBoard() {
   var gridNumbers = ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];

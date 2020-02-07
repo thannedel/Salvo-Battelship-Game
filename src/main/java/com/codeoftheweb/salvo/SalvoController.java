@@ -5,7 +5,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 //@CrossOrigin("http://localhost:8081")
 @RestController
@@ -77,64 +80,36 @@ public class SalvoController {
        return shipTypeAndLocations;
    }
 
-   /* private Map<String, Object> getSalvoInfo(Salvo salvo) {
+    private Map<String, Object> getSalvoInfo(Salvo salvo) {
         Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("player_id", salvo.getGamePlayer().getId());
+        dto.put("player_id", salvo.getGamePlayer().getPlayer().getId());
         dto.put("turn", salvo.getTurnNumber());
         dto.put("locations", salvo.getSalvoLocation());
         return dto;
-    }*/
-   public List<Object> salvoInfo(GamePlayer gamePlayer) {
-       List<Object> salvos = new ArrayList<>();
+    }
 
-       gamePlayer.getSalvos().forEach(salvo -> {
-           Map<String, Object> salvoes = new HashMap<>();
-
-
-           salvoes.put("turn", salvo.getTurnNumber());
-           salvoes.put("playerId", salvo.getGamePlayer().getId());
-           salvoes.put("locations", salvo.getSalvoLocation());
-           salvos.add(salvoes);
-       });
-       return salvos;
-   }
-
-   @RequestMapping("/game_view/{gamePlayerId}")
-   public Map<String, Object> getGame(@PathVariable Long gamePlayerId) {
-       Map<String, Object> gameViewInfo = new LinkedHashMap<>();
-       GamePlayer currentGamePlayer = gamePlayerRepository.getOne(gamePlayerId);
-       //Player player = (Player) playerRepository.findById(currentGamePlayer.getPlayer().getId());
-       gameViewInfo.put("created", currentGamePlayer.getGame().getDate());
-       gameViewInfo.put("id", currentGamePlayer.getGame().getId());
-       gameViewInfo.put("gamePlayers", currentGamePlayer.getGame().getGamePlayers().stream()
-               .map(gamePlayer -> GamePlayerDTO(gamePlayer))
-               .collect(Collectors.toList())
-       );
-
-       gameViewInfo.put("ships", currentGamePlayer.getShips().stream()
-               .map(ship -> getShipInfo(ship))
-               .collect(Collectors.toList()));
-       /*gameViewInfo.put("salvos", currentGamePlayer.getSalvos().stream()
-               .map(salvo -> getSalvoInfo(salvo))
-               .collect(Collectors.toList()));*/
-       gameViewInfo.put("salvos", salvoInfo(currentGamePlayer));
-       gameViewInfo.put("opponents", getOpponentInfo(currentGamePlayer));
-       return gameViewInfo;
-   }
-    public Map<String,Object> getOpponentInfo (GamePlayer you){
-
-        Map<String,Object> opponent = new LinkedHashMap<>();
-
-        you.getGame().getGamePlayers().forEach(player -> {
-            if (player.getId() != you.getId()){
-                opponent.put("opponentSalvos",salvoInfo(player));
-
-            }
-        });
-        return opponent;
+   
+    @RequestMapping("/game_view/{gameId}")
+    public Map<String, Object> getGame(@PathVariable Long gameId) {
+        Map<String, Object> gameViewInfo = new LinkedHashMap<>();
+        GamePlayer currentGamePlayer = gamePlayerRepository.getOne(gameId);
+        //Player player = (Player) playerRepository.findById(currentGamePlayer.getPlayer().getId());
+        gameViewInfo.put("created", currentGamePlayer.getGame().getDate());
+        gameViewInfo.put("id", currentGamePlayer.getId());
+        gameViewInfo.put("gamePlayers", currentGamePlayer.getGame().getGamePlayers().stream()
+                .map(gamePlayer -> GamePlayerDTO(gamePlayer))
+                .collect(Collectors.toList())
+        );
+        gameViewInfo.put("ships", currentGamePlayer.getShips().stream()
+                .map(ship -> getShipInfo(ship))
+                .collect(Collectors.toList()));
+        gameViewInfo.put("salvos", currentGamePlayer.getGame().getGamePlayers().stream()
+                .map(gamePlayer -> gamePlayer.getSalvos().stream()
+                        .map(salvo -> getSalvoInfo(salvo))
+                        .collect(Collectors.toSet())).collect(Collectors.toList()));
+        return gameViewInfo;
     }
 }
-
 
 
 
@@ -180,7 +155,28 @@ public class SalvoController {
 
 
 
-//Alternative Method for games
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   //Alternative Method for games
 /* @RequestMapping("/games")
 public List<Object> getGames() {
         List<Object> gamesObject = new ArrayList<>();
