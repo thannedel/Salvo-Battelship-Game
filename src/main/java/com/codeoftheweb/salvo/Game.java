@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +21,8 @@ public class Game {
     Date date;
 
 
-
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    Set<Score> scores = new HashSet<>();
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
     Set<GamePlayer> gamePlayers;
     public Game(){}
