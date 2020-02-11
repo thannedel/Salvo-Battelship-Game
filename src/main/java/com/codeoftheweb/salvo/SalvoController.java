@@ -43,6 +43,7 @@ public class SalvoController {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", game.getId());
         dto.put("created", game.created());
+        dto.put("finished", getScoreDate(game.getScores()));
         // CREATE A LIST of maps WITH GAME PLAYERS
         List<Object> gamePlayersDTO = game.getGamePlayers()
                 .stream()
@@ -50,13 +51,35 @@ public class SalvoController {
                 .map(gamePlayer -> GamePlayerDTO(gamePlayer))
                 .collect(Collectors.toList());
         dto.put("gamePlayers", gamePlayersDTO);
+        dto.put("scores", GamePlayerScores(game.getScores()));
         return dto;
+    }
+    private List<Map> GamePlayerScores(Set<Score> scores) {
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        return scores.stream()
+                .map(score -> ScoreToDTO(score))
+                .collect(Collectors.toList());
+    }
+
+    private Map<String, Object> ScoreToDTO(Score score) {
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("playerID", score.getPlayer().getId());
+        dto.put("score", score.getScore());
+        //dto.put("finishDate", score.getFinishDate());
+        return dto;
+    }
+    private Date getScoreDate(Set<Score> scores) {
+        return scores.stream()
+                .findFirst()
+                .map(score -> score.getFinishDate())
+                .orElse(null);
     }
 
     private Map<String, Object> GamePlayerDTO(GamePlayer gamePlayer) {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", gamePlayer.getId());
         dto.put("player", PlayersDTO(gamePlayer.getPlayer()));
+
         return dto;
     }
 

@@ -124,9 +124,16 @@ public class SalvoApplication {
 			salvoRepository.save(salvo5);
 
 //-------------------------------------scores-------------------------------------------------------
-			Date firstFinish = Date.from(game1.getDate().toInstant().plusSeconds(1800));
+			Date firstFinish = Date.from(date.toInstant().plusSeconds(1800));
 			Score score1 = new Score(game1,p1,1.0,firstFinish);
-scoreRepository.save(score1);
+			Score score3 = new Score(game1, p4, 0.0, firstFinish);
+			scoreRepository.save(score3);
+			scoreRepository.save(score1);
+			Date secondFinish = Date.from(date1hLater.toInstant().plusSeconds(1800));
+			Score score2 = new Score(game2,p2,0.5,secondFinish);
+			scoreRepository.save(score2);
+			Score score4 = new Score(game2, p5, 0.5, secondFinish);
+			scoreRepository.save(score4);
 		};
 	}
 

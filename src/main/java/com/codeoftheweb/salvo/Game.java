@@ -23,19 +23,24 @@ public class Game {
 
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     Set<Score> scores = new HashSet<>();
-    @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     Set<GamePlayer> gamePlayers;
-    public Game(){}
+
+    public Game() {
+    }
 
     public Game(Date date) {
         this.date = date;
     }
+
     public Date getDate() {
         return date;
     }
+
     public void setDate(Date date) {
         this.date = date;
     }
+
     public long getId() {
         return id;
     }
@@ -44,23 +49,37 @@ public class Game {
     public Set<GamePlayer> getGamePlayers() {
         return gamePlayers;
     }
-    public long created(){
+
+    public long created() {
         long timeMilli = date.getTime();
         return timeMilli;
     }
+
     public void addGamePlayer(GamePlayer gamePlayer) {
         gamePlayer.setGame(this);
         gamePlayers.add(gamePlayer);
     }
 
+    public Set<Score> getScores() {
+        return scores;
+    }
+
+    public void setScores(Set<Score> scores) {
+        this.scores = scores;
+    }
+
     //@JsonIgnore
-   public List<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return gamePlayers.stream().map(sub -> sub.getPlayer()).collect(toList());
     }
-  @Override
-   public String toString() {
-       return "Game{" +
-               "date=" + date +
-               '}';
-   }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "id=" + id +
+                ", date=" + date +
+                ", scores=" + scores +
+                ", gamePlayers=" + gamePlayers +
+                '}';
+    }
 }

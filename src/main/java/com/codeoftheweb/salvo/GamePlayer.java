@@ -16,22 +16,22 @@ public class GamePlayer {
     private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="player_id")
+    @JoinColumn(name = "player_id")
     private Player player;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="game_id")
+    @JoinColumn(name = "game_id")
     private Game game;
-    public GamePlayer(){}
+
+    public GamePlayer() {
+    }
 
 
-
-    @OneToMany(mappedBy="gamePlayer", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
     Set<Ship> ships = new HashSet<>();
 
 
-
-    @OneToMany(mappedBy = "gamePlayer", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
     Set<Salvo> salvos = new HashSet<>();
 
     public GamePlayer(Player player, Game game) {
@@ -50,9 +50,11 @@ public class GamePlayer {
     public Game getGame() {
         return game;
     }
+
     public long getId() {
         return id;
     }
+
     public void setGame(Game game) {
         this.game = game;
     }
@@ -60,7 +62,9 @@ public class GamePlayer {
     public Set<Ship> getShips() {
         return ships;
     }
+
     public Set<Salvo> getSalvos() {
         return salvos;
     }
+
 }
