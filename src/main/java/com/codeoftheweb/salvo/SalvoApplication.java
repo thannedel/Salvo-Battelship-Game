@@ -20,7 +20,7 @@ public class SalvoApplication {
 	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
 		return (args) -> {
 			//  players
-			Player p1 = new Player("Jack", "Bauer@gmail");
+			Player p1 = new Player("Jack", "Zadauer@gmail");
 			playerRepository.save(p1);
 			Player p2 = new Player("Chloe", "O'Brian@hotmail");
 			playerRepository.save(p2);
@@ -35,12 +35,15 @@ public class SalvoApplication {
 			Date date = new Date();
 			Date date1hLater = Date.from(date.toInstant().plusSeconds(3600));
 			Date date2hLater = Date.from(date.toInstant().plusSeconds(7200));
+			Date date2misHLater = Date.from(date.toInstant().plusSeconds(9000));
 			Game game1 = new Game(new Date());
 			gameRepository.save(game1);
 			Game game2 = new Game(date1hLater);
 			gameRepository.save(game2);
 			Game game3 = new Game(date2hLater);
 			gameRepository.save(game3);
+			Game game4 = new Game(date2misHLater);
+			gameRepository.save(game4);
 
 			//a game must have max two players
 			GamePlayer gamePlayer1 = new GamePlayer(p1, game1);
@@ -55,6 +58,10 @@ public class SalvoApplication {
 			gamePlayerRepository.save(gamePlayer5);
 			GamePlayer gamePlayer6 = new GamePlayer(p2, game3);
 			gamePlayerRepository.save(gamePlayer6);
+			GamePlayer gamePlayer7 = new GamePlayer(p5, game4);
+			gamePlayerRepository.save(gamePlayer7);
+			GamePlayer gamePlayer8 = new GamePlayer(p3, game4);
+			gamePlayerRepository.save(gamePlayer8);
 
 			//Ship (type, gamePlayer and location)
 			List<String> firstShipLocation = new ArrayList<>();
@@ -64,12 +71,12 @@ public class SalvoApplication {
 			Ship ship1 = new Ship("Cruiser", gamePlayer1,firstShipLocation);
 			shipRepository.save(ship1);
 
-			List<String> fifthShipLocation = new ArrayList<>();
-			fifthShipLocation.add("F4");
-			fifthShipLocation.add("F5");
-			fifthShipLocation.add("F6");
-			Ship ship5 = new Ship("Destroyer", gamePlayer1,fifthShipLocation);
-			shipRepository.save(ship5);
+			List<String> sixthShipLocation = new ArrayList<>();
+			sixthShipLocation.add("F4");
+			sixthShipLocation.add("F5");
+			sixthShipLocation.add("F6");
+			Ship ship6 = new Ship("Destroyer", gamePlayer1,sixthShipLocation);
+			shipRepository.save(ship6);
 
 			List<String> secondShipLocation = new ArrayList<>();
 			secondShipLocation.add("H2");
@@ -91,6 +98,20 @@ public class SalvoApplication {
 			fourthShipLocation.add("A9");
 			Ship ship4 = new Ship("Patrol Boat", gamePlayer4,fourthShipLocation);
 			shipRepository.save(ship4);
+
+			List<String> fifthShipLocation = new ArrayList<>();
+			fifthShipLocation.add("B7");
+			fifthShipLocation.add("B8");
+			fifthShipLocation.add("B9");
+			Ship ship5 = new Ship("Patrol Boat", gamePlayer5,fifthShipLocation);
+			shipRepository.save(ship5);
+
+			List<String> seventhShipLocation = new ArrayList<>();
+			seventhShipLocation.add("D7");
+			seventhShipLocation.add("D8");
+			seventhShipLocation.add("D9");
+			Ship ship7 = new Ship("Patrol Boat", gamePlayer8,seventhShipLocation);
+			shipRepository.save(ship7);
 
 			//Salvos(turnNumber, gamePlayer, salvoLocations(List))
 		List<String> salvoLocation1 = new ArrayList<>();
@@ -123,6 +144,23 @@ public class SalvoApplication {
 			Salvo salvo5 = new Salvo(3,gamePlayer4,salvoLocation5);
 			salvoRepository.save(salvo5);
 
+			List<String> salvoLocation6 = new ArrayList<>();
+			salvoLocation6.add("J7");
+			salvoLocation6.add("D2");
+			Salvo salvo6 = new Salvo(2,gamePlayer5,salvoLocation6);
+			salvoRepository.save(salvo6);
+
+			List<String> salvoLocation7 = new ArrayList<>();
+			salvoLocation6.add("J7");
+			salvoLocation6.add("D2");
+			Salvo salvo7 = new Salvo(2,gamePlayer7,salvoLocation7);
+			salvoRepository.save(salvo7);
+
+			List<String> salvoLocation8 = new ArrayList<>();
+			salvoLocation8.add("J7");
+			salvoLocation8.add("D2");
+			Salvo salvo8 = new Salvo(2,gamePlayer8,salvoLocation8);
+			salvoRepository.save(salvo8);
 //-------------------------------------scores-------------------------------------------------------
 			Date firstFinish = Date.from(date.toInstant().plusSeconds(1800));
 			Score score1 = new Score(game1,p1,1.0,firstFinish);
@@ -134,6 +172,10 @@ public class SalvoApplication {
 			scoreRepository.save(score2);
 			Score score4 = new Score(game2, p5, 0.5, secondFinish);
 			scoreRepository.save(score4);
+			Score score5 = new Score(game4, p5, 1.0, secondFinish);
+			scoreRepository.save(score5);
+			Score score6 = new Score(game4, p3, 0.0, secondFinish);
+			scoreRepository.save(score6);
 		};
 	}
 
