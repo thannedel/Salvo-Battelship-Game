@@ -178,7 +178,7 @@ public class SalvoController {
         salvoTurnAndLocations.put("locations", salvo.getLocations());
         return salvoTurnAndLocations;
     }
-    @CrossOrigin(origins = "http://127.0.0.1:5500")
+
     @RequestMapping("/game_view/{gameId}")
     public Map<String, Object> getGame(@PathVariable Long gameId) {
         Map<String, Object> gameViewInfo = new LinkedHashMap<>();

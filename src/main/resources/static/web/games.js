@@ -36,10 +36,12 @@ function fetching() {
 
       console.log(games);
       createList();
-      listOfPlayers();
+      boardObject();
       totalScore(playersArray);
       createTable(playersArray);
+
       console.log(playersArray);
+
     })
     .catch(function (error) {
       console.log(error);
@@ -56,7 +58,7 @@ function createList() {
 
 }
 
-function listOfPlayers() {
+function boardObject() {
   playersArray = [];
   let playersIds = [];
 
@@ -70,7 +72,10 @@ function listOfPlayers() {
           "id": games[i].gamePlayers[j].player.id,
           "email": games[i].gamePlayers[j].player.email,
           "scores": [],
-          "total": 0.0
+          "total": 0.0,
+          "win": 0.0,
+          "loss": 0.0,
+          "tie": 0.0,
         };
         playersArray.push(playerScoreData);
       }
@@ -95,24 +100,42 @@ function totalScore(playersArray) {
         }
       }
     }
-
   }
+  for (i = 0; i < playersArray.length; i++) {
 
+
+    if (playersArray[i].scores.length > 0) {
+
+      for (j = 0; j < playersArray[i].scores.length; j++) {
+        if (playersArray[i].scores[j] == 0.0) {
+          playersArray[i].loss++;
+        } else if (playersArray[i].scores[j] == 0.5) {
+          playersArray[i].tie++;
+        } else {
+          playersArray[i].win++;
+        }
+      }
+
+    }
+  }
 }
+
 
 function createTable(playersArray) {
   playersArray.sort(function (a, b) {
     return b.total - a.total;
   });
-  console.log(playersArray);
+  console.log(playersArray[2].scores);
   var leaderBoard = document.getElementById("leaderBoard");
   leaderBoard.innerHTML = "";
   for (i = 0; i < playersArray.length; i++) {
     var tableRow = document.createElement("tr");
     var user = playersArray[i].email;
-
     var total = playersArray[i].total;
-    var cells = [user, total];
+    var win = playersArray[i].win;
+    var loss = playersArray[i].loss;
+    var tie = playersArray[i].tie;
+    var cells = [user, total, win, loss, tie];
     for (var j = 0; j < cells.length; j++) {
       var tableCell = document.createElement("td");
       tableCell.append(cells[j]);
@@ -122,30 +145,3 @@ function createTable(playersArray) {
   }
 
 }
-
-
-
-
-
-
-
-/*  countWon = 0;
- countLost = 0;
- countTied = 0;
- for (i = 0; i < playersArray.length; i++) {
-
-
-   if (playersArray[i].scores.length > 0) {
-
-     for (j = 0; j < playersArray[i].scores.length; j++) {
-       if (playersArray[i].scores[j] == 0.0) {
-         countLost++;
-       } else if (playersArray[i].scores[j] == 0.5) {
-         countTied++;
-       } else if (playersArray[i].scores[j] == 1.0) {
-         countWon++;
-       }
-     }
-
-   }
- } */

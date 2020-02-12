@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <link rel="stylesheet" href="css/bootstrap.css">
     <title>Salvo</title>
 </head>
 
@@ -11,10 +12,23 @@
     <ol id="output">
 
     </ol>
-    <table id="leaderBoard">
+    <table class="table table-striped">
+        <thead class="thead-inverse">
+            <th>User</th>
+            <th>Total</th>
+            <th>Win</th>
+            <th>Loss</th>
+            <th>Tie</th>
+        </thead>
+        <tbody id="leaderBoard">
+            <tr>
 
+            </tr>
+        </tbody>
     </table>
+
     <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <script src="games.js"></script>
 
 </body>
