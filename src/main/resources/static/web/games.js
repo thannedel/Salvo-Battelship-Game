@@ -9,28 +9,22 @@ fetch("/api/games").then(function (response) {
   });
 */
 
-
-site = ' http://localhost:8080/api/games';
+site = " http://localhost:8080/api/games";
 
 var i, j, k;
 
-
-
-fetching()
+fetching();
 
 //var members;
 
 function fetching() {
-
-  var fetchConfig =
-    fetch(this.site, {
-      method: "GET",
-
-    }).then(function (res) {
-      if (res.ok)
-        return res.json();
-    }).then(function (json) {
-
+  var fetchConfig = fetch(this.site, {
+    method: "GET"
+  })
+    .then(function(res) {
+      if (res.ok) return res.json();
+    })
+    .then(function(json) {
       data = json;
       games = data;
 
@@ -41,21 +35,21 @@ function fetching() {
       createTable(playersArray);
 
       console.log(playersArray);
-
     })
-    .catch(function (error) {
+    .catch(function(error) {
       console.log(error);
-    })
+    });
 }
 
 function createList() {
   games.forEach(game => {
     var date = new Date(game.created);
-    let testList = document.createElement("li")
-    testList.innerHTML = ` ${game.id}, ${date.toLocaleString()}, ${game.gamePlayers[0].player.email} vs ${game.gamePlayers[1].player.email} `
+    let testList = document.createElement("li");
+    testList.innerHTML = ` ${game.id}, ${date.toLocaleString()}, ${
+      game.gamePlayers[0].player.email
+    } vs ${game.gamePlayers[1].player.email} `;
     output.appendChild(testList);
-  })
-
+  });
 }
 
 function boardObject() {
@@ -63,37 +57,31 @@ function boardObject() {
   let playersIds = [];
 
   for (i = 0; i < games.length; i++) {
-
     for (j = 0; j < games[i].gamePlayers.length; j++) {
-
       if (!playersIds.includes(games[i].gamePlayers[j].player.id)) {
         playersIds.push(games[i].gamePlayers[j].player.id);
         let playerScoreData = {
-          "id": games[i].gamePlayers[j].player.id,
-          "email": games[i].gamePlayers[j].player.email,
-          "scores": [],
-          "total": 0.0,
-          "win": 0.0,
-          "loss": 0.0,
-          "tie": 0.0,
+          id: games[i].gamePlayers[j].player.id,
+          email: games[i].gamePlayers[j].player.email,
+          scores: [],
+          total: 0.0,
+          win: 0.0,
+          loss: 0.0,
+          tie: 0.0
         };
         playersArray.push(playerScoreData);
       }
     }
   }
   return playersArray;
-
 }
 
 function totalScore(playersArray) {
   for (i = 0; i < games.length; i++) {
-
     for (j = 0; j < games[i].scores.length; j++) {
-
       let scorePlayerId = games[i].scores[j].playerID;
 
       for (k = 0; k < playersArray.length; k++) {
-
         if (playersArray[k].id == scorePlayerId) {
           playersArray[k].scores.push(games[i].scores[j].score);
           playersArray[k].total += games[i].scores[j].score;
@@ -102,10 +90,7 @@ function totalScore(playersArray) {
     }
   }
   for (i = 0; i < playersArray.length; i++) {
-
-
     if (playersArray[i].scores.length > 0) {
-
       for (j = 0; j < playersArray[i].scores.length; j++) {
         if (playersArray[i].scores[j] == 0.0) {
           playersArray[i].loss++;
@@ -115,14 +100,12 @@ function totalScore(playersArray) {
           playersArray[i].win++;
         }
       }
-
     }
   }
 }
 
-
 function createTable(playersArray) {
-  playersArray.sort(function (a, b) {
+  playersArray.sort(function(a, b) {
     return b.total - a.total;
   });
   console.log(playersArray[2].scores);
@@ -143,5 +126,51 @@ function createTable(playersArray) {
     }
     document.getElementById("leaderBoard").append(tableRow);
   }
+}
+login();
+loginPost();
 
+function login() {
+  $("#loginButton").click(function(event) {
+    event.preventDefault();
+    var form = event.target.form;
+    loginPost(form);
+  });
+}
+
+function loginPost(form) {
+  $.post("/api/login", {
+    username: form["username"].value,
+    password: form["password"].value
+  })
+    .done(function() {
+      console.log("Logged in!");
+    })
+    .fail(function() {
+      showOutput("You have to sign up first!");
+    });
+}
+
+logout();
+
+function logOut() {
+  fetch("http://localhost:8080/api/logout", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  })
+    .then(function(response) {
+      console.log("logged out", response);
+      return response.status;
+    })
+    .then(status => {
+      if (status == 200) {
+        window.location.href = "games.html";
+      } else {
+        alert("something went wrong");
+      }
+    })
+    .catch(error => console.log(error));
 }

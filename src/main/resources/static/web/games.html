@@ -8,12 +8,14 @@
 
 <body>
     <h3>Salvo!</h3>
-    <form id="login-form">
-        <label>Name: <input type="text" name="username" id="userName"></label>
-        <label>Password: <input type="text" name="password" id="password"></label>
+    <form id="login-form" onsubmit="return false">
+        <label>Name: <input type="text" name="username"></label>
+        <label>Password: <input type="text" name="password"></label>
         <button type="button" id="loginButton">Login</button>
-        <button type="button" id="signupButton">Sign up</button>
     </form>
+
+    <button type="button" class="btn btn-outline-primary" id="logoutButton" onclick="logOut()">Log Out</button>
+
     <ol id="output">
 
     </ol>
