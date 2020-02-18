@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="css/bootstrap.css">
+
     <title>Salvo</title>
 </head>
 
@@ -12,9 +12,16 @@
         <label>Name: <input type="text" name="username"></label>
         <label>Password: <input type="text" name="password"></label>
         <button type="button" id="loginButton">Login</button>
+        <button type="button" id="logoutButton" onclick="logOut()">Log Out</button>
     </form>
 
-    <button type="button" class="btn btn-outline-primary" id="logoutButton" onclick="logOut()">Log Out</button>
+    <div id=register>
+        <label>Name: <input type="text" name="username" id="username"></label>
+        <label>Password: <input type="text" name="password" id="password"></label>
+        <label>email: <input type="text" name="email" id="email"></label>
+        <button type="button" id="signupButton" onclick="signUp()">Sign up</button>
+    </div>
+
 
     <ol id="output">
 
@@ -35,7 +42,7 @@
     </table>
 
     <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+
     <script src="games.js"></script>
 
 </body>
