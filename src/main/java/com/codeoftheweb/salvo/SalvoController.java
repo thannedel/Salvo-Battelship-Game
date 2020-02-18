@@ -211,7 +211,12 @@ public class SalvoController {
         //add the code for empty strings
         if (username.trim().isEmpty() || email.trim().isEmpty() || password.trim().isEmpty()) {
             return new ResponseEntity<>(makeMap("error", "Wrong Data"), HttpStatus.FORBIDDEN);
-        } else {
+
+        }
+        if(!email.contains("@") || !email.contains(".") ){
+            return new ResponseEntity<>(makeMap("error", "wrong email address"), HttpStatus.FORBIDDEN);
+        }
+
             if (playerRepository.findByUsername(username) == null) {
 
                 Player newPlayer = new Player(username, email, passwordEncoder.encode(password));
@@ -221,7 +226,7 @@ public class SalvoController {
                 return new ResponseEntity<>(makeMap("error", "This username already exists, please try with a different one"), HttpStatus.FORBIDDEN);
             }
         }
-    }
+
 
     private Map<String, Object> makeMap(String key, Object value) {
         Map<String, Object> map = new HashMap<>();

@@ -8,17 +8,20 @@
 
 <body>
     <h3>Salvo!</h3>
+
+
     <form id="login-form" onsubmit="return false">
-        <label>Name: <input type="text" name="username"></label>
-        <label>Password: <input type="text" name="password"></label>
+        <label for="username">Name: <input type="text" name="username"></label>
+        <label for="password">Password: <input type="password" name="password"></label>
         <button type="button" id="loginButton">Login</button>
         <button type="button" id="logoutButton" onclick="logOut()">Log Out</button>
     </form>
 
     <div id=register>
-        <label>Name: <input type="text" name="username" id="username"></label>
-        <label>Password: <input type="text" name="password" id="password"></label>
-        <label>email: <input type="text" name="email" id="email"></label>
+        <label>Name: <input type="text" name="username" id="username" required></label>
+        <label>Password: <input type="password" name="password" id="password" required></label>
+
+        <label for="email">email:</label><input id="email" type="email" name="email" required>
         <button type="button" id="signupButton" onclick="signUp()">Sign up</button>
     </div>
 

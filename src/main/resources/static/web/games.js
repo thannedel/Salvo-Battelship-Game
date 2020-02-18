@@ -151,6 +151,7 @@ function loginPost(form) {
       alert("You have to sign up first!");
     });
 }
+
 logOut();
 
 function logOut() {
