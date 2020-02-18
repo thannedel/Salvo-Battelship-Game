@@ -26,9 +26,10 @@ function fetching() {
     })
     .then(function(json) {
       data = json;
-      games = data;
+      player = data.player;
+      games = data.games;
 
-      console.log(games);
+      console.log(player);
       createList();
       boardObject();
       totalScore(playersArray);
@@ -127,9 +128,9 @@ function createTable(playersArray) {
     document.getElementById("leaderBoard").append(tableRow);
   }
 }
+
 login();
 loginPost();
-
 function login() {
   $("#loginButton").click(function(event) {
     event.preventDefault();
@@ -147,11 +148,10 @@ function loginPost(form) {
       console.log("Logged in!");
     })
     .fail(function() {
-      showOutput("You have to sign up first!");
+      alert("You have to sign up first!");
     });
 }
-
-logout();
+logOut();
 
 function logOut() {
   fetch("http://localhost:8080/api/logout", {
@@ -173,4 +173,33 @@ function logOut() {
       }
     })
     .catch(error => console.log(error));
+}
+signUp();
+function signUp() {
+  var newName = document.getElementById("username").value;
+  var newPassword = document.getElementById("password").value;
+  var eMail = document.getElementById("email").value;
+  fetch("/api/players", {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    method: "POST",
+    body: "username=" + newName + "&password=" + newPassword + "&email=" + eMail
+  })
+    .then(function(res) {
+      return res.json();
+    })
+    .then(data => {
+      console.log("Request success: ", data);
+      if (data.username) {
+        alert("Welcome " + newName + ", you can login now");
+        window.location.reload();
+      } else {
+        alert(data.error);
+      }
+    })
+    .catch(function(error) {
+      console.log("Request failure: ", error);
+    });
 }
