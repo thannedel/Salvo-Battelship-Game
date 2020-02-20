@@ -9,7 +9,7 @@ function paramObj(search) {
   var obj = {};
   var reg = /(?:[?&]([^?&#=]+)(?:=([^&#]*))?)(?:#.*)?/g;
 
-  search.replace(reg, function(match, param, val) {
+  search.replace(reg, function (match, param, val) {
     obj[decodeURIComponent(param)] =
       val === undefined ? "" : decodeURIComponent(val);
   });
@@ -18,10 +18,10 @@ function paramObj(search) {
 }
 
 function loadJsonData(param) {
-  $.getJSON("/api/game_view/" + param, function(data_json) {
+  $.getJSON("/api/game_view/" + param, function (data_json) {
     var data = data_json;
-    loadJsonShipData(param, data);
-    loadJsonSalvoData(param, data);
+    /*  loadJsonShipData(param, data);
+     loadJsonSalvoData(param, data); */
     createShips(data);
   });
 }
@@ -30,14 +30,19 @@ function loadJsonData(param) {
 function fetching(param) {
   site = "/api/game_view/" + param;
   var fetchConfig = fetch(this.site, {
-    method: "GET"
-  })
-    .then(function(res) {
-      if (res.ok) return res.json();
+      method: "GET"
     })
-    .then(function(json) {
+    .then(function (res) {
+
+      if (!res.status === 200) {
+        console.log("no allowed")
+      }
+      return res.json()
+    })
+    .then(function (json) {
       data = json;
       games = data;
+      console.log(games)
       createTable("playerTable");
       createTable("opponentTable");
       //gridBoard();
@@ -45,10 +50,12 @@ function fetching(param) {
       checkPlayer(param);
       salvos();
       bingoSalvos(playerLocations);
+
       console.log(games);
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.log(error);
+      alert("Don't fuckin arround")
     });
 }
 
@@ -110,6 +117,7 @@ function markShips() {
   }
 }
 
+
 function salvos() {
   var cells = document
     .getElementById("opponentTable")
@@ -131,21 +139,26 @@ function salvos() {
 function bingoSalvos() {
   var cells = document.getElementById("playerTable").getElementsByTagName("td");
   var opponents = games.opponents.opponentSalvos;
-  for (i = 0; i < opponents.length; i++) {
-    for (y = 0; y < opponents[i].locations.length; y++) {
-      for (z = 0; z < cells.length; z++) {
-        if (opponents[i].locations[y] == cells[z].id) {
-          cells[z].innerHTML = opponents[i].turn;
+  console.log(Object.entries(games.opponents).length === 0 && games.opponents.constructor === Object)
+  let noOpponent = Object.entries(games.opponents).length === 0 && games.opponents.constructor === Object
+  if (!noOpponent) {
+    for (i = 0; i < opponents.length; i++) {
+      for (y = 0; y < opponents[i].locations.length; y++) {
+        for (z = 0; z < cells.length; z++) {
+          if (opponents[i].locations[y] == cells[z].id) {
+            cells[z].innerHTML = opponents[i].turn;
 
-          if (cells[z].className == "marked") {
-            cells[z].setAttribute("class", "bingoSalvo");
-          } else {
-            cells[z].setAttribute("class", "salvo");
+            if (cells[z].className == "marked") {
+              cells[z].setAttribute("class", "bingoSalvo");
+            } else {
+              cells[z].setAttribute("class", "salvo");
+            }
           }
         }
       }
     }
   }
+
 }
 
 /* function bingoSalvos(playerLocations) {

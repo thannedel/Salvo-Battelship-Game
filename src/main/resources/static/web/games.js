@@ -19,38 +19,94 @@ fetching();
 
 function fetching() {
   var fetchConfig = fetch(this.site, {
-    method: "GET"
-  })
-    .then(function(res) {
+      method: "GET"
+    })
+    .then(function (res) {
+      console.log(res);
       if (res.ok) return res.json();
     })
-    .then(function(json) {
+    .then(function (json) {
       data = json;
-      player = data.player;
+      user = data.player;
       games = data.games;
 
-      console.log(player);
-      createList();
+      console.log(user);
+
+      createList(games);
       boardObject();
       totalScore(playersArray);
       createTable(playersArray);
 
-      console.log(playersArray);
+      console.log(games);
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.log(error);
     });
 }
 
-function createList() {
-  games.forEach(game => {
-    var date = new Date(game.created);
-    let testList = document.createElement("li");
-    testList.innerHTML = ` ${game.id}, ${date.toLocaleString()}, ${
-      game.gamePlayers[0].player.email
-    } vs ${game.gamePlayers[1].player.email} `;
-    output.appendChild(testList);
-  });
+function getcurrentplayer(currentPlayerId) {
+  for (i = 0; i < games.length; i++) {
+    if (user != null) {
+      if (
+        user.id == games[i].gamePlayers[0].player.id ||
+        user.id == games[i].gamePlayers[1].player.id
+      ) {
+        var currentPlayerId = user.id;
+      }
+    }
+  }
+  return currentPlayerId;
+}
+
+function createList(games) {
+  var output = document.getElementById("output");
+  output.innerHTML = "";
+  console.log(games);
+
+  console.log(getcurrentplayer());
+  //console.log(Object.entries(games.gamePlayers.player).length === 0 && games.gamePlayers.player.constructor === Object)
+  for (var i = 0; i < games.length; i++) {
+    var row = document.createElement("tr");
+    var date = new Date(games[i].created);
+    var localDate = date.toLocaleString();
+
+    var player1 = games[i].gamePlayers[0].player.email;
+    var player2 = games[i].gamePlayers[1].player.email;
+
+
+    var currentGamePlayerId;
+    if (games[i].gamePlayers[0].player.id == getcurrentplayer()) {
+      // gameplayer id of loggedin player
+      currentGamePlayerId = games[i].gamePlayers[0].id;
+    }
+    if (games[i].gamePlayers[1].player.id == getcurrentplayer()) {
+      // gameplayer id of loggedin player
+      currentGamePlayerId = games[i].gamePlayers[1].id;
+    }
+    var backtogame = document.createElement("a");
+    backtogame.setAttribute("href", "/web/game.html?gp=" + currentGamePlayerId);
+    backtogame.innerHTML = "Go to Game";
+
+    if (
+      currentGamePlayerId == games[i].gamePlayers[0].id ||
+      currentGamePlayerId == games[i].gamePlayers[1].id
+    ) {
+      var action = backtogame;
+    } else {
+      var action = "-";
+    }
+
+    var kelia = [localDate, player1, player2, action];
+
+    kelia.forEach(keli => {
+      var tablekelia = document.createElement("td");
+      tablekelia.append(keli);
+      row.append(tablekelia);
+    });
+
+    document.getElementById("output").append(row);
+  }
+  console.log("current game player id", currentGamePlayerId);
 }
 
 function boardObject() {
@@ -106,7 +162,7 @@ function totalScore(playersArray) {
 }
 
 function createTable(playersArray) {
-  playersArray.sort(function(a, b) {
+  playersArray.sort(function (a, b) {
     return b.total - a.total;
   });
   console.log(playersArray[2].scores);
@@ -128,41 +184,46 @@ function createTable(playersArray) {
     document.getElementById("leaderBoard").append(tableRow);
   }
 }
-
 login();
-loginPost();
+//loginPost();
+
 function login() {
-  $("#loginButton").click(function(event) {
+  $("#loginButton").click(function (event) {
     event.preventDefault();
-    var form = event.target.form;
-    loginPost(form);
+
+    let username = document.getElementById("usernameLogin").value;
+    let password = document.getElementById("passwordLogin").value;
+    console.log(username);
+    loginPost(username, password);
   });
 }
 
-function loginPost(form) {
+function loginPost(username, password) {
   $.post("/api/login", {
-    username: form["username"].value,
-    password: form["password"].value
-  })
-    .done(function() {
-      console.log("Logged in!");
+      username: username,
+      password: password
     })
-    .fail(function() {
+    .done(function () {
+      console.log("Logged in!");
+
+      window.location.reload();
+    })
+    .fail(function () {
       alert("You have to sign up first!");
     });
 }
 
-logOut();
+//logOut();
 
 function logOut() {
   fetch("http://localhost:8080/api/logout", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
-  })
-    .then(function(response) {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    })
+    .then(function (response) {
       console.log("logged out", response);
       return response.status;
     })
@@ -175,20 +236,21 @@ function logOut() {
     })
     .catch(error => console.log(error));
 }
-signUp();
+//signUp();
+
 function signUp() {
   var newName = document.getElementById("username").value;
   var newPassword = document.getElementById("password").value;
   var eMail = document.getElementById("email").value;
   fetch("/api/players", {
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    method: "POST",
-    body: "username=" + newName + "&password=" + newPassword + "&email=" + eMail
-  })
-    .then(function(res) {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      method: "POST",
+      body: "username=" + newName + "&password=" + newPassword + "&email=" + eMail
+    })
+    .then(function (res) {
       return res.json();
     })
     .then(data => {
@@ -200,7 +262,29 @@ function signUp() {
         alert(data.error);
       }
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.log("Request failure: ", error);
     });
 }
+
+$('#createGame').click(function (event) {
+  event.preventDefault();
+  $.post("/api/createGame")
+    .done(function (games) {
+      console.log(games);
+      console.log("game created");
+      gameViewUrl = "/web/game.html?gp=" + games.gpid;
+
+
+      location.href = gameViewUrl;
+
+    })
+    .fail(function (data) {
+      console.log("game creation failed");
+
+
+    })
+    .always(function () {
+
+    });
+});

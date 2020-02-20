@@ -10,13 +10,13 @@
     <h3>Salvo!</h3>
 
 
-    <form id="login-form" onsubmit="return false">
-        <label for="username">Name: <input type="text" name="username"></label>
-        <label for="password">Password: <input type="password" name="password"></label>
-        <button type="button" id="loginButton">Login</button>
-        <button type="button" id="logoutButton" onclick="logOut()">Log Out</button>
-    </form>
-
+    <!-- <form id="login-form" onsubmit="return false"> -->
+    <label for="username">Name: <input type="text" name="username" id="usernameLogin"></label>
+    <label for="password">Password: <input type="password" name="password" id="passwordLogin"></label>
+    <button type="button" id="loginButton">Login</button>
+    <button type="button" id="logoutButton" onclick="logOut()">Log Out</button>
+    <!--  </form>
+ -->
     <div id=register>
         <label>Name: <input type="text" name="username" id="username" required></label>
         <label>Password: <input type="password" name="password" id="password" required></label>
@@ -25,10 +25,22 @@
         <button type="button" id="signupButton" onclick="signUp()">Sign up</button>
     </div>
 
+    <button type="submit" id="createGame">Create New Game</button>
 
-    <ol id="output">
+    <!-- <button type="button" id="newGameButton">Create New Game</button> -->
+    <table>
+        <thead>
+            <tr>
+                <th>Created</th>
+                <th>Player 1</th>
+                <th>Player 2</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="output">
+        </tbody>
+    </table>
 
-    </ol>
     <table class="table table-striped">
         <thead class="thead-inverse">
             <th>User</th>
