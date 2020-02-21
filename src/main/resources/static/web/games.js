@@ -46,7 +46,7 @@ function fetching() {
 
 function getcurrentplayer(currentPlayerId) {
   for (i = 0; i < games.length; i++) {
-    if (user != null) {
+    if (user != null && games[i].gamePlayers.length > 1) {
       if (
         user.id == games[i].gamePlayers[0].player.id ||
         user.id == games[i].gamePlayers[1].player.id
@@ -63,41 +63,56 @@ function createList(games) {
   output.innerHTML = "";
   console.log(games);
 
-  console.log(getcurrentplayer());
+  //console.log(getcurrentplayer());
   //console.log(Object.entries(games.gamePlayers.player).length === 0 && games.gamePlayers.player.constructor === Object)
+
   for (var i = 0; i < games.length; i++) {
+    var gameid = games[i].id
     var row = document.createElement("tr");
     var date = new Date(games[i].created);
     var localDate = date.toLocaleString();
 
     var player1 = games[i].gamePlayers[0].player.email;
-    var player2 = games[i].gamePlayers[1].player.email;
-
-
+    var player2;
+    var action = "-";
     var currentGamePlayerId;
-    if (games[i].gamePlayers[0].player.id == getcurrentplayer()) {
-      // gameplayer id of loggedin player
-      currentGamePlayerId = games[i].gamePlayers[0].id;
-    }
-    if (games[i].gamePlayers[1].player.id == getcurrentplayer()) {
-      // gameplayer id of loggedin player
-      currentGamePlayerId = games[i].gamePlayers[1].id;
-    }
-    var backtogame = document.createElement("a");
-    backtogame.setAttribute("href", "/web/game.html?gp=" + currentGamePlayerId);
-    backtogame.innerHTML = "Go to Game";
+    var joinButton;
+    var backtogame;
+    if (games[i].gamePlayers.length > 1) {
+      player2 = games[i].gamePlayers[1].player.email;
+      if (games[i].gamePlayers[0].player.id == getcurrentplayer()) {
+        // gameplayer id of loggedin player
+        currentGamePlayerId = games[i].gamePlayers[0].id;
+      }
+      if (games[i].gamePlayers[1].player.id == getcurrentplayer()) {
+        // gameplayer id of loggedin player
+        currentGamePlayerId = games[i].gamePlayers[1].id;
+      }
 
-    if (
-      currentGamePlayerId == games[i].gamePlayers[0].id ||
-      currentGamePlayerId == games[i].gamePlayers[1].id
-    ) {
-      var action = backtogame;
+      backtogame = document.createElement("a");
+      backtogame.setAttribute(
+        "href",
+        "/web/game.html?gp=" + currentGamePlayerId
+      );
+      backtogame.innerHTML = "Go to Game";
+     joinButton = document.createElement("button");
+      joinButton.setAttribute("data-gameid", gameid); 
+      joinButton.setAttribute("class", "joinButton");
+      joinButton.innerHTML = "Join the Game";
+      if (
+        currentGamePlayerId == games[i].gamePlayers[0].id ||
+        currentGamePlayerId == games[i].gamePlayers[1].id
+      ) {
+        action = backtogame;
+      }
     } else {
-      var action = "-";
+      player2 = "-";
+      action = joinButton;
     }
+
 
     var kelia = [localDate, player1, player2, action];
-
+    //var index = i + 1;
     kelia.forEach(keli => {
       var tablekelia = document.createElement("td");
       tablekelia.append(keli);
@@ -267,9 +282,33 @@ function signUp() {
     });
 }
 
+
+/* function joinGame(gameid){
+$('.joinButton').click(function (e) {
+  e.preventDefault();
+
+  let joinGameUrl = "/api/game/" + gameid + "/players";
+  $.post(joinGameUrl)
+    .done(function (data) {
+      console.log(data);
+      console.log("game joined");
+      gameViewUrl = "/web/game.html?gp=" + gameid;
+     
+    })
+    .fail(function (data) {
+      console.log("game join failed");
+      $('#errorSignup').text(data.responseJSON.error);
+      
+
+    })
+    .always(function () {
+
+    });
+});
+} */
 $('#createGame').click(function (event) {
   event.preventDefault();
-  $.post("/api/createGame")
+  $.post("/api/games")
     .done(function (games) {
       console.log(games);
       console.log("game created");
