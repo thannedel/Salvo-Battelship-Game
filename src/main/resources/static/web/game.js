@@ -33,9 +33,10 @@ function fetching(param) {
       method: "GET"
     })
     .then(function (res) {
-
-      if (!res.status === 200) {
-        console.log("no allowed")
+      console.log(res.status);
+      if (res.status == 403) {
+        alert("Not allowed to view opponents game")
+        window.location.href = "games.html";
       }
       return res.json()
     })
@@ -55,7 +56,7 @@ function fetching(param) {
     })
     .catch(function (error) {
       console.log(error);
-      alert("Don't fuckin arround")
+
     });
 }
 
