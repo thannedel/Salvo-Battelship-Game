@@ -123,7 +123,7 @@ public class SalvoController {
         return dto;
     }
 
-    @RequestMapping(path = "/createGame", method = RequestMethod.POST)
+    @RequestMapping(path = "/games", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> createGame(Authentication authentication) {
         if (!isGuest(authentication)) {
             Player player = playerRepository.findByUsername(authentication.getName());
@@ -256,7 +256,31 @@ public class SalvoController {
         map.put(key, value);
         return map;
     }
+    @RequestMapping(path = "/game/{gameID}/players", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> joinGame(@PathVariable long gameID, Authentication authentication) {
+        if (!isGuest(authentication)) {
+            Player player = playerRepository.findByUsername(authentication.getName());
+            if (gameRepository.getOne(gameID) == null) {
+
+                return new ResponseEntity<>(makeMap("error", "No game"), HttpStatus.FORBIDDEN);
+            } else {
+                //if the game has 2 players send FORBIDDEN and text: game is full
+                if (gameRepository.getOne(gameID).getGamePlayers().size() == 2) {
+                    return new ResponseEntity<>(makeMap("error", "game is full"), HttpStatus.FORBIDDEN);
+                } else {
+                    //create and save a new game player, with this game and the current user
+                    GamePlayer newGamePlayer = new GamePlayer(player, gameRepository.getOne(gameID));
+                    gamePlayerRepository.save(newGamePlayer);
+                    return new ResponseEntity<>(makeMap("gpid", newGamePlayer.getId()), HttpStatus.CREATED);
+                }
+            }
+        } else {
+            //if no current user - Unauthorized response
+            return new ResponseEntity<>(makeMap("error", "not logged in"), HttpStatus.UNAUTHORIZED);
+        }
+    }
 }
+
 /*
 @Autowired
 private PasswordEncoder passwordEncoder;
