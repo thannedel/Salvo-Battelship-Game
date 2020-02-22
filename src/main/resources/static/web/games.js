@@ -63,9 +63,8 @@ function createList(games) {
   output.innerHTML = "";
   console.log(games);
 
-  //console.log(getcurrentplayer());
-  //console.log(Object.entries(games.gamePlayers.player).length === 0 && games.gamePlayers.player.constructor === Object)
-
+  
+  
   for (var i = 0; i < games.length; i++) {
     var gameid = games[i].id
     var row = document.createElement("tr");
@@ -76,8 +75,9 @@ function createList(games) {
     var player2;
     var action = "-";
     var currentGamePlayerId;
-    var joinButton;
+   
     var backtogame;
+    
     if (games[i].gamePlayers.length > 1) {
       player2 = games[i].gamePlayers[1].player.email;
       if (games[i].gamePlayers[0].player.id == getcurrentplayer()) {
@@ -95,21 +95,28 @@ function createList(games) {
         "/web/game.html?gp=" + currentGamePlayerId
       );
       backtogame.innerHTML = "Go to Game";
-     joinButton = document.createElement("button");
-      joinButton.setAttribute("data-gameid", gameid); 
-      joinButton.setAttribute("class", "joinButton");
-      joinButton.innerHTML = "Join the Game";
+     
       if (
         currentGamePlayerId == games[i].gamePlayers[0].id ||
         currentGamePlayerId == games[i].gamePlayers[1].id
       ) {
         action = backtogame;
+      
       }
     } else {
       player2 = "-";
+      var joinButton = document.createElement("button");
+      joinButton.innerHTML="Join the Game";
+     
+     joinButton.setAttribute("data-gameid", gameid); 
+     joinButton.setAttribute("class", "joinButton"); 
+     joinButton.addEventListener("click", function () {
+
+      joinGame(gameid)
+  })
       action = joinButton;
     }
-
+    console.log(action)
 
     var kelia = [localDate, player1, player2, action];
     //var index = i + 1;
@@ -122,6 +129,7 @@ function createList(games) {
     document.getElementById("output").append(row);
   }
   console.log("current game player id", currentGamePlayerId);
+
 }
 
 function boardObject() {
@@ -283,29 +291,28 @@ function signUp() {
 }
 
 
-/* function joinGame(gameid){
-$('.joinButton').click(function (e) {
-  e.preventDefault();
+function joinGame(gameid) {
+  
+  fetch(`http://localhost:8080/api/game/${gameid}/players`, {
+          method: 'POST',
+          headers: {
+              Accept: "application/json",
+              "Content-Type": "application/x-www-form-urlencoded",
+              credentials: "include"
+          }
+      })
+      .then(response => {
+          console.log(response)
+          return response.json()
+      })
+     .then((res) => {
 
-  let joinGameUrl = "/api/game/" + gameid + "/players";
-  $.post(joinGameUrl)
-    .done(function (data) {
-      console.log(data);
-      console.log("game joined");
-      gameViewUrl = "/web/game.html?gp=" + gameid;
-     
-    })
-    .fail(function (data) {
-      console.log("game join failed");
-      $('#errorSignup').text(data.responseJSON.error);
-      
-
-    })
-    .always(function () {
-
-    });
-});
-} */
+          if (res.gm_id) {
+              window.location.href = "game.html?gm=" + res.gm_id
+          } 
+      })
+      .catch(error => console.log(error))
+}
 $('#createGame').click(function (event) {
   event.preventDefault();
   $.post("/api/games")
