@@ -12,7 +12,7 @@ fetch("/api/games").then(function (response) {
 site = " http://localhost:8080/api/games";
 
 var i, j, k;
-
+var index = 1;
 fetching();
 
 //var members;
@@ -63,8 +63,8 @@ function createList(games) {
   output.innerHTML = "";
   console.log(games);
 
-  
-  
+
+
   for (var i = 0; i < games.length; i++) {
     var gameid = games[i].id
     var row = document.createElement("tr");
@@ -75,9 +75,9 @@ function createList(games) {
     var player2;
     var action = "-";
     var currentGamePlayerId;
-   
+
     var backtogame;
-    
+
     if (games[i].gamePlayers.length > 1) {
       player2 = games[i].gamePlayers[1].player.email;
       if (games[i].gamePlayers[0].player.id == getcurrentplayer()) {
@@ -95,31 +95,31 @@ function createList(games) {
         "/web/game.html?gp=" + currentGamePlayerId
       );
       backtogame.innerHTML = "Go to Game";
-     
+
       if (
         currentGamePlayerId == games[i].gamePlayers[0].id ||
         currentGamePlayerId == games[i].gamePlayers[1].id
       ) {
         action = backtogame;
-      
+
       }
     } else {
       player2 = "-";
       var joinButton = document.createElement("button");
-      joinButton.innerHTML="Join the Game";
-     
-     joinButton.setAttribute("data-gameid", gameid); 
-     joinButton.setAttribute("class", "joinButton"); 
-     joinButton.addEventListener("click", function () {
+      joinButton.innerHTML = "Join the Game";
 
-      joinGame(gameid)
-  })
+      joinButton.setAttribute("data-gameid", gameid);
+      joinButton.setAttribute("class", "joinButton");
+      joinButton.addEventListener("click", function () {
+
+        joinGame(gameid)
+      })
       action = joinButton;
     }
     console.log(action)
+    index = i + 1;
+    var kelia = [index, localDate, player1, player2, action];
 
-    var kelia = [localDate, player1, player2, action];
-    //var index = i + 1;
     kelia.forEach(keli => {
       var tablekelia = document.createElement("td");
       tablekelia.append(keli);
@@ -198,7 +198,8 @@ function createTable(playersArray) {
     var win = playersArray[i].win;
     var loss = playersArray[i].loss;
     var tie = playersArray[i].tie;
-    var cells = [user, total, win, loss, tie];
+    index = i + 1;
+    var cells = [index, user, total, win, loss, tie];
     for (var j = 0; j < cells.length; j++) {
       var tableCell = document.createElement("td");
       tableCell.append(cells[j]);
@@ -292,34 +293,37 @@ function signUp() {
 
 
 function joinGame(gameid) {
-  
-  fetch(`http://localhost:8080/api/game/${gameid}/players`, {
-          method: 'POST',
-          headers: {
-              Accept: "application/json",
-              "Content-Type": "application/x-www-form-urlencoded",
-              credentials: "include"
-          }
-      })
-      .then(response => {
-          console.log(response)
-          return response.json()
-      })
-     .then((res) => {
 
-          if (res.gm_id) {
-              window.location.href = "game.html?gm=" + res.gm_id
-          } 
-      })
-      .catch(error => console.log(error))
+  fetch(`http://localhost:8080/api/game/${gameid}/players`, {
+      method: 'POST',
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+        credentials: "include"
+      }
+    })
+    .then(response => {
+      console.log(response)
+      return response.json()
+    })
+    .then((games) => {
+
+      if (games.gpid) {
+        window.location.href = "game.html?gp=" + games.gpid;
+      }
+    })
+    .catch(error => console.log(error))
 }
+
+
+
 $('#createGame').click(function (event) {
   event.preventDefault();
   $.post("/api/games")
     .done(function (games) {
       console.log(games);
       console.log("game created");
-      gameViewUrl = "/web/game.html?gp=" + games.gpid;
+      gameViewUrl = "/web/game.html?gp=" + games.gpId;
 
 
       location.href = gameViewUrl;
