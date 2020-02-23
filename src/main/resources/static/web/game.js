@@ -18,14 +18,14 @@ function paramObj(search) {
 }
 
 function loadJsonData(param) {
+
   $.getJSON("/api/game_view/" + param, function (data_json) {
     var data = data_json;
-    /*  loadJsonShipData(param, data);
-     loadJsonSalvoData(param, data); */
+
     createShips(data);
   });
 }
-//var members;
+
 
 function fetching(param) {
   site = "/api/game_view/" + param;
@@ -71,15 +71,20 @@ function checkPlayer(param) {
   var gamePlayers = games.gamePlayers;
 
   for (i = 0; i < gamePlayers.length; i++) {
-    if (gamePlayers[i].id == param) {
-      player = gamePlayers[i].player.email;
+    if (gamePlayers.length > 1) {
+      if (gamePlayers[i].id == param) {
+        player = gamePlayers[i].player.email;
+      } else {
+        opponent = gamePlayers[i].player.email;
+      }
     } else {
-      opponent = gamePlayers[i].player.email;
+      player = gamePlayers[i].player.email;
+      opponent = "waiting for opponent";
     }
-  }
 
-  document.getElementById("player").innerHTML = player;
-  document.getElementById("opponent").innerHTML = opponent;
+    document.getElementById("player").innerHTML = player;
+    document.getElementById("opponent").innerHTML = opponent;
+  }
 }
 
 function createTable(table) {
