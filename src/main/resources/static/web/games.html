@@ -2,11 +2,20 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/font-awesome.min.css">
+    <link rel="stylesheet" href="styles/style1.css">
 
     <title>Salvo</title>
 </head>
 
 <body>
+
+
     <h3>Salvo!</h3>
 
 
@@ -28,36 +37,43 @@
     <button type="submit" id="createGame">Create New Game</button>
 
     <!-- <button type="button" id="newGameButton">Create New Game</button> -->
-    <table>
-        <thead>
-            <tr>
+    <div class="container">
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Created</th>
+                    <th>Player 1</th>
+                    <th>Player 2</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="output">
+            </tbody>
+        </table>
 
-                <th>Created</th>
-                <th>Player 1</th>
-                <th>Player 2</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="output">
-        </tbody>
-    </table>
+        <table class="table table-dark">
+            <thead>
+                <th>#</th>
+                <th>User</th>
+                <th>Total</th>
+                <th>Win</th>
+                <th>Loss</th>
+                <th>Tie</th>
+            </thead>
+            <tbody id="leaderBoard">
+                <tr>
 
-    <table class="table table-striped">
-        <thead class="thead-inverse">
-            <th>User</th>
-            <th>Total</th>
-            <th>Win</th>
-            <th>Loss</th>
-            <th>Tie</th>
-        </thead>
-        <tbody id="leaderBoard">
-            <tr>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-            </tr>
-        </tbody>
-    </table>
 
     <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+    <!-- <script src="js/jquery.min.js"></script>
+  <script src="js/tether.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>-->
 
     <script src="games.js"></script>
 
