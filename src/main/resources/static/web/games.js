@@ -19,13 +19,13 @@ fetching();
 
 function fetching() {
   var fetchConfig = fetch(this.site, {
-      method: "GET"
-    })
-    .then(function (res) {
+    method: "GET"
+  })
+    .then(function(res) {
       console.log(res);
       if (res.ok) return res.json();
     })
-    .then(function (json) {
+    .then(function(json) {
       data = json;
       user = data.player;
       games = data.games;
@@ -39,7 +39,7 @@ function fetching() {
 
       console.log(games);
     })
-    .catch(function (error) {
+    .catch(function(error) {
       console.log(error);
     });
 }
@@ -63,10 +63,8 @@ function createList(games) {
   output.innerHTML = "";
   console.log(games);
 
-
-
   for (var i = 0; i < games.length; i++) {
-    var gameid = games[i].id
+    var gameid = games[i].id;
     var row = document.createElement("tr");
     var date = new Date(games[i].created);
     var localDate = date.toLocaleString();
@@ -101,22 +99,24 @@ function createList(games) {
         currentGamePlayerId == games[i].gamePlayers[1].id
       ) {
         action = backtogame;
-
       }
-    } else {
+    } else if (user.id != games[i].gamePlayers[0].player.id && user != null) {
       player2 = "-";
       var joinButton = document.createElement("button");
       joinButton.innerHTML = "Join the Game";
 
       joinButton.setAttribute("data-gameid", gameid);
       joinButton.setAttribute("class", "joinButton");
-      joinButton.addEventListener("click", function () {
-
-        joinGame(gameid)
-      })
+      joinButton.addEventListener("click", function() {
+        joinGame(gameid);
+      });
       action = joinButton;
+    } else {
+      player2 = "-";
+      action = "waiting for opponent";
     }
-    console.log(action)
+
+    console.log(action);
     index = i + 1;
     var kelia = [index, localDate, player1, player2, action];
 
@@ -129,7 +129,6 @@ function createList(games) {
     document.getElementById("output").append(row);
   }
   console.log("current game player id", currentGamePlayerId);
-
 }
 
 function boardObject() {
@@ -185,7 +184,7 @@ function totalScore(playersArray) {
 }
 
 function createTable(playersArray) {
-  playersArray.sort(function (a, b) {
+  playersArray.sort(function(a, b) {
     return b.total - a.total;
   });
   console.log(playersArray[2].scores);
@@ -212,7 +211,7 @@ login();
 //loginPost();
 
 function login() {
-  $("#loginButton").click(function (event) {
+  $("#loginButton").click(function(event) {
     event.preventDefault();
 
     let username = document.getElementById("usernameLogin").value;
@@ -224,15 +223,15 @@ function login() {
 
 function loginPost(username, password) {
   $.post("/api/login", {
-      username: username,
-      password: password
-    })
-    .done(function () {
+    username: username,
+    password: password
+  })
+    .done(function() {
       console.log("Logged in!");
 
       window.location.reload();
     })
-    .fail(function () {
+    .fail(function() {
       alert("You have to sign up first!");
     });
 }
@@ -241,13 +240,13 @@ function loginPost(username, password) {
 
 function logOut() {
   fetch("http://localhost:8080/api/logout", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded"
-      }
-    })
-    .then(function (response) {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  })
+    .then(function(response) {
       console.log("logged out", response);
       return response.status;
     })
@@ -267,14 +266,14 @@ function signUp() {
   var newPassword = document.getElementById("password").value;
   var eMail = document.getElementById("email").value;
   fetch("/api/players", {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      method: "POST",
-      body: "username=" + newName + "&password=" + newPassword + "&email=" + eMail
-    })
-    .then(function (res) {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    method: "POST",
+    body: "username=" + newName + "&password=" + newPassword + "&email=" + eMail
+  })
+    .then(function(res) {
       return res.json();
     })
     .then(data => {
@@ -286,55 +285,44 @@ function signUp() {
         alert(data.error);
       }
     })
-    .catch(function (error) {
+    .catch(function(error) {
       console.log("Request failure: ", error);
     });
 }
 
-
 function joinGame(gameid) {
-
   fetch(`http://localhost:8080/api/game/${gameid}/players`, {
-      method: 'POST',
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
-        credentials: "include"
-      }
-    })
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+      credentials: "include"
+    }
+  })
     .then(response => {
-      console.log(response)
-      return response.json()
+      console.log(response);
+      return response.json();
     })
-    .then((games) => {
-
+    .then(games => {
       if (games.gpid) {
         window.location.href = "game.html?gp=" + games.gpid;
       }
     })
-    .catch(error => console.log(error))
+    .catch(error => console.log(error));
 }
 
-
-
-$('#createGame').click(function (event) {
+$("#createGame").click(function(event) {
   event.preventDefault();
   $.post("/api/games")
-    .done(function (games) {
+    .done(function(games) {
       console.log(games);
       console.log("game created");
       gameViewUrl = "/web/game.html?gp=" + games.gpId;
 
-
       location.href = gameViewUrl;
-
     })
-    .fail(function (data) {
+    .fail(function(data) {
       console.log("game creation failed");
-
-
     })
-    .always(function () {
-
-    });
+    .always(function() {});
 });
