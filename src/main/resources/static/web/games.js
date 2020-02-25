@@ -100,7 +100,7 @@ function createList(games) {
       ) {
         action = backtogame;
       }
-    } else if (user.id != games[i].gamePlayers[0].player.id && user != null) {
+    } else if (user != null && user.id != games[i].gamePlayers[0].player.id) {
       player2 = "-";
       var joinButton = document.createElement("button");
       joinButton.innerHTML = "Join the Game";
