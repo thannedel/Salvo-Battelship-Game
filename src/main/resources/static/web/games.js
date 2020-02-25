@@ -64,7 +64,6 @@ function createList(games) {
   console.log(games);
 
   for (var i = 0; i < games.length; i++) {
-    var gameid = games[i].id;
     var row = document.createElement("tr");
     var date = new Date(games[i].created);
     var localDate = date.toLocaleString();
@@ -104,7 +103,7 @@ function createList(games) {
       player2 = "-";
       var joinButton = document.createElement("button");
       joinButton.innerHTML = "Join the Game";
-
+      var gameid = games[i].id;
       joinButton.setAttribute("data-gameid", gameid);
       joinButton.setAttribute("class", "joinButton");
       joinButton.addEventListener("click", function() {
@@ -291,6 +290,7 @@ function signUp() {
 }
 
 function joinGame(gameid) {
+  console.log(gameid);
   fetch(`http://localhost:8080/api/game/${gameid}/players`, {
     method: "POST",
     headers: {
