@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -82,53 +83,43 @@ public class SalvoApplication {
 			gamePlayerRepository.save(gamePlayer8);
 
 			//Ship (type, gamePlayer and location)
-			List<String> firstShipLocation = new ArrayList<>();
-			firstShipLocation.add("A9");
-			firstShipLocation.add("B9");
-			firstShipLocation.add("C9");
-			Ship ship1 = new Ship("Cruiser", gamePlayer1, firstShipLocation);
+			Ship ship1 = new Ship("Cruiser", new ArrayList<>(Arrays.asList("A9", "B9", "C9")));
+			gamePlayer1.addShip(ship1);
 			shipRepository.save(ship1);
 
-			List<String> sixthShipLocation = new ArrayList<>();
-			sixthShipLocation.add("F4");
-			sixthShipLocation.add("F5");
-			sixthShipLocation.add("F6");
-			Ship ship6 = new Ship("Destroyer", gamePlayer1, sixthShipLocation);
+
+			Ship ship6 = new Ship("Destroyer", new ArrayList<>(Arrays.asList("F4", "F5","F6")));
+			gamePlayer1.addShip((ship6));
 			shipRepository.save(ship6);
 
-			List<String> secondShipLocation = new ArrayList<>();
-			secondShipLocation.add("H2");
-			secondShipLocation.add("H3");
-			secondShipLocation.add("H4");
-			Ship ship2 = new Ship("Destroyer", gamePlayer2, secondShipLocation);
+
+
+			Ship ship2 = new Ship("Destroyer", new ArrayList<>(Arrays.asList("H2", "H3", "H4")));
+			gamePlayer2.addShip((ship2));
 			shipRepository.save(ship2);
 
-			List<String> thirdShipLocation = new ArrayList<>();
-			thirdShipLocation.add("E1");
-			thirdShipLocation.add("F1");
-			thirdShipLocation.add("G1");
-			Ship ship3 = new Ship("Submarine", gamePlayer2, thirdShipLocation);
+
+
+			Ship ship3 = new Ship("Submarine", new ArrayList<>(Arrays.asList("E1", "F1", "G1")));
+			gamePlayer2.addShip(ship3);
 			shipRepository.save(ship3);
 
-			List<String> fourthShipLocation = new ArrayList<>();
-			fourthShipLocation.add("A7");
-			fourthShipLocation.add("A8");
-			fourthShipLocation.add("A9");
-			Ship ship4 = new Ship("Patrol Boat", gamePlayer4, fourthShipLocation);
+
+
+			Ship ship4 = new Ship("Patrol Boat", new ArrayList<>(Arrays.asList("A7", "A8", "A9")));
+			gamePlayer4.addShip((ship4));
 			shipRepository.save(ship4);
 
-			List<String> fifthShipLocation = new ArrayList<>();
-			fifthShipLocation.add("B7");
-			fifthShipLocation.add("B8");
-			fifthShipLocation.add("B9");
-			Ship ship5 = new Ship("Patrol Boat", gamePlayer5, fifthShipLocation);
+
+
+			Ship ship5 = new Ship("Patrol Boat", new ArrayList<>(Arrays.asList("B7", "B8", "B9")));
+			gamePlayer5.addShip(ship5);
 			shipRepository.save(ship5);
 
-			List<String> seventhShipLocation = new ArrayList<>();
-			seventhShipLocation.add("D7");
-			seventhShipLocation.add("D8");
-			seventhShipLocation.add("D9");
-			Ship ship7 = new Ship("Patrol Boat", gamePlayer8, seventhShipLocation);
+
+
+			Ship ship7 = new Ship("Patrol Boat",  new ArrayList<>(Arrays.asList("D7", "D8", "D9")));
+			gamePlayer8.addShip(ship7);
 			shipRepository.save(ship7);
 
 			//Salvos(turnNumber, gamePlayer, salvoLocations(List))

@@ -12,7 +12,6 @@ public class Ship {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
-
     private long id;
     private String type;
 
@@ -30,9 +29,9 @@ public class Ship {
 
     public Ship(){}
 
-    public Ship(String type, GamePlayer gamePlayer, List<String> shipLocation) {
+    public Ship(String type, List<String> shipLocation) {
         this.type = type;
-        this.gamePlayer = gamePlayer;
+
         this.shipLocation = shipLocation;
     }
 
@@ -67,7 +66,6 @@ public class Ship {
         return "Ship{" +
                 "id=" + id +
                 ", type='" + type + '\'' +
-                ", gamePlayer=" + gamePlayer +
                 ", shipLocation=" + shipLocation +
                 '}';
     }

@@ -66,5 +66,8 @@ public class GamePlayer {
     public Set<Salvo> getSalvos() {
         return salvos;
     }
-
+    public void addShip(Ship ship){
+        ship.setGamePlayer(this);
+        this.ships.add(ship);
+    }
 }
