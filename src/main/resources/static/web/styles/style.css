@@ -1,4 +1,4 @@
-	/*	body {
+/*	body {
 
 			font-family: 'Nunito Semibold';
 			text-align: center;
@@ -41,40 +41,110 @@
           background-color: rgb(0, 255, 34);
         }*/
 
+.table {
+  margin: 50px;
+  display: flex;
+  justify-content: space-around;
+}
+
+td {
+  height: 35px;
+  width: 35px;
+  border: 1px solid rgb(7, 5, 5);
+}
+
+.marked {
+  background-color: rgb(0, 255, 34);
+}
+
+.salvo {
+  background-color: red;
+}
+
+.bingoSalvo {
+  background-color: blue;
+}
+
+/* .aircraft {
+  position: absolute;
+  background-image: url('https://source.unsplash.com/random/150x150');
+  height: 25px;
+  width: 25px;
+  top: 5px;
+  left: 5px;
+  cursor: pointer;
+} */
+
+.ship {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header {
+  display: flex;
+  justify-content: space-around;
+}
+
+.header child {
+  width: 20%;
+}
+
+ .empty {
+  
+  height: 35px;
+  width: 35px;
+  border: 1px solid rgb(7, 5, 5);
+
+  background: white;
+} 
+
+.aircraft {
+  position: absolute;
+  width: 200px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.battleship {
+  position: absolute;
+  height: 40px;
+  width: 160px;
+  cursor: pointer;
+}
+
+.submarine {
+  position: absolute;
+  height: 40px;
+  width: 120px;
+  cursor: pointer;
+}
+
+.destroyer {
+  position: absolute;
+  height: 40px;
+  width: 120px;
+  cursor: pointer;
+}
+
+.patrolboat {
+  position: absolute;
+  height: 40px;
+  width: 80px;
+  cursor: pointer;
+}
+
+ .hold {
+  border: solid 5px #ccc;
+}
+
+/* .hovered {
+  background: #f4f4f4;
+  border-style: dashed;
+}  
+
+.invisible {
+  display: none;
+}*/
 
 
-	.table {
 
-		margin: 50px;
-		display: flex;
-		justify-content: space-around;
-
-	}
-
-
-	td {
-		height: 30px;
-		width: 30px;
-		border: 1px solid rgb(7, 5, 5);
-	}
-
-	.marked {
-		background-color: rgb(0, 255, 34);
-	}
-
-	.salvo {
-		background-color: red;
-	}
-
-	.bingoSalvo {
-		background-color: blue;
-	}
-
-	.header {
-		display: flex;
-		justify-content: space-around;
-	}
-
-	.header child {
-		width: 20%;
-	}

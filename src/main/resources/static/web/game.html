@@ -21,8 +21,9 @@
         <!--<div id="content"></div>-->
         <div class="table">
 
-            <div id="playerTable">
+            <div id="playerTable" class="playerTable">
                 <div id="player"></div>
+                
             </div>
             <div>vs</div>
 
@@ -30,11 +31,33 @@
                 <div id="opponent"></div>
             </div>
         </div>
-
+        <button type="button" id="sendShips" onclick="postShips()">Done</button>
     </div>
 
-
-
+    <div class="container">
+        <div id="boards" class="ships-board">
+            <div id="ship" class="ship">
+                <div>
+                    <img id="aircraft" src="img/pngwave.png" class="aircraft"  ondragstart="drag(event)" class="2 horizontal" ondblclick="vertical(this)">aircraft</div>
+                <div>
+                    <img id="battleship" src="img/pngwave.png" class="battleship" 
+                        ondragstart="drag(event)" class="3 horizontal" ondblclick="vertical(this)">battleship</div>
+                <div>
+                    <img id="submarine" src="img/pngwave.png" class="submarine" draggable="true"
+                        ondragstart="drag(event)" class="4 horizontal" ondblclick="vertical(this)">submarine</div>
+                <div>
+                    <img id="destroyer" src="img/pngwave.png" class="destroyer" draggable="true"
+                        ondragstart="drag(event)" class="5 horizontal" ondblclick="vertical(this)">destroyer</div>
+                <div>
+                    <img id="patrolboat" src="img/pngwave.png" class="patrolboat" draggable="true"
+                        ondragstart="drag(event)" class="6 horizontal" ondblclick="vertical(this)">patrolboat</div>
+            </div>
+        </div>
+    </div>
+    
+    
+        
+    
 
     <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
     <script src="game.js"></script>
