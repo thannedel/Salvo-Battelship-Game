@@ -309,34 +309,72 @@ document.addEventListener(
   console.log(splitNumber);
   console.log(firsrtCell); */
     shipType = draggableElement.className;
-
+    let previousLocations = [];
     for (i = 0; i < actualShips.length; i++) {
       if (shipType == actualShips[i].type) {
-        actualShips[i].shipLocation = [];
+        //actualShips[i].shipLocation = [];
+        let locations = [];
         for (j = 0; j < actualShips[i].length; j++) {
-          var finalShipLocations = splitLetter + (splitNumber + j);
-          if (finalShipLocations != isNaN()) {
-            actualShips[i].shipLocation.push(finalShipLocations);
+          let finalShipLocations = splitLetter + (splitNumber + j);
+          if (
+            finalShipLocations != isNaN() &&
+            splitNumber + actualShips[i].length <= 11
+          ) {
+            locations.push(finalShipLocations);
+            //actualShips[i].shipLocation.push(finalShipLocations);
           }
           /* console.log(event.target)
                   console.log(dragged) */
         }
+        previousLocations = actualShips[i].shipLocation;
+        actualShips[i].shipLocation = locations;
+        console.log(previousLocations);
         console.log(actualShips[i].shipLocation);
         event.target.style.background = "";
 
         if (
           event.target.className == "empty" &&
-          splitNumber + actualShips[i].length <= 11
+          splitNumber + actualShips[i].length <= 11 &&
+          checkShipsPositions(shipType) == false
         ) {
           dragged.parentNode.removeChild(dragged);
           event.target.appendChild(dragged);
+        } else {
+          for (i = 0; i < actualShips.length; i++) {
+            //when the ship is found
+            if (shipType == actualShips[i].type) {
+              actualShips[i].shipLocation = previousLocations;
+            }
+          }
         }
-        //console.log(actualShips[i].shipLocation)
       }
     }
 
     //myPosition = rows.indexOf(splitLetter);
-    console.log(myPosition);
+    //console.log(myPosition);
   },
   false
 );
+function checkShipsPositions(shipType) {
+  let duplicate = false;
+  for (i = 0; i < actualShips.length; i++) {
+    if (shipType == actualShips[i].type) {
+      for (p = 0; p < actualShips[i].shipLocation.length; p++) {
+        let checkedLocation = actualShips[i].shipLocation[p];
+        console.log(checkedLocation);
+        for (y = 0; y < actualShips.length; y++) {
+          if (actualShips[y].type !== shipType) {
+            if (actualShips[y].shipLocation.includes(checkedLocation)) {
+              duplicate = true;
+            }
+          }
+        }
+      }
+    }
+  }
+  if (duplicate == true) {
+    return true;
+  } else {
+    return false;
+  }
+}
