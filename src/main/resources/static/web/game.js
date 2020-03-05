@@ -116,29 +116,26 @@ function createTable(table) {
     var newRow = document.createElement("tr");
     for (y = 0; y < columns.length; y++) {
       newCell = newRow.insertCell(y);
-      
+
       if (i == 0 || y == 0) {
         newCell.innerHTML = rows[i] + columns[y];
         newRow.insertCell;
-      } 
-      else {
+      } else {
         newCell.setAttribute("id", rows[i] + columns[y]);
-        
-        
-       // newCell.setAttribute("class", "empty");
+
+        // newCell.setAttribute("class", "empty");
         newRow.insertCell;
-      
+      }
+      document.getElementById(table).appendChild(newRow);
     }
-    document.getElementById(table).appendChild(newRow);
   }
-}
 }
 
 var shipLocations = [];
 
 function markShips() {
   var cells = document.getElementById("playerTable").getElementsByTagName("td");
-  for (i = 0; i < cells.length; i++){
+  for (i = 0; i < cells.length; i++) {
     cells[i].setAttribute("class", "empty");
   }
   for (i = 0; i < games.ships.length; i++) {
@@ -153,7 +150,7 @@ function markShips() {
       cells[z].setAttribute("class", "marked");
     }
   }
-  console.log(shipLocations);
+  // console.log(shipLocations);
 }
 
 function salvos() {
@@ -233,225 +230,113 @@ function postShips() {
 }
 
 var dragged;
-function drag(ev) {
-ev.dataTransfer.setData("text/plain", ev.target.id);
+
+function drag(event) {
+  event.dataTransfer.setData("text/plain", event.target.id);
 }
 
-  /* events fired on the draggable target */
-  document.addEventListener("drag", function( event ) {
+/* events fired on the draggable target */
+document.addEventListener("drag", function(event) {}, false);
 
-  }, false);
+document.addEventListener(
+  "dragstart",
+  function(event) {
+    // store a ref. on the dragged elem
+    dragged = event.target;
+    // make it half transparent
+    event.target.style.opacity = 0.5;
+  },
+  false
+);
 
-  document.addEventListener("dragstart", function( event ) {
-      // store a ref. on the dragged elem
-      dragged = event.target;
-      // make it half transparent
-      event.target.style.opacity = .5;
-  }, false);
+document.addEventListener(
+  "dragend",
+  function(event) {
+    // reset the transparency
+    event.target.style.opacity = "";
+  },
+  false
+);
 
-  document.addEventListener("dragend", function( event ) {
-      // reset the transparency
-      event.target.style.opacity = "";
-     }, false);
+/* events fired on the drop targets */
+document.addEventListener(
+  "dragover",
+  function(event) {
+    // prevent default to allow drop
+    event.preventDefault();
+  },
+  false
+);
 
-  /* events fired on the drop targets */
-  document.addEventListener("dragover", function( event ) {
-      // prevent default to allow drop
-      event.preventDefault();
-  }, false);
+document.addEventListener(
+  "dragenter",
+  function(event) {
+    // highlight potential drop target when the draggable element enters it
 
-  document.addEventListener("dragenter", function( event ) {
-      // highlight potential drop target when the draggable element enters it
-      
-      if ( event.target.className == "empty" ) {
-          event.target.style.background = "purple";
-         }
-}, false);
+    if (event.target.className == "empty") {
+      event.target.style.background = "#f4f4f4";
+    }
+  },
+  false
+);
 
-  document.addEventListener("dragleave", function( event ) {
-      // reset background of potential drop target when the draggable element leaves it
-      if ( event.target.className == "empty" ) {
-          event.target.style.background = "";
-          }
+document.addEventListener(
+  "dragleave",
+  function(event) {
+    // reset background of potential drop target when the draggable element leaves it
+    if (event.target.className == "empty") {
+      event.target.style.background = "";
+    }
+  },
+  false
+);
 
-  }, false);
+document.addEventListener(
+  "drop",
+  function(event) {
+    // prevent default action (open as link for some elements)
+    event.preventDefault();
+    // move dragged elem to the selected drop target
+    var myPosition = "";
+    var shipType = "";
+    let data = event.dataTransfer.getData("text");
+    let draggableElement = document.getElementById(data);
 
+    var firsrtCell = event.target.id;
+    var splitNumber = parseInt(event.target.id.slice(1));
+    var splitLetter = event.target.id.slice(0, 1);
+    /* console.log(splitLetter);
+  console.log(splitNumber);
+  console.log(firsrtCell); */
+    shipType = draggableElement.className;
 
-  document.addEventListener("drop", function( event ) {
-      // prevent default action (open as link for some elements)
-      event.preventDefault();
-      // move dragged elem to the selected drop target
-     
-      if ( event.target.className == "empty" ) {
-          event.target.style.background = "";
-          dragged.parentNode.removeChild( dragged );
-          event.target.appendChild( dragged );
-          }
-
-          var myPosition = "";
-          var shipType = "";
-          let data = event.dataTransfer.getData("text");
-          let draggableElement = document.getElementById(data);
-          
-          
-          
-          var firsrtCell = event.target.id;
-          var splitNumber = parseInt(event.target.id.slice(1));
-          var splitLetter = event.target.id.slice(0,1);
-          console.log(splitLetter);
-          console.log(splitNumber);
-          shipType = draggableElement.className;
-          
-          //console.log(firsrtCell)
-          //myPosition = rows.indexOf(splitLetter);
-          
-          console.log(myPosition);
-        for(i=0; i<actualShips.length; i++){
-          if(shipType == actualShips[i].type){
-            for(j=0; j<actualShips[i].length; j++){
+    for (i = 0; i < actualShips.length; i++) {
+      if (shipType == actualShips[i].type) {
+        actualShips[i].shipLocation = [];
+        for (j = 0; j < actualShips[i].length; j++) {
           var finalShipLocations = splitLetter + (splitNumber + j);
-
-          
+          if (finalShipLocations != isNaN()) {
             actualShips[i].shipLocation.push(finalShipLocations);
-            }
-          console.log(actualShips[i].shipLocation);
-          
+          }
+          /* console.log(event.target)
+                  console.log(dragged) */
         }
+        console.log(actualShips[i].shipLocation);
+        event.target.style.background = "";
+
+        if (
+          event.target.className == "empty" &&
+          splitNumber + actualShips[i].length <= 11
+        ) {
+          dragged.parentNode.removeChild(dragged);
+          event.target.appendChild(dragged);
+        }
+        //console.log(actualShips[i].shipLocation)
       }
-      console.log(actualShips);
-  }, false);
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* function bingoSalvos(shipLocations) {
-  var cells = document
-    .getElementById("opponentTable")
-    .getElementsByTagName("td");
-  var opponentSalvo = [];
-  var opponents = games.opponents.opponentSalvos;
-  for (i = 0; i < opponents.length; i++) {
-    for (y = 0; y < opponents[i].locations.length; y++) {
-      opponentSalvo.push(opponents[i].locations[y]);
     }
-  }
-  console.log(opponents[0].locations.length);
-  console.log(opponentSalvo);
-  console.log(shipLocations);
-  const objMap = {};
 
-  opponentSalvo.forEach(e1 =>
-    shipLocations.forEach(e2 => {
-      if (e1 === e2) {
-        objMap[e1] = objMap[e1] + 1 || 1;
-      }
-    })
-  );
-  var hit = Object.keys(objMap).map(e => String(e));
-  console.log(hit);
-  var cells = document.getElementById("playerTable").getElementsByTagName("td");
-
-  for (z = 0; z < cells.length; z++) {
-    if (hit == cells[z].id) {
-      cells[z].setAttribute("class", "bingoSalvo");
-    }
-  }
-} */
-
-/*gridBoard();
-function gridBoard() {
-  var gridNumbers = ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-  var gridLetters = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-
-  for (var i = 0; i < gridLetters.length; i++) {
-    for (var j = 0; j < gridNumbers.length; j++) {
-
-      let card = document.createElement("div");
-      if(i==0||j==0){
-     card.innerHTML = `${gridLetters[i] + gridNumbers[j]} `;
-     }else
-     {
-                  card.setAttribute("id", gridLetters[i] + gridNumbers[j]);
-                  card.setAttribute("class", "content");
-                card.innerHTML;
-                }
-      playerTable.appendChild(card);
-    }
-  }
-}*/
-
-/*gridBoard();
-function gridBoard(){
-var numbers = ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-
-for (var i = 0; i<numbers.length; i++){
-let lettersRow = document.createElement("div");
-lettersRow.innerHTML = `${numbers[i]}`;
-playerTable.appendChild(lettersRow);
-
-}
-for (var i = 0; i < letters.length; i++) {
-    for (var j = 0; j < numbers.length; j++) {
-
-      let card = document.createElement("div");
-      if( j==0){
-     card.innerHTML = `${letters[i] + numbers[j]} `;
-     }else
-     {
-                  card.setAttribute("id", letters[i] + numbers[j]);
-                  card.setAttribute("class", "content");
-                card.innerHTML;
-                }
-      playerTable.appendChild(card);
-
-    }
-  }
-}
-
-
-gridBoard2();
-function gridBoard2(){
-var numbers = ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-
-for (var i = 0; i<numbers.length; i++){
-let lettersRow = document.createElement("div");
-lettersRow.innerHTML = `${numbers[i]}`;
-opponentTable.appendChild(lettersRow);
-}
-for (var i = 0; i < letters.length; i++) {
-    for (var j = 0; j < numbers.length; j++) {
-
-      let card = document.createElement("div");
-      if( j==0){
-     card.innerHTML = `${letters[i] + numbers[j]} `;
-     }else
-     {
-                  card.setAttribute("id", letters[i] + numbers[j]);
-                  card.setAttribute("class", "content");
-                card.innerHTML;
-                }
-      opponentTable.appendChild(card);
-    }
-  }
-}*/
+    //myPosition = rows.indexOf(splitLetter);
+    console.log(myPosition);
+  },
+  false
+);

@@ -47,11 +47,11 @@
   justify-content: space-around;
 }
 
-td {
+/* td {
   height: 35px;
   width: 35px;
   border: 1px solid rgb(7, 5, 5);
-}
+} */
 
 .marked {
   background-color: rgb(0, 255, 34);
@@ -89,14 +89,15 @@ td {
   width: 20%;
 }
 
- .empty {
-  
-  height: 35px;
-  width: 35px;
+td,
+.empty {
+
+  height: 40px;
+  width: 40px;
   border: 1px solid rgb(7, 5, 5);
 
   background: white;
-} 
+}
 
 .aircraft {
   position: absolute;
@@ -133,9 +134,11 @@ td {
   cursor: pointer;
 }
 
- .hold {
+.hold {
   border: solid 5px #ccc;
 }
+
+
 
 /* .hovered {
   background: #f4f4f4;
@@ -145,6 +148,3 @@ td {
 .invisible {
   display: none;
 }*/
-
-
-
