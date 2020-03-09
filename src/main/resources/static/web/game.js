@@ -3,29 +3,34 @@ var url = window.location.href;
 var key_url;
 var actualShips = [
   {
-    type: "aircraft",
+    type: "aircraft horizontal",
     shipLocation: [],
-    length: 5
+    length: 5,
+    position: "horizontal"
   },
   {
-    type: "battleship",
+    type: "battleship horizontal",
     shipLocation: [],
-    length: 4
+    length: 4,
+    position: "horizontal"
   },
   {
-    type: "submarine",
+    type: "submarine horizontal",
     shipLocation: [],
-    length: 3
+    length: 3,
+    position: "horizontal"
   },
   {
-    type: "destroyer",
+    type: "destroyer horizontal",
     shipLocation: [],
-    length: 3
+    length: 3,
+    position: "horizontal"
   },
   {
-    type: "patrolboat",
+    type: "patrolboat horizontal",
     shipLocation: [],
-    length: 2
+    length: 2,
+    position: "horizontal"
   }
 ];
 paramObj(url);
@@ -297,61 +302,60 @@ document.addEventListener(
     // prevent default action (open as link for some elements)
     event.preventDefault();
     // move dragged elem to the selected drop target
-    var myPosition = "";
+    let indexOfLetter = "";
     var shipType = "";
     let data = event.dataTransfer.getData("text");
     let draggableElement = document.getElementById(data);
 
-    var firsrtCell = event.target.id;
+    //var firsrtCell = event.target.id;
     var splitNumber = parseInt(event.target.id.slice(1));
     var splitLetter = event.target.id.slice(0, 1);
-    /* console.log(splitLetter);
-  console.log(splitNumber);
+
+    /*console.log(splitNumber);
   console.log(firsrtCell); */
     shipType = draggableElement.className;
     let previousLocations = [];
+    console.log(shipType);
     for (i = 0; i < actualShips.length; i++) {
       if (shipType == actualShips[i].type) {
-        //actualShips[i].shipLocation = [];
-        let locations = [];
-        for (j = 0; j < actualShips[i].length; j++) {
-          let finalShipLocations = splitLetter + (splitNumber + j);
-          if (
-            finalShipLocations != isNaN() &&
-            splitNumber + actualShips[i].length <= 11
-          ) {
-            locations.push(finalShipLocations);
-            //actualShips[i].shipLocation.push(finalShipLocations);
+        if (actualShips[i].position == "horizontal") {
+          let locations = [];
+          for (j = 0; j < actualShips[i].length; j++) {
+            let finalShipLocations = splitLetter + (splitNumber + j);
+            if (
+              finalShipLocations != isNaN() &&
+              splitNumber + actualShips[i].length <= 11
+            ) {
+              locations.push(finalShipLocations);
+              //actualShips[i].shipLocation.push(finalShipLocations);
+            }
+            /* console.log(event.target)
+                        console.log(dragged) */
           }
-          /* console.log(event.target)
-                  console.log(dragged) */
-        }
-        previousLocations = actualShips[i].shipLocation;
-        actualShips[i].shipLocation = locations;
-        console.log(previousLocations);
-        console.log(actualShips[i].shipLocation);
-        event.target.style.background = "";
+          previousLocations = actualShips[i].shipLocation;
+          actualShips[i].shipLocation = locations;
+          console.log(previousLocations);
+          console.log(actualShips[i].shipLocation);
+          event.target.style.background = "";
 
-        if (
-          event.target.className == "empty" &&
-          splitNumber + actualShips[i].length <= 11 &&
-          checkShipsPositions(shipType) == false
-        ) {
-          dragged.parentNode.removeChild(dragged);
-          event.target.appendChild(dragged);
-        } else {
-          for (i = 0; i < actualShips.length; i++) {
-            //when the ship is found
-            if (shipType == actualShips[i].type) {
-              actualShips[i].shipLocation = previousLocations;
+          if (
+            event.target.className == "empty" &&
+            splitNumber + actualShips[i].length <= 11 &&
+            checkShipsPositions(shipType) == false
+          ) {
+            dragged.parentNode.removeChild(dragged);
+            event.target.appendChild(dragged);
+          } else {
+            for (i = 0; i < actualShips.length; i++) {
+              //when the ship is found
+              if (shipType == actualShips[i].type) {
+                actualShips[i].shipLocation = previousLocations;
+              }
             }
           }
         }
       }
     }
-
-    //myPosition = rows.indexOf(splitLetter);
-    //console.log(myPosition);
   },
   false
 );
@@ -377,4 +381,55 @@ function checkShipsPositions(shipType) {
   } else {
     return false;
   }
+}
+function vertical(element) {
+  var shipType = element.getAttribute("id");
+  console.log(shipType);
+  if (element.classList.contains("horizontal")) {
+    element.classList.remove("horizontal");
+    element.classList.add("vertical");
+  } else if (element.classList.contains("vertical")) {
+    element.classList.remove("vertical");
+    element.classList.add("horizontal");
+  }
+  /*  for (i = 0; i < actualShips.length; i++) {
+    if (shipType == actualShips[i].type) {
+      
+      
+      let locations = [];
+      indexOfLetter = rows.indexOf(splitLetter);
+      console.log(myPosition);
+      for (j = 0; j < actualShips[i].length; j++) {
+        let finalShipLocations = splitLetter + j + splitNumber;
+        if (
+          finalShipLocations != isNaN() &&
+          splitNumber + indexOfLetter <= 11
+        ) {
+          locations.push(finalShipLocations);
+          //actualShips[i].shipLocation.push(finalShipLocations);
+        }
+      }
+      previousLocations = actualShips[i].shipLocation;
+      actualShips[i].shipLocation = locations;
+      console.log(previousLocations);
+      console.log(actualShips[i].shipLocation);
+      event.target.style.background = "";
+
+      if (
+        event.target.className == "empty" &&
+        splitNumber + actualShips[i].length <= 11 &&
+        checkShipsPositions(shipType) == false
+      ) {
+        dragged.parentNode.removeChild(dragged);
+        event.target.appendChild(dragged);
+      } else {
+        for (i = 0; i < actualShips.length; i++) {
+          //when the ship is found
+          if (shipType == actualShips[i].type) {
+            actualShips[i].shipLocation = previousLocations;
+          }
+        }
+      }
+    }
+  } */
 }

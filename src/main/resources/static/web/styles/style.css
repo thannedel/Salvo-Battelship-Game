@@ -91,9 +91,8 @@
 
 td,
 .empty {
-
-  height: 40px;
-  width: 40px;
+  height: 35px;
+  width: 35px;
   border: 1px solid rgb(7, 5, 5);
 
   background: white;
@@ -101,44 +100,42 @@ td,
 
 .aircraft {
   position: absolute;
-  width: 200px;
-  height: 40px;
+  width: 175px;
+  height: 35px;
   cursor: pointer;
 }
 
 .battleship {
   position: absolute;
-  height: 40px;
-  width: 160px;
+  height: 35px;
+  width: 140px;
   cursor: pointer;
 }
 
 .submarine {
   position: absolute;
-  height: 40px;
-  width: 120px;
+  height: 35px;
+  width: 105px;
   cursor: pointer;
 }
 
 .destroyer {
   position: absolute;
-  height: 40px;
-  width: 120px;
+  height: 35px;
+  width: 105px;
   cursor: pointer;
 }
 
 .patrolboat {
   position: absolute;
-  height: 40px;
-  width: 80px;
+  height: 35px;
+  width: 70px;
   cursor: pointer;
 }
 
-.hold {
+/* .hold {
   border: solid 5px #ccc;
-}
-
-
+} */
 
 /* .hovered {
   background: #f4f4f4;
@@ -148,3 +145,11 @@ td,
 .invisible {
   display: none;
 }*/
+
+.vertical {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
