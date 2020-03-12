@@ -70,4 +70,19 @@ public class GamePlayer {
         ship.setGamePlayer(this);
         this.ships.add(ship);
     }
+    public void addSalvo(Salvo salvo){
+        salvo.setGamePlayer(this);
+        this.salvos.add(salvo);
+    }
+
+    public Integer getLastTurn() {
+        if(!this.getSalvos().isEmpty()){
+            return this.getSalvos().stream()
+                    .map(salvo1 ->salvo1.getTurnNumber() )
+                    .max((x,y)->Integer.compare(x,y))
+                    .get();
+        }else {
+            return 0;
+        }
+    }
 }
