@@ -1,7 +1,8 @@
 //site = "'http://localhost:8080/api/game_view/1";
 var url = window.location.href;
 var key_url;
-var actualShips = [{
+var actualShips = [
+  {
     type: "aircraft horizontal",
     shipLocation: [],
     length: 5,
@@ -39,7 +40,7 @@ function paramObj(search) {
   var obj = {};
   var reg = /(?:[?&]([^?&#=]+)(?:=([^&#]*))?)(?:#.*)?/g;
 
-  search.replace(reg, function (match, param, val) {
+  search.replace(reg, function(match, param, val) {
     obj[decodeURIComponent(param)] =
       val === undefined ? "" : decodeURIComponent(val);
   });
@@ -48,7 +49,7 @@ function paramObj(search) {
 }
 
 function loadJsonData(param) {
-  $.getJSON("/api/game_view/" + param, function (data_json) {
+  $.getJSON("/api/game_view/" + param, function(data_json) {
     var data = data_json;
   });
 }
@@ -56,9 +57,9 @@ function loadJsonData(param) {
 function fetching(param) {
   site = "/api/game_view/" + param;
   var fetchConfig = fetch(this.site, {
-      method: "GET"
-    })
-    .then(function (res) {
+    method: "GET"
+  })
+    .then(function(res) {
       console.log(res.status);
       if (res.status == 403) {
         alert("Not allowed to view opponents game");
@@ -66,7 +67,7 @@ function fetching(param) {
       }
       return res.json();
     })
-    .then(function (json) {
+    .then(function(json) {
       data = json;
       games = data;
       ships = data.ships;
@@ -77,13 +78,14 @@ function fetching(param) {
       //gridBoard();
       markShips();
       checkPlayer(param);
-      salvos();
+      crosshair();
+      playerSalvos();
       bingoSalvos(shipLocations);
       console.log("param in get", param);
       //postShips(param)
       console.log(games);
     })
-    .catch(function (error) {
+    .catch(function(error) {
       console.log(error);
     });
 }
@@ -125,8 +127,9 @@ function createTable(table) {
         newCell.innerHTML = rows[i] + columns[y];
         newRow.insertCell;
       } else {
-        newCell.setAttribute("id", rows[i] + columns[y]);
-
+        cellId = rows[i] + columns[y];
+        newCell.setAttribute("id", cellId);
+        newCell.setAttribute("onclick", "salvos(this)");
         // newCell.setAttribute("class", "empty");
         newRow.insertCell;
       }
@@ -156,8 +159,55 @@ function markShips() {
   }
   // console.log(shipLocations);
 }
+/* var salvoLocations = [{
+  player_id: "",
+  turn:"",
+  locations:[],
+}]; */
 
-function salvos() {
+function crosshair() {
+  let cells = document
+    .getElementById("opponentTable")
+    .getElementsByTagName("td");
+  for (i = 0; i < cells.length; i++) {
+    cells[i].setAttribute("class", "crosshair");
+  }
+}
+var salvoLocations = [];
+function salvos(element) {
+  cellsId = element.getAttribute("id");
+  console.log(cellsId);
+  var cells = document
+    .getElementById("opponentTable")
+    .getElementsByTagName("td");
+
+  if (element.classList.contains("salvo")) {
+    element.classList.remove("salvo");
+    element.classList.add("crosshair");
+  } else if (element.classList.contains("crosshair")) {
+    element.classList.remove("crosshair");
+    element.classList.add("salvo");
+  }
+  salvoLocations = [];
+  for (i = 0; i < cells.length; i++) {
+    if (cells[i].classList.contains("salvo")) {
+      salvoLocations.push(cells[i].id);
+    }
+  }
+  console.log(salvoLocations);
+  /* for (i = 0; i < salvoLocations.length; i++) {
+
+    for (z = 0; z < cells.length; z++) {
+
+      if (salvoLocations[i] == cells[z].id) {
+        //cells[z].innerHTML = games.salvos[i].turn;
+        cells[z].setAttribute("class", "salvo");
+      }
+    }
+  } */
+}
+
+function playerSalvos() {
   var cells = document
     .getElementById("opponentTable")
     .getElementsByTagName("td");
@@ -175,12 +225,48 @@ function salvos() {
   }
 }
 
+function postSalvos() {
+  let param = paramObj(url);
+  console.log("param in post salvos", param);
+  console.log(salvoLocations);
+  if (salvoLocations.length == 5) {
+    let salvoData = {
+      turnNumber: "",
+      salvoLocation: salvoLocations
+    };
+    fetch("/api/games/players/" + param + "/salvos", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(salvoData)
+    })
+      .then(response => {
+        if (response.status == 201) {
+          return response.json();
+        }
+      })
+      .then(data => {
+        console.log(data);
+
+        window.location.reload();
+      })
+      .catch(error => {
+        console.log("Request failure: ", error);
+      });
+  } else {
+    alert("You have more Salvos to shoot");
+  }
+}
+
 function bingoSalvos() {
   var cells = document.getElementById("playerTable").getElementsByTagName("td");
   var opponents = games.opponents.opponentSalvos;
   console.log(
     Object.entries(games.opponents).length === 0 &&
-    games.opponents.constructor === Object
+      games.opponents.constructor === Object
   );
   let noOpponent =
     Object.entries(games.opponents).length === 0 &&
@@ -207,17 +293,17 @@ function bingoSalvos() {
 function postShips() {
   let param = paramObj(url);
   console.log("param in post ships", param);
-  console.log(actualShips)
+  console.log(actualShips);
   if (actualShips.length == 5) {
     fetch("/api/games/players/" + param + "/ships", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(actualShips)
-      })
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(actualShips)
+    })
       .then(response => {
         if (response.status == 201) {
           return response.json();
@@ -227,7 +313,8 @@ function postShips() {
       })
       .then(data => {
         //console.log(data)
-        //window.location.reload();
+        window.location.reload();
+        //alert("Your ships are successfully placed!");
       });
   } else {
     alert("Place the rest of the ships!");
@@ -241,11 +328,11 @@ function drag(event) {
 }
 
 /* events fired on the draggable target */
-document.addEventListener("drag", function (event) {}, false);
+document.addEventListener("drag", function(event) {}, false);
 
 document.addEventListener(
   "dragstart",
-  function (event) {
+  function(event) {
     // store a ref. on the dragged elem
     dragged = event.target;
     // make it half transparent
@@ -256,7 +343,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragend",
-  function (event) {
+  function(event) {
     // reset the transparency
     event.target.style.opacity = "";
   },
@@ -266,7 +353,7 @@ document.addEventListener(
 /* events fired on the drop targets */
 document.addEventListener(
   "dragover",
-  function (event) {
+  function(event) {
     // prevent default to allow drop
     event.preventDefault();
   },
@@ -275,7 +362,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragenter",
-  function (event) {
+  function(event) {
     // highlight potential drop target when the draggable element enters it
 
     if (event.target.className == "empty") {
@@ -287,7 +374,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragleave",
-  function (event) {
+  function(event) {
     // reset background of potential drop target when the draggable element leaves it
     if (event.target.className == "empty") {
       event.target.style.background = "";
@@ -298,8 +385,8 @@ document.addEventListener(
 
 document.addEventListener(
   "drop",
-  function (event) {
-    console.log("dropping")
+  function(event) {
+    console.log("dropping");
     // prevent default action (open as link for some elements)
     event.preventDefault();
     // move dragged elem to the selected drop target
@@ -318,47 +405,45 @@ document.addEventListener(
     shipType = draggableElement.className;
     let previousLocations = [];
     console.log(shipType);
+
     for (i = 0; i < actualShips.length; i++) {
       if (shipType == actualShips[i].type) {
         let position = actualShips[i].position;
-        if (draggableElement.classList.contains("horizontal")) {
 
-          console.log(draggableElement.classList);
-          let locations = [];
-          for (j = 0; j < actualShips[i].length; j++) {
-            let finalShipLocations = splitLetter + (splitNumber + j);
-            if (
-              finalShipLocations != isNaN() &&
-              splitNumber + actualShips[i].length <= 11
-            ) {
-              locations.push(finalShipLocations);
-              //actualShips[i].shipLocation.push(finalShipLocations);
-            }
-            console.log(event.target)
-            console.log(dragged)
-          }
-          previousLocations = actualShips[i].shipLocation;
-          actualShips[i].shipLocation = locations;
-          console.log(previousLocations);
-          console.log(actualShips[i].shipLocation);
-          event.target.style.background = "";
-
+        console.log(draggableElement.classList);
+        let locations = [];
+        for (j = 0; j < actualShips[i].length; j++) {
+          let finalShipLocations = splitLetter + (splitNumber + j);
           if (
-            event.target.className == "empty" &&
-            splitNumber + actualShips[i].length <= 11 &&
-            checkShipsPositions(shipType) == false
+            finalShipLocations != isNaN() &&
+            splitNumber + actualShips[i].length <= 11
           ) {
-            dragged.parentNode.removeChild(dragged);
-            event.target.appendChild(dragged);
-          } else {
-            for (i = 0; i < actualShips.length; i++) {
-              //when the ship is found
-              if (shipType == actualShips[i].type) {
-                actualShips[i].shipLocation = previousLocations;
-              }
+            locations.push(finalShipLocations);
+            //actualShips[i].shipLocation.push(finalShipLocations);
+          }
+          console.log(event.target);
+          console.log(dragged);
+        }
+        previousLocations = actualShips[i].shipLocation;
+        actualShips[i].shipLocation = locations;
+        console.log(previousLocations);
+        console.log(actualShips[i].shipLocation);
+        event.target.style.background = "";
+
+        if (
+          event.target.className == "empty" &&
+          splitNumber + actualShips[i].length <= 11 &&
+          checkShipsPositions(shipType) == false
+        ) {
+          dragged.parentNode.removeChild(dragged);
+          event.target.appendChild(dragged);
+        } else {
+          for (i = 0; i < actualShips.length; i++) {
+            //when the ship is found
+            if (shipType == actualShips[i].type) {
+              actualShips[i].shipLocation = previousLocations;
             }
           }
-
         }
       }
     }
@@ -390,21 +475,18 @@ function checkShipsPositions(shipType) {
   }
 }
 
-function vertical(element) {
+/* function vertical(element) {
   var shipType = element.getAttribute("class");
   console.log(shipType);
-  if (element.classList.contains("horizontal")) {
-    element.classList.remove("horizontal");
-    element.classList.add("vertical");
-  } else if (element.classList.contains("vertical")) {
+  //if (element.classList.contains("horizontal")) {
+    //element.classList.remove("horizontal");
+    //element.classList.add("vertical");} 
+  if (element.classList.contains("vertical")) {
     element.classList.remove("vertical");
     element.classList.add("horizontal");
   }
-  if (element.classList.contains("vertical")) {
-
+  {
     let locations = [];
-
-
 
     for (i = 0; i < actualShips.length; i++) {
       let ship = actualShips[i];
@@ -417,16 +499,23 @@ function vertical(element) {
         let letterInCharCode = letter.charCodeAt();
 
         for (j = 0; j < actualShips[i].length; j++) {
-          let finalShipLocations = String.fromCharCode(letterInCharCode + j) + number;
+          let finalShipLocations =
+            String.fromCharCode(letterInCharCode + j) + number;
+          if (
+            indexOfLetter + actualShips[i].length <= 11 &&
+            element.classList.contains("horizontal")
+          ) {
+            element.classList.remove("horizontal");
+            element.classList.add("vertical");
+          }
           if (
             finalShipLocations != isNaN() &&
             indexOfLetter + actualShips[i].length <= 11
           ) {
             locations.push(finalShipLocations);
+
             //actualShips[i].shipLocation.push(finalShipLocations);
           }
-          /* console.log(event.target)
-          console.log(dragged) */
         }
         previousLocations = actualShips[i].shipLocation;
         actualShips[i].shipLocation = locations;
@@ -434,23 +523,23 @@ function vertical(element) {
         //console.log(actualShips[i].shipLocation);
         event.target.style.background = "";
         // console.log(checkShipsPositions(shipType))
-        console.log(indexOfLetter)
-        console.log(actualShips[i].length)
-        // console.log(event.target.className)
-        if (indexOfLetter + actualShips[i].length >= 11 ||
+        console.log(indexOfLetter);
+        console.log(actualShips[i].length);
+
+        if (
+          indexOfLetter + actualShips[i].length >= 11 ||
           checkShipsPositions(shipType) == true
         ) {
-          console.log("here")
+          element.classList.remove("vertical");
+          element.classList.add("horizontal");
           for (i = 0; i < actualShips.length; i++) {
             //when the ship is found
             if (shipType == actualShips[i].type) {
               actualShips[i].shipLocation = previousLocations;
-
             }
           }
-
         }
       }
     }
   }
-}
+}  */

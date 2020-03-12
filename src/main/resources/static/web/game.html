@@ -2,79 +2,86 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="styles/style.css">
-    <title>Ship Locations!</title>
+  <meta charset="UTF-8" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/style.css" />
+  <title>Ship Locations!</title>
 </head>
 
 <body>
-    <h3>Ship Locations!</h3>
+  <h3>Ship Locations!</h3>
 
-
-    <div id="app" class="backgroundColor">
-        <!-- <div class="header">
+  <div id="app" class="backgroundColor">
+    <!-- <div class="header">
             <div id=player></div>
             <div>vs</div>
             <div id="opponent"></div>
         </div>-->
-        <!--<div id="content"></div>-->
-        <div class="table">
+    <!--<div id="content"></div>-->
+    <div class="table">
+      <div id="playerTable" class="playerTable">
+        <div id="player"></div>
+      </div>
+      <div>vs</div>
 
-            <div id="playerTable" class="playerTable">
-                <div id="player"></div>
-
-            </div>
-            <div>vs</div>
-
-            <div id="opponentTable">
-                <div id="opponent"></div>
-            </div>
-        </div>
-        <button type="button" id="sendShips" onclick="postShips()">Done</button>
+      <div id="opponentTable">
+        <div id="opponent"></div>
+      </div>
     </div>
-
-    <div class="container">
-        <div id="boards" class="ships-board">
-            <div id="ship" class="ship">
-                <div>
-                    <img id="aircraft" src="img/aircraft.png" class="aircraft horizontal" ondragstart="drag(event)"
-                        ondblclick="vertical(this)">aircraft</div>
-                <div>
-                    <img id="battleship" src="img/battleship.png" class="battleship horizontal"
-                        ondragstart="drag(event)" ondblclick="vertical(this)">battleship</div>
-                <div>
-                    <img id="submarine" src="img/submarine.png" class="submarine horizontal" draggable="true"
-                        ondragstart="drag(event)" ondblclick="vertical(this)">submarine</div>
-                <div>
-                    <img id="destroyer" src="img/destroyer.png" class="destroyer horizontal" draggable="true"
-                        ondragstart="drag(event)" ondblclick="vertical(this)">destroyer</div>
-                <div>
-                    <img id="patrolboat" src="img/patrol.png" class="patrolboat horizontal" draggable="true"
-                        ondragstart="drag(event)" ondblclick="vertical(this)">patrolboat</div>
-            </div>
-        </div>
+    <button type="button" id="sendShips" onclick="postShips()">Done</button>
+  </div>
+  <div class="container">
+    <button type="button" id="sendSalvos" onclick="postSalvos()">
+      Salvo
+    </button>
+  </div>
+  <div class="ship">
+    <div>
+      <img id="aircraft" src="img/aircraft.png" class="aircraft horizontal" draggable="true" ondragstart="drag(event)"
+        ondblclick="vertical(this)" />aircraft
     </div>
+    <div>
+      <img id="battleship" src="img/battleship.png" class="battleship horizontal" ondragstart="drag(event)"
+        ondblclick="vertical(this)" />battleship
+    </div>
+    <div>
+      <img id="submarine" src="img/submarine.png" class="submarine horizontal" draggable="true"
+        ondragstart="drag(event)" ondblclick="vertical(this)" />submarine
+    </div>
+    <div>
+      <img id="destroyer" src="img/destroyer.png" class="destroyer horizontal" draggable="true"
+        ondragstart="drag(event)" ondblclick="vertical(this)" />destroyer
+    </div>
+    <div>
+      <img id="patrolboat" src="img/patrol.png" class="patrolboat horizontal" draggable="true" ondragstart="drag(event)"
+        ondblclick="vertical(this)" />patrolboat
+    </div>
+  </div>
+  <div class="background">
+    <div class="water"></div>
+  </div>
+  <svg>
+    <filter id="turbulence" x="0" y="0" width="100%" height="100%">
+      <feTurbulence id="sea-filter" numOctaves="3" seed="2" baseFrequency="0.02 0.05"></feTurbulence>
+      <feDisplacementMap scale="20" in="SourceGraphic"></feDisplacementMap>
+      <animate xlink:href="#sea-filter" attributeName="baseFrequency" dur="60s" keyTimes="0;0.5;1"
+        values="0.02 0.06;0.04 0.08;0.02 0.06" repeatCount="indefinite" />
+    </filter>
+  </svg>
 
-
-
-
-
-    <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
-    <script src="game.js"></script>
+  <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+  <script src="game.js"></script>
 </body>
 
 </html>
 <!--<!DOCTYPE HTML>
 <html lang="en">
 <link rel="stylesheet" href="styles/style.css">
-
-
 <head>
     <title>Game View</title>
-
 </head>
-
 <body>
 <div id="app" class="backgroundColor">
     <div class="header">
@@ -89,5 +96,4 @@
 </div>
 <script src="game.js"></script>
 </body>
-
 </html>-->

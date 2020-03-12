@@ -1,45 +1,13 @@
-/*	body {
+html {
+  font: normal 16px sans-serif;
+  color: #fff;
+}
 
-			font-family: 'Nunito Semibold';
-			text-align: center;
-
-		}
-          .table{
-            display:flex;
-            justify-content: space-around;
-            }
-
-
-		#playerTable,#opponentTable {
-			display: grid;
-
-			grid-template-columns: repeat(11, 1fr);
-			 max-width: 960 px;
-			margin: 0 auto;
-		}
-
-		#playerTable div,#opponentTable div {
-			background: #3bbced;
-			padding: 30px;
-
-		}
-
-		#playerTable div:nth-child(even),#opponentTable div:nth-child(even){
-			background: #777;
-			padding: 30px;
-		}
-		.header {
-          display: flex;
-          justify-content: space-around;
-        }
-
-        .header child {
-          width: 20%;
-        }
-
-        .marked {
-          background-color: rgb(0, 255, 34);
-        }*/
+body {
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+}
 
 .table {
   margin: 50px;
@@ -93,9 +61,9 @@ td,
 .empty {
   height: 35px;
   width: 35px;
-  border: 1px solid rgb(7, 5, 5);
+  border: 1px solid rgba(15, 31, 122, 0.342);
 
-  background: white;
+  background-color: rgba(241, 186, 7, 0.685);
 }
 
 .aircraft {
@@ -141,7 +109,6 @@ td,
   background: #f4f4f4;
   border-style: dashed;
 }  
-
 .invisible {
   display: none;
 }*/
@@ -152,4 +119,34 @@ td,
   -ms-transform: rotate(90deg);
   -o-transform: rotate(90deg);
   transform: rotate(90deg);
+}
+
+.crosshair {
+  background-color: rgba(153, 205, 50, 0.233);
+
+  cursor: url(../img/targetres.png), auto;
+}
+
+.background {
+  position: absolute;
+  z-index: -100;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-image: url("../img/sea.jpg");
+  background-size: cover;
+}
+
+.background .water {
+  position: absolute;
+  background-image: url("../img/sea.jpg");
+  background-size: cover;
+  z-index: -99;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  filter: url("#turbulence");
 }

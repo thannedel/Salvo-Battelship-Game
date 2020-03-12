@@ -28,9 +28,8 @@ public class Salvo {
 
     public Salvo() {}
 
-    public Salvo(Integer turnNumber, GamePlayer gamePlayer, List<String> salvoLocation) {
+    public Salvo(Integer turnNumber, List<String> salvoLocation) {
         this.turnNumber = turnNumber;
-        this.gamePlayer = gamePlayer;
         this.salvoLocation = salvoLocation;
     }
 

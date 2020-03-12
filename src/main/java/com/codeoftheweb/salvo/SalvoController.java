@@ -303,7 +303,29 @@ public class SalvoController {
         }
     }
 
+    @RequestMapping(path = "/games/players/{gamePlayerId}/salvos", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> placeSalvoes(@PathVariable long gamePlayerId, @RequestBody Salvo salvo, Authentication authentication) {
+        Player player = playerRepository.findByUsername(authentication.getName());
+        GamePlayer currentGamePlayer = gamePlayerRepository.getOne(gamePlayerId);
+        //there is no current user logged in, or there is no game player with the given ID, or
+        // the current user is not the game player the ID references
+
+
+        if (isGuest(authentication) || currentGamePlayer == null || !currentGamePlayer.getPlayer().equals(player)) {
+            return new ResponseEntity<>(makeMap("error", "action not allowed"), HttpStatus.UNAUTHORIZED);
+        } else if (salvo.getSalvoLocation().size() != 5) {
+            return new ResponseEntity<>(makeMap("error", "you need 5 salvo locations"), HttpStatus.FORBIDDEN);
+        } else {
+            salvo.setGamePlayer(currentGamePlayer);
+            salvo.setTurnNumber(currentGamePlayer.getLastTurn() + 1);
+            currentGamePlayer.addSalvo(salvo);
+            salvoRepository.save(salvo);
+            System.out.println(salvo);
+            return new ResponseEntity<>(makeMap("success", "added salvo"), HttpStatus.CREATED);
+        }
+    }
 }
+
 
 
 

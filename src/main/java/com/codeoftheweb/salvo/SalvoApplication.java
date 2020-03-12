@@ -123,52 +123,43 @@ public class SalvoApplication {
 			shipRepository.save(ship7);
 
 			//Salvos(turnNumber, gamePlayer, salvoLocations(List))
-			List<String> salvoLocation1 = new ArrayList<>();
-			salvoLocation1.add("H1");
-			salvoLocation1.add("A9");
-			Salvo salvo1 = new Salvo(1, gamePlayer1, salvoLocation1);
+
+			Salvo salvo1 = new Salvo(1, new ArrayList<>(Arrays.asList("H1","A9")));
+			gamePlayer1.addSalvo(salvo1);
 			salvoRepository.save(salvo1);
 
-			List<String> salvoLocation2 = new ArrayList<>();
-			salvoLocation2.add("J5");
-			salvoLocation2.add("A8");
-			Salvo salvo2 = new Salvo(2, gamePlayer1, salvoLocation2);
+
+			Salvo salvo2 = new Salvo(2, new ArrayList<>(Arrays.asList("J5","A8")));
+			gamePlayer1.addSalvo(salvo2);
 			salvoRepository.save(salvo2);
 
-			List<String> salvoLocation3 = new ArrayList<>();
-			salvoLocation3.add("J5");
-			salvoLocation3.add("H4");
-			Salvo salvo3 = new Salvo(3, gamePlayer2, salvoLocation3);
+
+			Salvo salvo3 = new Salvo(3, new ArrayList<>(Arrays.asList("J5","H4")));
+			gamePlayer2.addSalvo(salvo3);
 			salvoRepository.save(salvo3);
 
-			List<String> salvoLocation4 = new ArrayList<>();
-			salvoLocation4.add("C5");
-			salvoLocation4.add("E6");
-			Salvo salvo4 = new Salvo(2, gamePlayer2, salvoLocation4);
+
+			Salvo salvo4 = new Salvo(2, new ArrayList<>(Arrays.asList("C5","E6")));
+			gamePlayer2.addSalvo(salvo4);
 			salvoRepository.save(salvo4);
 
-			List<String> salvoLocation5 = new ArrayList<>();
-			salvoLocation5.add("D3");
-			salvoLocation5.add("F6");
-			Salvo salvo5 = new Salvo(3, gamePlayer4, salvoLocation5);
+
+			Salvo salvo5 = new Salvo(3, new ArrayList<>(Arrays.asList("D3","F6")));
+			gamePlayer4.addSalvo(salvo5);
 			salvoRepository.save(salvo5);
 
-			List<String> salvoLocation6 = new ArrayList<>();
-			salvoLocation6.add("J7");
-			salvoLocation6.add("D2");
-			Salvo salvo6 = new Salvo(2, gamePlayer5, salvoLocation6);
+
+			Salvo salvo6 = new Salvo(2, new ArrayList<>(Arrays.asList("J7","D2")));
+			gamePlayer5.addSalvo(salvo6);
 			salvoRepository.save(salvo6);
 
-			List<String> salvoLocation7 = new ArrayList<>();
-			salvoLocation6.add("J7");
-			salvoLocation6.add("D2");
-			Salvo salvo7 = new Salvo(2, gamePlayer7, salvoLocation7);
+
+			Salvo salvo7 = new Salvo(2, new ArrayList<>(Arrays.asList("J7","D2")));
+			gamePlayer7.addSalvo(salvo7);
 			salvoRepository.save(salvo7);
 
-			List<String> salvoLocation8 = new ArrayList<>();
-			salvoLocation8.add("J7");
-			salvoLocation8.add("D2");
-			Salvo salvo8 = new Salvo(2, gamePlayer8, salvoLocation8);
+			Salvo salvo8 = new Salvo(2, new ArrayList<>(Arrays.asList("J7","D2")));
+			gamePlayer8.addSalvo(salvo8);
 			salvoRepository.save(salvo8);
 //-------------------------------------scores-------------------------------------------------------
 			Date firstFinish = Date.from(date.toInstant().plusSeconds(1800));
