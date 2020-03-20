@@ -1,0 +1,126 @@
+html {
+  font: normal 16px sans-serif;
+  color: #fff;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+.header {
+  padding: 2.5%;
+  background-color: rgb(226, 238, 183);
+}
+
+/* .table {
+  margin: 10%;
+  display: flex;
+  justify-content: space-around;
+} */
+
+.table {
+  display: grid;
+  grid-template-columns: 1.5fr 3.5fr 1.5fr 3.5fr;
+}
+
+.table div {
+  padding: 20px;
+}
+
+.marked {
+  background-color: rgb(0, 255, 34);
+}
+
+.salvo {
+  background-color: red;
+}
+
+.bingoSalvo {
+  background-color: blue;
+}
+
+td,
+.empty {
+  height: 35px;
+  width: 35px;
+  border: 1px solid rgba(15, 31, 122, 0.342);
+
+  background-color: rgba(153, 205, 50, 0.233);
+}
+
+
+
+#aircraft {
+  position: absolute;
+  width: 175px;
+  height: 35px;
+  cursor: pointer;
+}
+
+#battleship {
+  position: absolute;
+  height: 35px;
+  width: 140px;
+  cursor: pointer;
+}
+
+#submarine {
+  position: absolute;
+  height: 35px;
+  width: 105px;
+  cursor: pointer;
+}
+
+#destroyer {
+  position: absolute;
+  height: 35px;
+  width: 105px;
+  cursor: pointer;
+}
+
+#patrolboat {
+  position: absolute;
+  height: 35px;
+  width: 70px;
+  cursor: pointer;
+}
+
+.vertical {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.crosshair {
+  background-color: rgba(153, 205, 50, 0.233);
+
+  cursor: url(../img/targetres.png), auto;
+}
+
+.background {
+  position: absolute;
+  z-index: -100;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-image: url("../img/sea.jpg");
+  background-size: cover;
+}
+
+.background .water {
+  position: absolute;
+  background-image: url("../img/sea.jpg");
+  background-size: cover;
+  z-index: -99;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  filter: url("#turbulence");
+}
