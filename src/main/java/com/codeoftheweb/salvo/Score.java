@@ -25,7 +25,7 @@ public class Score {
 
     public Score() {}
 
-    public Score(Game game, Player player, Double score,  Date finishDate) {
+    public Score(Double score, Game game, Player player) {
         this.score = score;
         this.game = game;
         this.player = player;

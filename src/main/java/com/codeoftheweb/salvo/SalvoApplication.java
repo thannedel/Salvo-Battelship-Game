@@ -25,7 +25,6 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 @SpringBootApplication
 
@@ -162,20 +161,21 @@ public class SalvoApplication {
 			gamePlayer8.addSalvo(salvo8);
 			salvoRepository.save(salvo8);
 //-------------------------------------scores-------------------------------------------------------
-			Date firstFinish = Date.from(date.toInstant().plusSeconds(1800));
-			Score score1 = new Score(game1, p1, 1.0, firstFinish);
-			Score score3 = new Score(game1, p4, 0.0, firstFinish);
+			//Date firstFinish = Date.from(date.toInstant().plusSeconds(1800));
+			Score score1 = new Score(1.0,game1, p1);
+			Score score3 = new Score(0.0,game1, p4);
 			scoreRepository.save(score3);
 			scoreRepository.save(score1);
-			Date secondFinish = Date.from(date1hLater.toInstant().plusSeconds(1800));
-			Score score2 = new Score(game2, p2, 0.5, secondFinish);
+			//Date secondFinish = Date.from(date1hLater.toInstant().plusSeconds(1800));
+			Score score2 = new Score(0.5,game2, p2);
 			scoreRepository.save(score2);
-			Score score4 = new Score(game2, p5, 0.5, secondFinish);
+			Score score4 = new Score(0.5,game2, p5);
 			scoreRepository.save(score4);
-			Score score5 = new Score(game4, p5, 1.0, secondFinish);
+			Score score5 = new Score(1.0,game4, p5);
 			scoreRepository.save(score5);
-			Score score6 = new Score(game4, p3, 0.0, secondFinish);
+			Score score6 = new Score(0.0,game4, p3 );
 			scoreRepository.save(score6);
+
 		};
 
 	}

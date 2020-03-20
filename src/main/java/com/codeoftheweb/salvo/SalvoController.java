@@ -26,7 +26,8 @@ public class SalvoController {
     private ShipRepository shipRepository;
     @Autowired
     private SalvoRepository salvoRepository;
-
+    @Autowired
+    private ScoreRepository scoreRepository;
     /* @RequestMapping("/games")
      public List<Long> getGames() {
          List<Long> gamesId = new ArrayList<>();
@@ -34,6 +35,7 @@ public class SalvoController {
          return gamesId;
          }
      }*/
+
     @RequestMapping("/games")
     public Map<String, Object> returnGames(Authentication authentication) {
         Map<String, Object> gamesMap = new LinkedHashMap<>();
@@ -190,9 +192,12 @@ public class SalvoController {
                         .map(salvo -> getSalvoInfo(salvo))
                         .collect(Collectors.toList()));
                 // gameViewInfo.put("salvos", salvoInfo(currentGamePlayer));
-                gameViewInfo.put("opponents", getOpponentInfo(currentGamePlayer));
-
-
+                gameViewInfo.put("opponents", getOpponentSalvoInfo(currentGamePlayer));
+                gameViewInfo.put("hits", getHits(currentGamePlayer));
+                gameViewInfo.put("opponentHasShips", opponentHasShips(currentGamePlayer));
+                gameViewInfo.put("gameStatus", getGameStatus(currentGamePlayer));
+                gameViewInfo.put("playerHasShips", playerHasShips(currentGamePlayer));
+                gameViewInfo.put("hitsWithShipName", getHitsWithShipName(getHits(currentGamePlayer), currentGamePlayer));
                 //auto dinei kai ta salvos tou opponent
        /*gameViewInfo.put("salvos", currentGamePlayer.getGame().getGamePlayers().stream()
                .map(gamePlayer -> gamePlayer.getSalvos().stream()
@@ -206,8 +211,151 @@ public class SalvoController {
             return new ResponseEntity<>(makeMap("error", "You are not logged in"), HttpStatus.UNAUTHORIZED);
         }
     }
+    public Map<String, Object> getHitsWithShipName(List<String> hits, GamePlayer gamePlayer) {
+        Map<String, Object> hitAndName = new HashMap<>();
+        GamePlayer opponent = getOpponent(gamePlayer);
+        if (opponent != null) {
+            if (hits.size() != 0) {
 
-    public Map<String, Object> getOpponentInfo(GamePlayer you) {
+                for (Ship ship : opponent.getShips()) {
+                    for (String hit : hits) {
+                        if (ship.getShipLocation().contains(hit)) {
+                            hitAndName.put(hit, ship.getType());
+                        }
+                    }
+                }
+            }
+        }
+        return hitAndName;
+    }
+public boolean playerHasShips(GamePlayer gamePlayer){
+    if (gamePlayer.getShips().size() == 0) {
+        return false;
+    } else {
+        return true;
+    }
+    }
+    public String getGameStatus(GamePlayer gamePlayer) {
+        if (gamePlayer.getGame().getGamePlayers().size() == 2) {
+            GamePlayer opponent = getOpponent(gamePlayer);
+            if (opponent.getShips().isEmpty()) {
+                return "waiting";
+            } else {
+                //opponent has ships
+                if (gamePlayer.getSalvos().size() == 0 && opponent.getSalvos().size() == 0) {
+                    if (goesFirst(gamePlayer)) {
+                        return "shooting";
+                    } else {
+                        return "waiting";
+                    }
+                } else if (opponent.getSalvos().size() != 0 && gamePlayer.getSalvos().size() == 0) {
+                    return "shooting";
+                } else {
+                    if (gamePlayer.getLastTurn() == opponent.getLastTurn() && getHits(gamePlayer).size() != 17
+                            && getHits(opponent).size() != 17) {
+                        if (goesFirst(gamePlayer)) {
+                            return "shooting";
+                        } else {
+                            return "waiting";
+                        }
+                    } else if (gamePlayer.getLastTurn() < opponent.getLastTurn() && getHits(gamePlayer).size() != 17
+                            && getHits(opponent).size() != 17) {
+                        return "shooting";
+                    } else if (gamePlayer.getLastTurn() > opponent.getLastTurn()
+                            && getHits(gamePlayer).size() != 17 && getHits(opponent).size() != 17) {
+                        return "waiting";
+                    } else if (gamePlayer.getLastTurn() > opponent.getLastTurn() && getHits(gamePlayer).size() == 17
+                            && getHits(opponent).size() != 17) {
+                        return "waiting";
+                    } else if (gamePlayer.getLastTurn() < opponent.getLastTurn() &&
+                            getHits(gamePlayer).size() != 17 && getHits(opponent).size() == 17) {
+                        return "shooting";
+                    } else {
+                        //same turn
+                        if (getHits(gamePlayer).size() == 17 && getHits(opponent).size() != 17) {
+                            if (checkScore(gamePlayer, opponent)) {
+                                scoreRepository.save(new Score(1.0, gamePlayer.getGame(), gamePlayer.getPlayer()));
+                                scoreRepository.save(new Score(0.0, opponent.getGame(), opponent.getPlayer()));
+                            }
+                            return "player wins";
+                        } else if (getHits(gamePlayer).size() != 17 && getHits(opponent).size() == 17) {
+                            if (checkScore(gamePlayer, opponent)) {
+                                scoreRepository.save(new Score(0.0, gamePlayer.getGame(), gamePlayer.getPlayer()));
+                                scoreRepository.save(new Score(1.0, opponent.getGame(), opponent.getPlayer()));
+                            }
+                            return "opponent wins";
+                        } else {
+                            if (checkScore(gamePlayer, opponent)) {
+                                scoreRepository.save(new Score(0.5, gamePlayer.getGame(), gamePlayer.getPlayer()));
+                                scoreRepository.save(new Score(0.5, opponent.getGame(), opponent.getPlayer()));
+                            }
+                            return "tie";
+                        }
+                    }
+                }
+            }
+        } else {
+            return "waiting for opponent";
+        }
+    }
+
+    private boolean checkScore(GamePlayer gamePlayer, GamePlayer opponent) {
+        if (gamePlayer.getPlayer().getScore(gamePlayer.getGame()) == null || opponent.getPlayer().getScore(opponent.getGame()) == null) {
+
+            return true;
+        }
+        return false;
+    }
+
+
+public boolean goesFirst(GamePlayer gamePlayer){
+GamePlayer opponent = getOpponent(gamePlayer);
+if(gamePlayer.getId() < opponent.getId()){
+    return true;
+}else
+{
+    return false;
+}
+}
+public List <String> getHits(GamePlayer gamePlayer){
+        GamePlayer opponent = getOpponent (gamePlayer);
+if(opponent != null){
+    List<String> salvoLocations = gamePlayer.getSalvos().stream()
+            .map(salvo -> salvo.getSalvoLocation())
+            .flatMap(s -> s.stream()).collect(Collectors.toList());
+
+    List<String> opponentShipLocations = opponent.getShips().stream()
+            .map(sh -> sh.getShipLocation())
+            .flatMap(loc -> loc.stream())
+            .collect(Collectors.toList());
+
+    return salvoLocations.stream()
+            .filter(location -> opponentShipLocations.contains(location))
+            .collect(Collectors.toList());
+} else {
+    return null;
+}
+}
+
+    public boolean opponentHasShips(GamePlayer gamePlayer) {
+        if (gamePlayer.getGame().getGamePlayers().size() == 2) {
+
+            GamePlayer opponent = getOpponent(gamePlayer);
+            if (!opponent.getShips().isEmpty()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
+public GamePlayer getOpponent(GamePlayer gamePlayer){
+        return gamePlayer.getGame().getGamePlayers().stream().filter(gamePlayer1 -> gamePlayer1.getId() != gamePlayer.getId()).findAny().orElse(null);
+}
+    public Map<String, Object> getOpponentSalvoInfo(GamePlayer you) {
 
         Map<String, Object> opponent = new LinkedHashMap<>();
 
@@ -324,7 +472,11 @@ public class SalvoController {
             return new ResponseEntity<>(makeMap("success", "added salvo"), HttpStatus.CREATED);
         }
     }
-}
+
+    }
+
+
+
 
 
 
@@ -398,7 +550,7 @@ public ResponseEntity<Object> register (
 
 
 
-   /* @RequestMapping("/game_view/{gamePlayerId}")
+   /*@RequestMapping("/game_view/{gamePlayerId}")
    This block creates the JSON from the getters of the GamePlayer
    //--------------------------------------
     Optional<GamePlayer> gameView(@PathVariable long gamePlayerId) {

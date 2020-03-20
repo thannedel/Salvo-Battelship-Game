@@ -74,6 +74,9 @@ public class Player{
     public void setScores(Set<Score> scores) {
         this.scores = scores;
     }
+    public Score getScore(Game game){
+        return scores.stream().filter( score -> score.getGame().equals(game)).findFirst().orElse(null);
+    }
    @JsonIgnore
     public List<Game> getGames() {
         return gamePlayers.stream().map(sub -> sub.getGame()).collect(toList());

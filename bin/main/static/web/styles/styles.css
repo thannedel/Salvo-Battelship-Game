@@ -9,17 +9,25 @@ body {
   width: 100vw;
 }
 
-.table {
-  margin: 50px;
-  display: flex;
-  justify-content: space-around;
+.header {
+  padding: 2.5%;
+  background-color: rgb(226, 238, 183);
 }
 
-/* td {
-  height: 35px;
-  width: 35px;
-  border: 1px solid rgb(7, 5, 5);
+/* .table {
+  margin: 10%;
+  display: flex;
+  justify-content: space-around;
 } */
+
+.table {
+  display: grid;
+  grid-template-columns: 1.5fr 3.5fr 1.5fr 3.5fr;
+}
+
+.table div {
+  padding: 20px;
+}
 
 .marked {
   background-color: rgb(0, 255, 34);
@@ -33,85 +41,51 @@ body {
   background-color: blue;
 }
 
-/* .aircraft {
-  position: absolute;
-  background-image: url('https://source.unsplash.com/random/150x150');
-  height: 25px;
-  width: 25px;
-  top: 5px;
-  left: 5px;
-  cursor: pointer;
-} */
-
-.ship {
-  display: flex;
-  justify-content: space-between;
-}
-
-.header {
-  display: flex;
-  justify-content: space-around;
-}
-
-.header child {
-  width: 20%;
-}
-
 td,
 .empty {
   height: 35px;
   width: 35px;
   border: 1px solid rgba(15, 31, 122, 0.342);
 
-  background-color: rgba(241, 186, 7, 0.685);
+  background-color: rgba(153, 205, 50, 0.233);
 }
 
-.aircraft {
+
+
+#aircraft {
   position: absolute;
   width: 175px;
   height: 35px;
   cursor: pointer;
 }
 
-.battleship {
+#battleship {
   position: absolute;
   height: 35px;
   width: 140px;
   cursor: pointer;
 }
 
-.submarine {
+#submarine {
   position: absolute;
   height: 35px;
   width: 105px;
   cursor: pointer;
 }
 
-.destroyer {
+#destroyer {
   position: absolute;
   height: 35px;
   width: 105px;
   cursor: pointer;
 }
 
-.patrolboat {
+#patrolboat {
   position: absolute;
   height: 35px;
   width: 70px;
   cursor: pointer;
 }
-
-/* .hold {
-  border: solid 5px #ccc;
-} */
-
-/* .hovered {
-  background: #f4f4f4;
-  border-style: dashed;
-}  
-.invisible {
-  display: none;
-}*/
 
 .vertical {
   -webkit-transform: rotate(90deg);

@@ -34,6 +34,10 @@ public class GamePlayer {
     @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
     Set<Salvo> salvos = new HashSet<>();
 
+
+
+
+
     public GamePlayer(Player player, Game game) {
         this.player = player;
         this.game = game;
@@ -66,6 +70,9 @@ public class GamePlayer {
     public Set<Salvo> getSalvos() {
         return salvos;
     }
+
+
+
     public void addShip(Ship ship){
         ship.setGamePlayer(this);
         this.ships.add(ship);
