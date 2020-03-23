@@ -1,0 +1,10 @@
+body {
+    background: url(https://wallpaperset.com/w/full/2/5/5/137216.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.header {
+    padding: 2.5%;
+    background-color: rgb(226, 238, 183);
+}

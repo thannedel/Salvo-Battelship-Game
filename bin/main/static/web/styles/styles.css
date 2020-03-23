@@ -19,6 +19,13 @@ body {
   display: flex;
   justify-content: space-around;
 } */
+.vertical {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
 
 .table {
   display: grid;
@@ -87,13 +94,7 @@ td,
   cursor: pointer;
 }
 
-.vertical {
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  transform: rotate(90deg);
-}
+
 
 .crosshair {
   background-color: rgba(153, 205, 50, 0.233);

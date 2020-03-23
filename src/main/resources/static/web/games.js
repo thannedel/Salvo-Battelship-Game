@@ -217,6 +217,7 @@ function login() {
     let password = document.getElementById("passwordLogin").value;
     console.log(username);
     loginPost(username, password);
+
   });
 }
 
@@ -229,11 +230,14 @@ function loginPost(username, password) {
       console.log("Logged in!");
 
       window.location.reload();
+
     })
     .fail(function () {
       alert("You have to sign up first!");
     });
 }
+
+
 
 //logOut();
 
