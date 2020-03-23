@@ -1,8 +1,7 @@
 //site = "'http://localhost:8080/api/game_view/1";
 var url = window.location.href;
 var key_url;
-var actualShips = [
-  {
+var actualShips = [{
     type: "aircraft horizontal",
     shipLocation: [],
     length: 5,
@@ -40,7 +39,7 @@ function paramObj(search) {
   var obj = {};
   var reg = /(?:[?&]([^?&#=]+)(?:=([^&#]*))?)(?:#.*)?/g;
 
-  search.replace(reg, function(match, param, val) {
+  search.replace(reg, function (match, param, val) {
     obj[decodeURIComponent(param)] =
       val === undefined ? "" : decodeURIComponent(val);
   });
@@ -49,7 +48,7 @@ function paramObj(search) {
 }
 
 function loadJsonData(param) {
-  $.getJSON("/api/game_view/" + param, function(data_json) {
+  $.getJSON("/api/game_view/" + param, function (data_json) {
     var data = data_json;
   });
 }
@@ -57,9 +56,9 @@ function loadJsonData(param) {
 function fetching(param) {
   site = "/api/game_view/" + param;
   var fetchConfig = fetch(this.site, {
-    method: "GET"
-  })
-    .then(function(res) {
+      method: "GET"
+    })
+    .then(function (res) {
       console.log(res.status);
       if (res.status == 403) {
         alert("Not allowed to view opponents game");
@@ -67,7 +66,7 @@ function fetching(param) {
       }
       return res.json();
     })
-    .then(function(json) {
+    .then(function (json) {
       data = json;
       games = data;
       ships = data.ships;
@@ -88,7 +87,7 @@ function fetching(param) {
       //postShips(param)
       console.log(games);
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.log(error);
     });
 }
@@ -184,7 +183,7 @@ function salvos() {
   if (games.gameStatus == "shooting") {
     for (i = 0; i < cells.length; i++) {
       let keli = cells[i];
-      keli.addEventListener("click", function() {
+      keli.addEventListener("click", function () {
         let type = keli.getAttribute("class");
         let location = keli.getAttribute("id");
 
@@ -244,14 +243,14 @@ function postSalvos() {
       salvoLocation: salvoLocations
     };
     fetch("/api/games/players/" + param + "/salvos", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(salvoData)
-    })
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(salvoData)
+      })
       .then(response => {
         if (response.status == 201) {
           return response.json();
@@ -275,7 +274,7 @@ function bingoSalvos() {
   var opponents = games.opponents.opponentSalvos;
   console.log(
     Object.entries(games.opponents).length === 0 &&
-      games.opponents.constructor === Object
+    games.opponents.constructor === Object
   );
   let noOpponent =
     Object.entries(games.opponents).length === 0 &&
@@ -306,11 +305,11 @@ function drag(event) {
 }
 
 /* events fired on the draggable target */
-document.addEventListener("drag", function(event) {}, false);
+document.addEventListener("drag", function (event) {}, false);
 
 document.addEventListener(
   "dragstart",
-  function(event) {
+  function (event) {
     // store a ref. on the dragged elem
     dragged = event.target;
     // make it half transparent
@@ -321,7 +320,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragend",
-  function(event) {
+  function (event) {
     // reset the transparency
     event.target.style.opacity = "";
   },
@@ -331,7 +330,7 @@ document.addEventListener(
 /* events fired on the drop targets */
 document.addEventListener(
   "dragover",
-  function(event) {
+  function (event) {
     // prevent default to allow drop
     event.preventDefault();
   },
@@ -340,7 +339,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragenter",
-  function(event) {
+  function (event) {
     // highlight potential drop target when the draggable element enters it
 
     if (event.target.className == "empty") {
@@ -352,7 +351,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragleave",
-  function(event) {
+  function (event) {
     // reset background of potential drop target when the draggable element leaves it
     if (event.target.className == "empty") {
       event.target.style.background = "";
@@ -363,7 +362,7 @@ document.addEventListener(
 
 document.addEventListener(
   "drop",
-  function(event) {
+  function (event) {
     console.log("dropping");
     // prevent default action (open as link for some elements)
     event.preventDefault();
@@ -397,7 +396,6 @@ document.addEventListener(
             splitNumber + actualShips[i].length <= 11
           ) {
             locations.push(finalShipLocations);
-            //actualShips[i].shipLocation.push(finalShipLocations);
           }
           console.log(event.target);
           console.log(dragged);
@@ -441,8 +439,7 @@ document.addEventListener(
       console.log(strlet);
       for (i = 0; i < actualShips.length; i++) {
         if (actualShips[i].type.includes(shipId)) {
-          let locations = [];
-          {
+          let locations = []; {
             // na liso shipType
 
             for (j = 0; j < actualShips[i].length; j++) {
@@ -673,14 +670,14 @@ function postShips() {
 
   if (result == 17) {
     fetch("/api/games/players/" + param + "/ships", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(actualShips)
-    })
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(actualShips)
+      })
       .then(response => {
         if (response.status == 201) {
           return response.json();
