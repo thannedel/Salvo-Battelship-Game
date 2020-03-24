@@ -15,6 +15,26 @@ public class Ship {
     private long id;
     private String type;
 
+    public String getPosition() {
+        return position;
+    }
+
+    @Override
+    public String toString() {
+        return "Ship{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", position='" + position + '\'' +
+                ", gamePlayer=" + gamePlayer +
+                ", shipLocation=" + shipLocation +
+                '}';
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    private String position;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
@@ -29,10 +49,10 @@ public class Ship {
 
     public Ship(){}
 
-    public Ship(String type, List<String> shipLocation) {
+    public Ship(String type, List<String> shipLocation,String position) {
         this.type = type;
-
         this.shipLocation = shipLocation;
+        this.position = position;
     }
 
     public long getId() {
@@ -60,14 +80,6 @@ public class Ship {
     }
     public void setShipLocation(List<String> shipLocation) {
         this.shipLocation = shipLocation;
-    }
-    @Override
-    public String toString() {
-        return "Ship{" +
-                "id=" + id +
-                ", type='" + type + '\'' +
-                ", shipLocation=" + shipLocation +
-                '}';
     }
 
 }
