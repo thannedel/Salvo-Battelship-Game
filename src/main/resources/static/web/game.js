@@ -688,7 +688,7 @@ function postShips() {
       .then(data => {
         //console.log(data)
         window.location.reload();
-        alert("Your ships are successfully placed!");
+        // alert("Your ships are successfully placed!");
       });
   } else {
     alert("Place the rest of the ships!");

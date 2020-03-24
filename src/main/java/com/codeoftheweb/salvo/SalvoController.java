@@ -142,6 +142,7 @@ public class SalvoController {
         Map<String, Object> shipTypeAndLocations = new LinkedHashMap<>();
         shipTypeAndLocations.put("type", ship.getType());
         shipTypeAndLocations.put("locations", ship.getShipLocation());
+        shipTypeAndLocations.put("position", ship.getPosition());
         return shipTypeAndLocations;
     }
 
@@ -223,8 +224,7 @@ public class SalvoController {
                             hitAndName.put(hit, ship.getType());
                         }
                     }
-                }
-            }
+                }        }
         }
         return hitAndName;
     }
@@ -447,6 +447,7 @@ public GamePlayer getOpponent(GamePlayer gamePlayer){
                     return new ResponseEntity<>(makeMap("error", "you can place only 5 ships"), HttpStatus.FORBIDDEN);
                 }
             }
+            System.out.println(ships);
             return new ResponseEntity<>(makeMap("success", "added ships"), HttpStatus.CREATED);
         }
     }
