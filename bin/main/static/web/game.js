@@ -1,7 +1,8 @@
 //site = "'http://localhost:8080/api/game_view/1";
 var url = window.location.href;
 var key_url;
-var actualShips = [{
+var actualShips = [
+  {
     type: "aircraft horizontal",
     shipLocation: [],
     length: 5,
@@ -39,7 +40,7 @@ function paramObj(search) {
   var obj = {};
   var reg = /(?:[?&]([^?&#=]+)(?:=([^&#]*))?)(?:#.*)?/g;
 
-  search.replace(reg, function (match, param, val) {
+  search.replace(reg, function(match, param, val) {
     obj[decodeURIComponent(param)] =
       val === undefined ? "" : decodeURIComponent(val);
   });
@@ -48,7 +49,7 @@ function paramObj(search) {
 }
 
 function loadJsonData(param) {
-  $.getJSON("/api/game_view/" + param, function (data_json) {
+  $.getJSON("/api/game_view/" + param, function(data_json) {
     var data = data_json;
   });
 }
@@ -56,9 +57,9 @@ function loadJsonData(param) {
 function fetching(param) {
   site = "/api/game_view/" + param;
   var fetchConfig = fetch(this.site, {
-      method: "GET"
-    })
-    .then(function (res) {
+    method: "GET"
+  })
+    .then(function(res) {
       console.log(res.status);
       if (res.status == 403) {
         alert("Not allowed to view opponents game");
@@ -66,7 +67,7 @@ function fetching(param) {
       }
       return res.json();
     })
-    .then(function (json) {
+    .then(function(json) {
       data = json;
       games = data;
       ships = data.ships;
@@ -87,7 +88,7 @@ function fetching(param) {
       //postShips(param)
       console.log(games);
     })
-    .catch(function (error) {
+    .catch(function(error) {
       console.log(error);
     });
 }
@@ -141,9 +142,65 @@ var shipLocations = [];
 
 function markShips() {
   var cells = document.getElementById("playerTable").getElementsByTagName("td");
+  let desthor = [];
+  let pathor = [];
+  let airhor = [];
+  let bathor = [];
+  let subhor = [];
+  let destver = [];
+  let patver = [];
+  let airver = [];
+  let batver = [];
+  let subver = [];
   for (i = 0; i < cells.length; i++) {
+    // give name to the classes for the drag n drop
     cells[i].setAttribute("class", "empty");
   }
+
+  for (i = 0; i < games.ships.length; i++) {
+    type = games.ships[i].type;
+    position = games.ships[i].position;
+    if (position == "horizontal") {
+      switch (type) {
+        case "aircraft horizontal":
+          airhor.push(games.ships[i].locations[0]);
+          break;
+        case "battleship horizontal":
+          bathor.push(games.ships[i].locations[0]);
+          break;
+        case "submarine horizontal":
+          subhor.push(games.ships[i].locations[0]);
+          break;
+        case "destroyer horizontal":
+          desthor.push(games.ships[i].locations[0]);
+          break;
+        case "patrolboat horizontal":
+          pathor.push(games.ships[i].locations[0]);
+          break;
+      }
+    } else if (position == "vertical") {
+      switch (type) {
+        case "aircraft horizontal":
+          airver.push(games.ships[i].locations[0]);
+          break;
+        case "battleship horizontal":
+          batver.push(games.ships[i].locations[0]);
+          break;
+        case "submarine horizontal":
+          subver.push(games.ships[i].locations[0]);
+          break;
+        case "destroyer horizontal":
+          destver.push(games.ships[i].locations[0]);
+          break;
+        case "patrolboat horizontal":
+          patver.push(games.ships[i].locations[0]);
+          break;
+      }
+    }
+  }
+  console.log(airver);
+  console.log(airhor);
+
   for (i = 0; i < games.ships.length; i++) {
     for (y = 0; y < games.ships[i].locations.length; y++) {
       shipLocations.push(games.ships[i].locations[y]);
@@ -151,14 +208,48 @@ function markShips() {
   }
 
   for (z = 0; z < cells.length; z++) {
-    if (shipLocations.includes(cells[z].id)) {
-      //var id = cells[z].id;
-      cells[z].setAttribute("class", "marked");
-      document.getElementById("patrolboat").setAttribute("draggable", false);
-      document.getElementById("battleship").setAttribute("draggable", false);
-      document.getElementById("submarine").setAttribute("draggable", false);
-      document.getElementById("aircraft").setAttribute("draggable", false);
-      document.getElementById("destroyer").setAttribute("draggable", false);
+    switch (cells[z].id) {
+      case pathor[0]:
+        cells[z].setAttribute("class", "pathor");
+        //document.getElementById("patrolboat").setAttribute("draggable", false);
+        document.getElementById("patrolboat").style.display = "none";
+        break;
+      case subhor[0]:
+        cells[z].setAttribute("class", "subhor");
+        document.getElementById("submarine").style.display = "none";
+        break;
+      case airhor[0]:
+        cells[z].setAttribute("class", "airhor");
+        document.getElementById("aircraft").style.display = "none";
+        break;
+      case bathor[0]:
+        cells[z].setAttribute("class", "bathor");
+        document.getElementById("battleship").style.display = "none";
+        break;
+      case desthor[0]:
+        cells[z].setAttribute("class", "desthor");
+        document.getElementById("destroyer").style.display = "none";
+        break;
+      case patver[0]:
+        cells[z].setAttribute("class", "patver");
+        document.getElementById("patrolboat").style.display = "none";
+        break;
+      case subver[0]:
+        cells[z].setAttribute("class", "subver");
+        document.getElementById("submarine").style.display = "none";
+        break;
+      case airver[0]:
+        cells[z].setAttribute("class", "airver");
+        document.getElementById("aircraft").style.display = "none";
+        break;
+      case batver[0]:
+        cells[z].setAttribute("class", "batver");
+        document.getElementById("battleship").style.display = "none";
+        break;
+      case destver[0]:
+        cells[z].setAttribute("class", "destver");
+        document.getElementById("destroyer").style.display = "none";
+        break;
     }
   }
 }
@@ -183,7 +274,7 @@ function salvos() {
   if (games.gameStatus == "shooting") {
     for (i = 0; i < cells.length; i++) {
       let keli = cells[i];
-      keli.addEventListener("click", function () {
+      keli.addEventListener("click", function() {
         let type = keli.getAttribute("class");
         let location = keli.getAttribute("id");
 
@@ -243,14 +334,14 @@ function postSalvos() {
       salvoLocation: salvoLocations
     };
     fetch("/api/games/players/" + param + "/salvos", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(salvoData)
-      })
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(salvoData)
+    })
       .then(response => {
         if (response.status == 201) {
           return response.json();
@@ -274,7 +365,7 @@ function bingoSalvos() {
   var opponents = games.opponents.opponentSalvos;
   console.log(
     Object.entries(games.opponents).length === 0 &&
-    games.opponents.constructor === Object
+      games.opponents.constructor === Object
   );
   let noOpponent =
     Object.entries(games.opponents).length === 0 &&
@@ -305,11 +396,11 @@ function drag(event) {
 }
 
 /* events fired on the draggable target */
-document.addEventListener("drag", function (event) {}, false);
+document.addEventListener("drag", function(event) {}, false);
 
 document.addEventListener(
   "dragstart",
-  function (event) {
+  function(event) {
     // store a ref. on the dragged elem
     dragged = event.target;
     // make it half transparent
@@ -320,7 +411,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragend",
-  function (event) {
+  function(event) {
     // reset the transparency
     event.target.style.opacity = "";
   },
@@ -330,7 +421,7 @@ document.addEventListener(
 /* events fired on the drop targets */
 document.addEventListener(
   "dragover",
-  function (event) {
+  function(event) {
     // prevent default to allow drop
     event.preventDefault();
   },
@@ -339,7 +430,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragenter",
-  function (event) {
+  function(event) {
     // highlight potential drop target when the draggable element enters it
 
     if (event.target.className == "empty") {
@@ -351,7 +442,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragleave",
-  function (event) {
+  function(event) {
     // reset background of potential drop target when the draggable element leaves it
     if (event.target.className == "empty") {
       event.target.style.background = "";
@@ -362,7 +453,7 @@ document.addEventListener(
 
 document.addEventListener(
   "drop",
-  function (event) {
+  function(event) {
     console.log("dropping");
     // prevent default action (open as link for some elements)
     event.preventDefault();
@@ -439,14 +530,18 @@ document.addEventListener(
       console.log(strlet);
       for (i = 0; i < actualShips.length; i++) {
         if (actualShips[i].type.includes(shipId)) {
-          let locations = []; {
+          let locations = [];
+          {
             // na liso shipType
+            actualShips[i].position = "vertical";
 
             for (j = 0; j < actualShips[i].length; j++) {
               finalShipLocations =
                 String.fromCharCode(letterInCharCode + j) + splitNumber;
 
               if (indexOfLetter + actualShips[i].length <= 11) {
+                actualShips[i].position = "vertical";
+                console.log(actualShips[i].vertical);
                 locations.push(finalShipLocations);
                 console.log(locations);
               }
@@ -555,7 +650,8 @@ function vertical(element) {
       console.log(previousLocations);
       console.log(actualShips[i].shipLocation);
       event.target.style.background = "";
-
+      actualShips[i].position = "horizontal";
+      console.log(actualShips[i].position);
       if (
         element.classList.contains("vertical") &&
         number + actualShips[i].length <= 11 &&
@@ -563,13 +659,17 @@ function vertical(element) {
       ) {
         element.classList.remove("vertical");
         element.classList.add("horizontal");
+
         element.style.marginLeft = "0px";
         element.style.marginTop = "0px";
+        //actualShips[i].position = "horizontal";
       } else {
         for (i = 0; i < actualShips.length; i++) {
           //when the ship is found
           if (shipType1 == actualShips[i].type) {
             actualShips[i].shipLocation = previousLocations;
+            actualShips[i].position = "horizontal";
+            console.log(actualShips[i].position);
           }
         }
       }
@@ -596,8 +696,9 @@ function vertical(element) {
         ) {
           element.classList.remove("horizontal");
           element.classList.add("vertical");
+          actualShips[i].position = "vertical";
           //element.setAttribute("draggable", false);
-
+          console.log(actualShips[i].position);
           switch (
             ship.length //positioning the vertical
           ) {
@@ -649,6 +750,8 @@ function vertical(element) {
           //when the ship is found
           if (shipType == actualShips[i].type) {
             actualShips[i].shipLocation = previousLocations;
+            actualShips[i].position = "horizontal";
+            console.log(actualShips[i].position);
           }
         }
       }
@@ -670,14 +773,14 @@ function postShips() {
 
   if (result == 17) {
     fetch("/api/games/players/" + param + "/ships", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(actualShips)
-      })
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(actualShips)
+    })
       .then(response => {
         if (response.status == 201) {
           return response.json();
@@ -716,9 +819,9 @@ function bingoOpponentsSalvo() {
   var cells = document
     .getElementById("opponentTable")
     .getElementsByTagName("td");
-  if (games.hits.length > 0) {
+  if (games.hits != null) {
     var hits = games.hits;
-
+    console.log(hits);
     for (j = 0; j < hits.length; j++) {
       for (i = 0; i < cells.length; i++) {
         if (cells[i].id == hits[j]) {
