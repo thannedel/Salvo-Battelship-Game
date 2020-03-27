@@ -91,6 +91,9 @@ function createList(games) {
         "href",
         "/web/game.html?gp=" + currentGamePlayerId
       );
+      backtogame.setAttribute(
+        "class",
+        "backButton");
       backtogame.innerHTML = "Go to Game";
 
       if (

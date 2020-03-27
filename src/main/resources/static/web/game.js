@@ -75,7 +75,7 @@ function fetching(param) {
       createTable("playerTable");
       createTable("opponentTable");
       //gridBoard();
-      markShips();
+      displayShips();
       checkPlayer(param);
       crosshair();
       playerSalvos();
@@ -83,6 +83,7 @@ function fetching(param) {
       gameStatus();
       bingoSalvos(shipLocations);
       bingoOpponentsSalvo();
+      //markShipLocations()
       console.log("param in get", param);
       //postShips(param)
       console.log(games);
@@ -137,13 +138,124 @@ function createTable(table) {
   }
 }
 
-var shipLocations = [];
 
-function markShips() {
+
+function displayShips() {
   var cells = document.getElementById("playerTable").getElementsByTagName("td");
+  let desthor = [];
+  let pathor = [];
+  let airhor = [];
+  let bathor = [];
+  let subhor = [];
+  let destver = [];
+  let patver = [];
+  let airver = [];
+  let batver = [];
+  let subver = [];
   for (i = 0; i < cells.length; i++) {
+    // give name to the classes for the drag n drop
     cells[i].setAttribute("class", "empty");
   }
+
+  for (i = 0; i < games.ships.length; i++) {
+    type = games.ships[i].type;
+    position = games.ships[i].position;
+    if (position == "horizontal") {
+      switch (type) {
+        case "aircraft horizontal":
+          airhor.push(games.ships[i].locations[0]);
+          break;
+        case "battleship horizontal":
+          bathor.push(games.ships[i].locations[0]);
+          break;
+        case "submarine horizontal":
+          subhor.push(games.ships[i].locations[0]);
+          break;
+        case "destroyer horizontal":
+          desthor.push(games.ships[i].locations[0]);
+          break;
+        case "patrolboat horizontal":
+          pathor.push(games.ships[i].locations[0]);
+          break;
+      }
+    } else if (position == "vertical") {
+      switch (type) {
+        case "aircraft horizontal":
+          airver.push(games.ships[i].locations[0]);
+          break;
+        case "battleship horizontal":
+          batver.push(games.ships[i].locations[0]);
+          break;
+        case "submarine horizontal":
+          subver.push(games.ships[i].locations[0]);
+          break;
+        case "destroyer horizontal":
+          destver.push(games.ships[i].locations[0]);
+          break;
+        case "patrolboat horizontal":
+          patver.push(games.ships[i].locations[0]);
+          break;
+      }
+    }
+  }
+  console.log(airver);
+  console.log(airhor);
+
+
+
+
+  for (z = 0; z < cells.length; z++) {
+    switch (cells[z].id) {
+      case pathor[0]:
+        cells[z].setAttribute("class", "pathor");
+        //document.getElementById("patrolboat").setAttribute("draggable", false);
+        document.getElementById("patrolboat").style.display = "none";
+        break;
+      case subhor[0]:
+        cells[z].setAttribute("class", "subhor");
+        document.getElementById("submarine").style.display = "none";
+        break;
+      case airhor[0]:
+        cells[z].setAttribute("class", "airhor");
+        document.getElementById("aircraft").style.display = "none";
+        break;
+      case bathor[0]:
+        cells[z].setAttribute("class", "bathor");
+        document.getElementById("battleship").style.display = "none";
+        break;
+      case desthor[0]:
+        cells[z].setAttribute("class", "desthor");
+        document.getElementById("destroyer").style.display = "none";
+        break;
+      case patver[0]:
+        cells[z].setAttribute("class", "patver");
+        document.getElementById("patrolboat").style.display = "none";
+        break;
+      case subver[0]:
+        cells[z].setAttribute("class", "subver");
+        document.getElementById("submarine").style.display = "none";
+        break;
+      case airver[0]:
+        cells[z].setAttribute("class", "airver");
+        document.getElementById("aircraft").style.display = "none";
+        break;
+      case batver[0]:
+        cells[z].setAttribute("class", "batver");
+        document.getElementById("battleship").style.display = "none";
+        break;
+      case destver[0]:
+        cells[z].setAttribute("class", "destver");
+        document.getElementById("destroyer").style.display = "none";
+        break;
+    }
+  }
+}
+
+
+var shipLocations = [];
+
+/* function markShipLocations() {
+  var cells = document.getElementById("playerTable").getElementsByTagName("td");
   for (i = 0; i < games.ships.length; i++) {
     for (y = 0; y < games.ships[i].locations.length; y++) {
       shipLocations.push(games.ships[i].locations[y]);
@@ -151,17 +263,14 @@ function markShips() {
   }
 
   for (z = 0; z < cells.length; z++) {
-    if (shipLocations.includes(cells[z].id)) {
-      //var id = cells[z].id;
-      cells[z].setAttribute("class", "marked");
-      document.getElementById("patrolboat").setAttribute("draggable", false);
-      document.getElementById("battleship").setAttribute("draggable", false);
-      document.getElementById("submarine").setAttribute("draggable", false);
-      document.getElementById("aircraft").setAttribute("draggable", false);
-      document.getElementById("destroyer").setAttribute("draggable", false);
+    for (j = 0; j < shipLocations.length; j++) {
+      if (cells[z].id == shipLocations[j]) {
+        cells[z].classList.add("marked");
+      }
     }
   }
-}
+
+} */
 
 function crosshair() {
   let cells = document
@@ -286,8 +395,8 @@ function bingoSalvos() {
           if (opponents[i].locations[y] == cells[z].id) {
             cells[z].innerHTML = opponents[i].turn;
 
-            if (cells[z].className == "marked") {
-              cells[z].setAttribute("class", "bingoSalvo");
+            if (cells[z].className.includes("marked")) {
+              cells[z].classList.add("bingoSalvo");
             } else {
               cells[z].setAttribute("class", "salvo");
             }
@@ -439,23 +548,26 @@ document.addEventListener(
       console.log(strlet);
       for (i = 0; i < actualShips.length; i++) {
         if (actualShips[i].type.includes(shipId)) {
-          let locations = []; {
-            // na liso shipType
+          let locations = [];
+          // na liso shipType
+          actualShips[i].position = "vertical";
 
-            for (j = 0; j < actualShips[i].length; j++) {
-              finalShipLocations =
-                String.fromCharCode(letterInCharCode + j) + splitNumber;
+          for (j = 0; j < actualShips[i].length; j++) {
+            finalShipLocations =
+              String.fromCharCode(letterInCharCode + j) + splitNumber;
 
-              if (indexOfLetter + actualShips[i].length <= 11) {
-                locations.push(finalShipLocations);
-                console.log(locations);
-              }
+            if (indexOfLetter + actualShips[i].length <= 11) {
+              actualShips[i].position = "vertical";
+              console.log(actualShips[i].position);
+              locations.push(finalShipLocations);
+              console.log(locations);
             }
-            previousLocations = actualShips[i].shipLocation;
-            actualShips[i].shipLocation = locations;
-            console.log(previousLocations);
-            console.log(actualShips[i].shipLocation);
           }
+          previousLocations = actualShips[i].shipLocation;
+          actualShips[i].shipLocation = locations;
+          console.log(previousLocations);
+          console.log(actualShips[i].shipLocation);
+
 
           if (
             indexOfLetter + actualShips[i].length <= 11 &&
@@ -534,11 +646,13 @@ function vertical(element) {
   let previousLocations = [];
   for (i = 0; i < actualShips.length; i++) {
     let ship = actualShips[i];
+
     if (ship.type == shipType1 && ship.shipLocation.length !== 0) {
       let locations = [];
       let firstCell = ship.shipLocation[0];
-      var number = parseInt(firstCell[1]);
-      let letter = firstCell[0];
+      var number = parseInt(firstCell.slice(1));
+      console.log(firstCell);
+      let letter = firstCell.slice(0, 1);
       for (j = 0; j < actualShips[i].length; j++) {
         let finalShipLocations = letter + (number + j);
         console.log(finalShipLocations);
@@ -555,21 +669,27 @@ function vertical(element) {
       console.log(previousLocations);
       console.log(actualShips[i].shipLocation);
       event.target.style.background = "";
-
+      actualShips[i].position = "horizontal";
+      console.log(actualShips[i].position);
       if (
         element.classList.contains("vertical") &&
         number + actualShips[i].length <= 11 &&
         checkShipsPositionsVertical(shipId) == false
       ) {
+        console.log(number)
         element.classList.remove("vertical");
         element.classList.add("horizontal");
+
         element.style.marginLeft = "0px";
         element.style.marginTop = "0px";
+        //actualShips[i].position = "horizontal";
       } else {
         for (i = 0; i < actualShips.length; i++) {
           //when the ship is found
           if (shipType1 == actualShips[i].type) {
             actualShips[i].shipLocation = previousLocations;
+            actualShips[i].position = "vertical";
+            console.log(actualShips[i].position);
           }
         }
       }
@@ -582,8 +702,8 @@ function vertical(element) {
     if (ship.type == shipType && ship.shipLocation.length !== 0) {
       let firstCell = ship.shipLocation[0];
       console.log(firstCell);
-      let number = firstCell[1];
-      let letter = firstCell[0];
+      let number = firstCell.slice(1);
+      let letter = firstCell.slice(0, 1);;
       indexOfLetter = rows.indexOf(letter); //converting the letter in rows number
       console.log(indexOfLetter);
       let letterInCharCode = letter.charCodeAt();
@@ -596,8 +716,9 @@ function vertical(element) {
         ) {
           element.classList.remove("horizontal");
           element.classList.add("vertical");
+          actualShips[i].position = "vertical";
           //element.setAttribute("draggable", false);
-
+          console.log(actualShips[i].position);
           switch (
             ship.length //positioning the vertical
           ) {
@@ -649,6 +770,8 @@ function vertical(element) {
           //when the ship is found
           if (shipType == actualShips[i].type) {
             actualShips[i].shipLocation = previousLocations;
+            actualShips[i].position = "horizontal";
+            console.log(actualShips[i].position);
           }
         }
       }
@@ -696,6 +819,9 @@ function postShips() {
 }
 
 function gameStatus() {
+  if (games.playerHasShips == true) {
+    document.getElementById("sendShips").style.display = "none";
+  }
   if (games.gameStatus == "shooting") {
     document.getElementById("sendSalvos").style.display = "block";
   } else if (
@@ -703,6 +829,8 @@ function gameStatus() {
     games.gameStatus == "waiting for opponent"
   ) {
     document.getElementById("sendSalvos").style.display = "none";
+  } else {
+    document.getElementById("sendSalvos").style.display = "block";
   }
 }
 
@@ -716,9 +844,9 @@ function bingoOpponentsSalvo() {
   var cells = document
     .getElementById("opponentTable")
     .getElementsByTagName("td");
-  if (games.hits.length > 0) {
+  if (games.hits != null) {
     var hits = games.hits;
-
+    console.log(hits);
     for (j = 0; j < hits.length; j++) {
       for (i = 0; i < cells.length; i++) {
         if (cells[i].id == hits[j]) {
@@ -727,4 +855,27 @@ function bingoOpponentsSalvo() {
       }
     }
   }
+}
+
+
+function logOut() {
+  fetch("http://localhost:8080/api/logout", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    })
+    .then(function (response) {
+      console.log("logged out", response);
+      return response.status;
+    })
+    .then(status => {
+      if (status == 200) {
+        window.location.href = "games.html";
+      } else {
+        alert("something went wrong");
+      }
+    })
+    .catch(error => console.log(error));
 }
