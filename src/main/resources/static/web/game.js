@@ -1,7 +1,16 @@
 //site = "'http://localhost:8080/api/game_view/1";
+var rows = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+var columns = ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+
+createTable("playerTable");
+createTable("opponentTable");
+crosshair();
+
 var url = window.location.href;
+const gpId = paramObj(url);
 var key_url;
-var actualShips = [{
+var actualShips = [
+  {
     type: "aircraft horizontal",
     shipLocation: [],
     length: 5,
@@ -32,14 +41,14 @@ var actualShips = [{
     position: "horizontal"
   }
 ];
-paramObj(url);
-fetching(key_url);
+
+fetching();
 //loadJsonData(key_url);
 function paramObj(search) {
   var obj = {};
   var reg = /(?:[?&]([^?&#=]+)(?:=([^&#]*))?)(?:#.*)?/g;
 
-  search.replace(reg, function (match, param, val) {
+  search.replace(reg, function(match, param, val) {
     obj[decodeURIComponent(param)] =
       val === undefined ? "" : decodeURIComponent(val);
   });
@@ -47,18 +56,18 @@ function paramObj(search) {
   return key_url;
 }
 
-function loadJsonData(param) {
-  $.getJSON("/api/game_view/" + param, function (data_json) {
+function loadJsonData() {
+  $.getJSON("/api/game_view/" + gpId, function(data_json) {
     var data = data_json;
   });
 }
 
-function fetching(param) {
-  site = "/api/game_view/" + param;
-  var fetchConfig = fetch(this.site, {
-      method: "GET"
-    })
-    .then(function (res) {
+function fetching() {
+  const site = "/api/game_view/" + gpId;
+  fetch(site, {
+    method: "GET"
+  })
+    .then(function(res) {
       console.log(res.status);
       if (res.status == 403) {
         alert("Not allowed to view opponents game");
@@ -66,60 +75,33 @@ function fetching(param) {
       }
       return res.json();
     })
-    .then(function (json) {
+    .then(function(json) {
       data = json;
       games = data;
       ships = data.ships;
 
       console.log(ships);
-      createTable("playerTable");
-      createTable("opponentTable");
-      //gridBoard();
+
+      checkPlayer(gpId);
       displayShips();
-      checkPlayer(param);
-      crosshair();
+
       playerSalvos();
-      salvos();
-      gameStatus();
+
+      //gameStatus();
+      markShipLocations();
       bingoSalvos(shipLocations);
       bingoOpponentsSalvo();
-      //markShipLocations()
-      console.log("param in get", param);
+      refresh();
+      //updateGameStatus();
+      //console.log("param in get", param);
       //postShips(param)
       console.log(games);
     })
-    .catch(function (error) {
+    .catch(function(error) {
       console.log(error);
     });
 }
-
-var rows = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-var columns = ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-
-//check player & opponent
-var player = "";
-var opponent = "";
-
-function checkPlayer(param) {
-  var gamePlayers = games.gamePlayers;
-
-  for (i = 0; i < gamePlayers.length; i++) {
-    if (gamePlayers.length > 1) {
-      if (gamePlayers[i].id == param) {
-        player = gamePlayers[i].player.email;
-      } else {
-        opponent = gamePlayers[i].player.email;
-      }
-    } else {
-      player = gamePlayers[i].player.email;
-      opponent = "waiting for opponent";
-    }
-
-    document.getElementById("player").innerHTML = player;
-    document.getElementById("opponent").innerHTML = opponent;
-  }
-}
-
+salvos();
 function createTable(table) {
   for (i = 0; i < rows.length; i++) {
     var newRow = document.createElement("tr");
@@ -137,8 +119,66 @@ function createTable(table) {
     }
   }
 }
+function crosshair() {
+  let cells = document
+    .getElementById("opponentTable")
+    .getElementsByTagName("td");
+  for (i = 0; i < cells.length; i++) {
+    cells[i].setAttribute("class", "crosshair");
+  }
+}
+//check player & opponent
+var player = "";
+var opponent = "";
+function checkPlayer(gpId) {
+  var gamePlayers = games.gamePlayers;
 
+  for (i = 0; i < gamePlayers.length; i++) {
+    if (gamePlayers.length > 1) {
+      if (gamePlayers[i].id == gpId) {
+        player = gamePlayers[i].player.email;
+      } else {
+        opponent = gamePlayers[i].player.email;
+      }
+    } else {
+      player = gamePlayers[i].player.email;
+      opponent = "waiting for opponent";
+    }
 
+    document.getElementById("player").innerHTML = player;
+    document.getElementById("opponent").innerHTML = opponent;
+  }
+}
+function refresh() {
+  var refresh = setInterval(() => {
+    if (
+      games.gameStatus == "waiting" ||
+      games.gameStatus == "waiting for opponent" ||
+      games.gameStatus == "shooting"
+    ) {
+      fetching();
+    }
+  }, 15000);
+}
+
+var shipLocations = [];
+
+function markShipLocations() {
+  var cells = document.getElementById("playerTable").getElementsByTagName("td");
+  for (i = 0; i < games.ships.length; i++) {
+    for (y = 0; y < games.ships[i].locations.length; y++) {
+      shipLocations.push(games.ships[i].locations[y]);
+    }
+  }
+
+  for (z = 0; z < cells.length; z++) {
+    for (j = 0; j < shipLocations.length; j++) {
+      if (cells[z].id == shipLocations[j]) {
+        cells[z].classList.add("marked");
+      }
+    }
+  }
+}
 
 function displayShips() {
   var cells = document.getElementById("playerTable").getElementsByTagName("td");
@@ -201,13 +241,11 @@ function displayShips() {
   console.log(airver);
   console.log(airhor);
 
-
-
-
   for (z = 0; z < cells.length; z++) {
     switch (cells[z].id) {
       case pathor[0]:
-        cells[z].setAttribute("class", "pathor");
+        cells[z].classList.replace("empty", "pathor");
+
         //document.getElementById("patrolboat").setAttribute("draggable", false);
         document.getElementById("patrolboat").style.display = "none";
         break;
@@ -220,7 +258,8 @@ function displayShips() {
         document.getElementById("aircraft").style.display = "none";
         break;
       case bathor[0]:
-        cells[z].setAttribute("class", "bathor");
+        cells[z].classList.remove("empty");
+        cells[z].classList.add("bathor");
         document.getElementById("battleship").style.display = "none";
         break;
       case desthor[0]:
@@ -251,35 +290,6 @@ function displayShips() {
   }
 }
 
-
-var shipLocations = [];
-
-/* function markShipLocations() {
-  var cells = document.getElementById("playerTable").getElementsByTagName("td");
-  for (i = 0; i < games.ships.length; i++) {
-    for (y = 0; y < games.ships[i].locations.length; y++) {
-      shipLocations.push(games.ships[i].locations[y]);
-    }
-  }
-
-  for (z = 0; z < cells.length; z++) {
-    for (j = 0; j < shipLocations.length; j++) {
-      if (cells[z].id == shipLocations[j]) {
-        cells[z].classList.add("marked");
-      }
-    }
-  }
-
-} */
-
-function crosshair() {
-  let cells = document
-    .getElementById("opponentTable")
-    .getElementsByTagName("td");
-  for (i = 0; i < cells.length; i++) {
-    cells[i].setAttribute("class", "crosshair");
-  }
-}
 var salvoLocations = [];
 
 function salvos() {
@@ -289,39 +299,39 @@ function salvos() {
     .getElementsByTagName("td");
   var node = document.getElementsByClassName("salvo");
   textContent = node.textContent;
-  if (games.gameStatus == "shooting") {
-    for (i = 0; i < cells.length; i++) {
-      let keli = cells[i];
-      keli.addEventListener("click", function () {
-        let type = keli.getAttribute("class");
-        let location = keli.getAttribute("id");
+  //if (games.gameStatus == "shooting") {
+  for (i = 0; i < cells.length; i++) {
+    let keli = cells[i];
+    keli.addEventListener("click", function() {
+      let type = keli.getAttribute("class");
+      let location = keli.getAttribute("id");
 
-        if (type == "crosshair" && this.textContent == "") {
-          counter++;
+      if (type == "crosshair" && this.textContent == "") {
+        counter++;
 
-          if (counter > 5) {
-            alert("you can only fire 5 salvos at one turn");
-            counter--;
-          } else {
-            keli.setAttribute("class", "salvo");
-
-            salvoLocations.push(location);
-          }
-        } else if (type == "salvo" && this.textContent == "") {
+        if (counter > 5) {
+          alert("you can only fire 5 salvos at one turn");
           counter--;
-          for (j = 0; j < salvoLocations.length; j++) {
-            let salvo = salvoLocations[j];
-            if (salvo == location) {
-              salvoLocations.splice(j, 1);
-            }
-          }
-          keli.setAttribute("class", "crosshair");
+        } else {
+          keli.setAttribute("class", "salvo");
+
+          salvoLocations.push(location);
         }
-        console.log(salvoLocations);
-        console.log(counter);
-      });
-    }
+      } else if (type == "salvo" && this.textContent == "") {
+        counter--;
+        for (j = 0; j < salvoLocations.length; j++) {
+          let salvo = salvoLocations[j];
+          if (salvo == location) {
+            salvoLocations.splice(j, 1);
+          }
+        }
+        keli.setAttribute("class", "crosshair");
+      }
+      console.log(salvoLocations);
+      console.log(counter);
+    });
   }
+  // }
 }
 
 function playerSalvos() {
@@ -352,14 +362,14 @@ function postSalvos() {
       salvoLocation: salvoLocations
     };
     fetch("/api/games/players/" + param + "/salvos", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(salvoData)
-      })
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(salvoData)
+    })
       .then(response => {
         if (response.status == 201) {
           return response.json();
@@ -378,12 +388,12 @@ function postSalvos() {
   }
 }
 
-function bingoSalvos() {
+function bingoSalvos(shipLocations) {
   var cells = document.getElementById("playerTable").getElementsByTagName("td");
   var opponents = games.opponents.opponentSalvos;
   console.log(
     Object.entries(games.opponents).length === 0 &&
-    games.opponents.constructor === Object
+      games.opponents.constructor === Object
   );
   let noOpponent =
     Object.entries(games.opponents).length === 0 &&
@@ -392,13 +402,12 @@ function bingoSalvos() {
     for (i = 0; i < opponents.length; i++) {
       for (y = 0; y < opponents[i].locations.length; y++) {
         for (z = 0; z < cells.length; z++) {
-          if (opponents[i].locations[y] == cells[z].id) {
-            cells[z].innerHTML = opponents[i].turn;
-
-            if (cells[z].className.includes("marked")) {
+          if (cells[z].id == opponents[i].locations[y]) {
+            if (shipLocations.includes(cells[z].id)) {
+              cells[z].innerHTML = opponents[i].turn;
               cells[z].classList.add("bingoSalvo");
-            } else {
-              cells[z].setAttribute("class", "salvo");
+
+              console.log("string", cells[z].id);
             }
           }
         }
@@ -414,11 +423,11 @@ function drag(event) {
 }
 
 /* events fired on the draggable target */
-document.addEventListener("drag", function (event) {}, false);
+document.addEventListener("drag", function(event) {}, false);
 
 document.addEventListener(
   "dragstart",
-  function (event) {
+  function(event) {
     // store a ref. on the dragged elem
     dragged = event.target;
     // make it half transparent
@@ -429,7 +438,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragend",
-  function (event) {
+  function(event) {
     // reset the transparency
     event.target.style.opacity = "";
   },
@@ -439,7 +448,7 @@ document.addEventListener(
 /* events fired on the drop targets */
 document.addEventListener(
   "dragover",
-  function (event) {
+  function(event) {
     // prevent default to allow drop
     event.preventDefault();
   },
@@ -448,7 +457,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragenter",
-  function (event) {
+  function(event) {
     // highlight potential drop target when the draggable element enters it
 
     if (event.target.className == "empty") {
@@ -460,7 +469,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragleave",
-  function (event) {
+  function(event) {
     // reset background of potential drop target when the draggable element leaves it
     if (event.target.className == "empty") {
       event.target.style.background = "";
@@ -471,7 +480,7 @@ document.addEventListener(
 
 document.addEventListener(
   "drop",
-  function (event) {
+  function(event) {
     console.log("dropping");
     // prevent default action (open as link for some elements)
     event.preventDefault();
@@ -567,7 +576,6 @@ document.addEventListener(
           actualShips[i].shipLocation = locations;
           console.log(previousLocations);
           console.log(actualShips[i].shipLocation);
-
 
           if (
             indexOfLetter + actualShips[i].length <= 11 &&
@@ -676,7 +684,7 @@ function vertical(element) {
         number + actualShips[i].length <= 11 &&
         checkShipsPositionsVertical(shipId) == false
       ) {
-        console.log(number)
+        console.log(number);
         element.classList.remove("vertical");
         element.classList.add("horizontal");
 
@@ -703,7 +711,7 @@ function vertical(element) {
       let firstCell = ship.shipLocation[0];
       console.log(firstCell);
       let number = firstCell.slice(1);
-      let letter = firstCell.slice(0, 1);;
+      let letter = firstCell.slice(0, 1);
       indexOfLetter = rows.indexOf(letter); //converting the letter in rows number
       console.log(indexOfLetter);
       let letterInCharCode = letter.charCodeAt();
@@ -793,14 +801,14 @@ function postShips() {
 
   if (result == 17) {
     fetch("/api/games/players/" + param + "/ships", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(actualShips)
-      })
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(actualShips)
+    })
       .then(response => {
         if (response.status == 201) {
           return response.json();
@@ -857,16 +865,15 @@ function bingoOpponentsSalvo() {
   }
 }
 
-
 function logOut() {
   fetch("http://localhost:8080/api/logout", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded"
-      }
-    })
-    .then(function (response) {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  })
+    .then(function(response) {
       console.log("logged out", response);
       return response.status;
     })
