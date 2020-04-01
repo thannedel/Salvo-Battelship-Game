@@ -82,7 +82,7 @@
         </div>
     </div>
 
-    <button type="button" id="logoutButton" onclick="logOut()">Log Out</button>
+
 
 
     <button type="submit" id="createGame">Create New Game</button>
@@ -103,24 +103,20 @@
             </tbody>
         </table>
 
-        <!-- <table class="table table-dark">
-            <thead>
-                <th>#</th>
-                <th>User</th>
-                <th>Total</th>
-                <th>Win</th>
-                <th>Loss</th>
-                <th>Tie</th>
-            </thead>
-            <tbody id="leaderBoard">
-                <tr>
 
-                </tr>
-            </tbody>
-        </table> -->
 
     </div>
-
+    <div class="background">
+        <div class="water"></div>
+    </div>
+    <svg>
+        <filter id="turbulence" x="0" y="0" width="100%" height="100%">
+            <feTurbulence id="sea-filter" numOctaves="3" seed="2" baseFrequency="0.02 0.05"></feTurbulence>
+            <feDisplacementMap scale="20" in="SourceGraphic"></feDisplacementMap>
+            <animate xlink:href="#sea-filter" attributeName="baseFrequency" dur="60s" keyTimes="0;0.5;1"
+                values="0.02 0.06;0.04 0.08;0.02 0.06" repeatCount="indefinite" />
+        </filter>
+    </svg>
 
     <script src="js/jquery.min.js"></script>
     <script src="js/tether.min.js"></script>
