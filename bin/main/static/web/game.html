@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" />
   <link rel="stylesheet" href="styles/styles.css">
-
   <title>Ship Locations!</title>
 </head>
 
@@ -15,7 +14,7 @@
 
 
   <div class="header">
-
+    <button type="button" id="logoutButton" onclick="logOut()">Log Out</button>
   </div>
   <div class="table">
     <div class=ships>
@@ -40,13 +39,13 @@
         <img id="patrolboat" src="img/patrol.png" class="patrolboat horizontal" draggable="true"
           ondragstart="drag(event)" ondblclick="vertical(this)" />
       </div>
+
     </div>
     <div id="playerTable" class="playerTable">
       <div id="player"></div>
 
-
-
     </div>
+
     <div>vs</div>
 
 
@@ -55,33 +54,39 @@
     <div id="opponentTable">
       <div id="opponent">
       </div>
+
     </div>
 
-    <button type="button" id="sendShips" onclick="postShips()">Done</button>
+    <div class="shipsButton">
+      <button type="button" id="sendShips" onclick="postShips()">Done</button>
+    </div>
+    <div class="salvosButton">
+      <button type="button" id="sendSalvos" onclick="postSalvos()">Salvo</button>
+    </div>
 
-    <button type="button" id="sendSalvos" onclick="postSalvos()">
-      Salvo
-    </button>
   </div>
-  <div>
+
+  <div id="gameStatus">
+    <h4 id="gameStatusText"></h4>
+  </div>
 
 
 
-    <div class="background">
-      <div class="water"></div>
-    </div>
-    <svg>
-      <filter id="turbulence" x="0" y="0" width="100%" height="100%">
-        <feTurbulence id="sea-filter" numOctaves="3" seed="2" baseFrequency="0.02 0.05"></feTurbulence>
-        <feDisplacementMap scale="20" in="SourceGraphic"></feDisplacementMap>
-        <animate xlink:href="#sea-filter" attributeName="baseFrequency" dur="60s" keyTimes="0;0.5;1"
-          values="0.02 0.06;0.04 0.08;0.02 0.06" repeatCount="indefinite" />
-      </filter>
-    </svg>
+  <div class="background">
+    <div class="water"></div>
+  </div>
+  <svg>
+    <filter id="turbulence" x="0" y="0" width="100%" height="100%">
+      <feTurbulence id="sea-filter" numOctaves="3" seed="2" baseFrequency="0.02 0.05"></feTurbulence>
+      <feDisplacementMap scale="20" in="SourceGraphic"></feDisplacementMap>
+      <animate xlink:href="#sea-filter" attributeName="baseFrequency" dur="60s" keyTimes="0;0.5;1"
+        values="0.02 0.06;0.04 0.08;0.02 0.06" repeatCount="indefinite" />
+    </filter>
+  </svg>
 
-    <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+  <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
 
-    <script src="game.js"></script>
+  <script src="game.js"></script>
 </body>
 
 </html>
