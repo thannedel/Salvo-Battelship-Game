@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/games.css">
@@ -19,7 +19,7 @@
     <div class="header">
 
 
-        <button class="btn btn-primary" data-toggle="modal" data-target="#contactModal">Register</button>
+        <button class="btn btn-success" data-toggle="modal" data-target="#contactModal">Register</button>
 
         <!-- <form id="login-form" onsubmit="return false"> -->
         <div class="modal fade" id="contactModal">
@@ -82,14 +82,14 @@
         </div>
     </div>
 
-    <button type="button" id="logoutButton" onclick="logOut()">Log Out</button>
+
 
 
     <button type="submit" id="createGame">Create New Game</button>
 
     <!-- <button type="button" id="newGameButton">Create New Game</button> -->
     <div class="container">
-        <table class="table table-dark">
+        <table class="table text-white">
             <thead>
                 <tr>
                     <th>#</th>
@@ -103,24 +103,20 @@
             </tbody>
         </table>
 
-        <table class="table table-dark">
-            <thead>
-                <th>#</th>
-                <th>User</th>
-                <th>Total</th>
-                <th>Win</th>
-                <th>Loss</th>
-                <th>Tie</th>
-            </thead>
-            <tbody id="leaderBoard">
-                <tr>
 
-                </tr>
-            </tbody>
-        </table>
 
     </div>
-
+    <div class="background">
+        <div class="water"></div>
+    </div>
+    <svg>
+        <filter id="turbulence" x="0" y="0" width="100%" height="100%">
+            <feTurbulence id="sea-filter" numOctaves="3" seed="2" baseFrequency="0.02 0.05"></feTurbulence>
+            <feDisplacementMap scale="20" in="SourceGraphic"></feDisplacementMap>
+            <animate xlink:href="#sea-filter" attributeName="baseFrequency" dur="60s" keyTimes="0;0.5;1"
+                values="0.02 0.06;0.04 0.08;0.02 0.06" repeatCount="indefinite" />
+        </filter>
+    </svg>
 
     <script src="js/jquery.min.js"></script>
     <script src="js/tether.min.js"></script>
