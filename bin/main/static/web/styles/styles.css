@@ -1,24 +1,36 @@
 html {
-  font: normal 16px sans-serif;
+  /* font: normal 16px sans-serif; */
   color: #fff;
+}
+
+@font-face {
+  font-family: "Press Start 2p";
+  src: url(../fonts/PressStart2P-Regular.ttf);
 }
 
 body {
   margin: 0;
   height: 100vh;
   width: 100vw;
+  font-family: "Press Start 2p";
+}
+
+p {
+  font-size: 20px;
+  color: rgb(19, 5, 5);
+  letter-spacing: 0.2rem;
 }
 
 .header {
-  padding: 2.5%;
+  display: flex;
+  justify-content: space-around;
+
+  /* For browsers that do not support gradients */
+  background-image: linear-gradient(to bottom right, #f5f2eb, #cfbe97);
   background-color: rgb(226, 238, 183);
 }
 
-/* .table {
-  margin: 10%;
-  display: flex;
-  justify-content: space-around;
-} */
+
 .vertical {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
@@ -37,24 +49,20 @@ body {
   padding: 20px;
 }
 
-.shipsButton {
-  grid-column: 2/3;
-}
-
-.salvosButton {
+.gamePannel {
   grid-column: 2/3;
 }
 
 .salvo {
-  background-color: red;
-  z-index: 2;
+  color: red;
+  height: 10px;
+  width: 10px;
+  /* z-index: 2; */
 }
 
 .bingoSalvo {
-  background: url(../img/hitrsz.gif);
-  /* background-color: black; */
-
-  /*  z-index: 2; */
+  background-image: url(../img/hitrsz.gif);
+  z-index: 2;
 }
 
 td,
@@ -107,30 +115,6 @@ td,
   cursor: url(../img/targetres.png), auto;
 }
 
-.background {
-  position: absolute;
-  z-index: -100;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-  background-image: url("../img/sea.jpg");
-  background-size: cover;
-}
-
-.background .water {
-  position: absolute;
-  background-image: url("../img/sea.jpg");
-  background-size: cover;
-  z-index: -99;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-size: cover;
-  filter: url("#turbulence");
-}
-
 .pathor {
   background-image: url("../img/patrolboathorrsz.png");
   position: absolute;
@@ -149,10 +133,10 @@ td,
 
 .airhor {
   background-image: url("../img/airhorrsz.png");
-  position: absolute;
+  z-index: -5;
   height: 35px;
   width: 175px;
-  z-index: -5;
+  position: absolute;
 }
 
 .bathor {
@@ -211,10 +195,12 @@ td,
   z-index: -5;
 }
 
+/*    buttons     */
 #logoutButton {
-  width: 10 rem;
-  padding: 0.8rem;
-  /* margin-top: 1rem; */
+  width: 100px;
+  height: 40px;
+
+  margin-top: 1rem;
   border: none;
   border-radius: 0.3rem;
   background-color: #0275d8;
@@ -223,5 +209,124 @@ td,
   font-size: 1rem;
   cursor: pointer;
   color: rgb(247, 239, 239);
-  text-decoration: none !important;
+  text-decoration: none;
+}
+
+#sendShips {
+  width: 10 rem;
+  padding: 0.8rem;
+  /* margin-top: 1rem; */
+  border: none;
+  border-radius: 0.3rem;
+  background-color: #180410;
+  color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  color: rgb(247, 239, 239);
+  text-decoration: none;
+}
+
+#sendSalvos {
+  width: 10 rem;
+  padding: 0.8rem;
+  /* margin-top: 1rem; */
+  border: none;
+  border-radius: 0.3rem;
+  background-color: #d81b02;
+  color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  color: rgb(247, 239, 239);
+  text-decoration: none;
+}
+
+.background {
+  position: absolute;
+  z-index: -100;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-image: url("../img/sea.jpg");
+  background-size: cover;
+}
+
+.background .water {
+  position: absolute;
+  background-image: url("../img/sea.jpg");
+  background-size: cover;
+  z-index: -99;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  filter: url("#turbulence");
+}
+
+.gamePannel {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.turn {
+  display: flex;
+  justify-content: space-around;
+}
+
+#over {
+  animation-name: parpadeo;
+  animation-duration: 3s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+
+  -webkit-animation-name: parpadeo;
+  -webkit-animation-duration: 3s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+}
+
+@-moz-keyframes parpadeo {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes parpadeo {
+  0% {
+    opacity: 1.0;
+  }
+
+  50% {
+    opacity: 0.0;
+  }
+
+  100% {
+    opacity: 1.0;
+  }
+}
+
+@keyframes parpadeo {
+  0% {
+    opacity: 1.0;
+  }
+
+  50% {
+    opacity: 0.0;
+  }
+
+  100% {
+    opacity: 1.0;
+  }
 }
