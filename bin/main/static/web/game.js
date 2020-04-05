@@ -14,41 +14,41 @@ var actualShips = [
     type: "aircraft horizontal",
     shipLocation: [],
     length: 5,
-    position: "horizontal"
+    position: "horizontal",
   },
   {
     type: "battleship horizontal",
     shipLocation: [],
     length: 4,
-    position: "horizontal"
+    position: "horizontal",
   },
   {
     type: "submarine horizontal",
     shipLocation: [],
     length: 3,
-    position: "horizontal"
+    position: "horizontal",
   },
   {
     type: "destroyer horizontal",
     shipLocation: [],
     length: 3,
-    position: "horizontal"
+    position: "horizontal",
   },
   {
     type: "patrolboat horizontal",
     shipLocation: [],
     length: 2,
-    position: "horizontal"
-  }
+    position: "horizontal",
+  },
 ];
 
 fetching();
-//loadJsonData(key_url);
+
 function paramObj(search) {
   var obj = {};
   var reg = /(?:[?&]([^?&#=]+)(?:=([^&#]*))?)(?:#.*)?/g;
 
-  search.replace(reg, function(match, param, val) {
+  search.replace(reg, function (match, param, val) {
     obj[decodeURIComponent(param)] =
       val === undefined ? "" : decodeURIComponent(val);
   });
@@ -57,7 +57,7 @@ function paramObj(search) {
 }
 
 function loadJsonData() {
-  $.getJSON("/api/game_view/" + gpId, function(data_json) {
+  $.getJSON("/api/game_view/" + gpId, function (data_json) {
     var data = data_json;
   });
 }
@@ -65,43 +65,38 @@ function loadJsonData() {
 function fetching() {
   const site = "/api/game_view/" + gpId;
   fetch(site, {
-    method: "GET"
+    method: "GET",
   })
-    .then(function(res) {
-      console.log(res.status);
+    .then(function (res) {
       if (res.status == 403) {
         alert("Not allowed to view opponents game");
         window.location.href = "games.html";
       }
       return res.json();
     })
-    .then(function(json) {
+    .then(function (json) {
       data = json;
       games = data;
       ships = data.ships;
 
-      console.log(ships);
-
       checkPlayer(gpId);
       displayShips();
+      gameStatus();
+
+      markShipLocations();
 
       playerSalvos();
-
-      //gameStatus();
-      markShipLocations();
+      getTurn();
       bingoSalvos(shipLocations);
       bingoOpponentsSalvo();
       refresh();
-      //updateGameStatus();
-      //console.log("param in get", param);
-      //postShips(param)
-      console.log(games);
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.log(error);
     });
 }
 salvos();
+
 function createTable(table) {
   for (i = 0; i < rows.length; i++) {
     var newRow = document.createElement("tr");
@@ -119,6 +114,7 @@ function createTable(table) {
     }
   }
 }
+
 function crosshair() {
   let cells = document
     .getElementById("opponentTable")
@@ -130,6 +126,7 @@ function crosshair() {
 //check player & opponent
 var player = "";
 var opponent = "";
+
 function checkPlayer(gpId) {
   var gamePlayers = games.gamePlayers;
 
@@ -149,16 +146,17 @@ function checkPlayer(gpId) {
     document.getElementById("opponent").innerHTML = opponent;
   }
 }
+
 function refresh() {
-  var refresh = setInterval(() => {
-    if (
+  setTimeout(() => {
+    /* if (
       games.gameStatus == "waiting" ||
       games.gameStatus == "waiting for opponent" ||
       games.gameStatus == "shooting"
-    ) {
-      fetching();
-    }
-  }, 15000);
+    ) { */
+    fetching();
+    //}
+  }, 10000);
 }
 
 var shipLocations = [];
@@ -238,15 +236,12 @@ function displayShips() {
       }
     }
   }
-  console.log(airver);
-  console.log(airhor);
 
   for (z = 0; z < cells.length; z++) {
     switch (cells[z].id) {
       case pathor[0]:
         cells[z].classList.replace("empty", "pathor");
 
-        //document.getElementById("patrolboat").setAttribute("draggable", false);
         document.getElementById("patrolboat").style.display = "none";
         break;
       case subhor[0]:
@@ -289,24 +284,27 @@ function displayShips() {
     }
   }
 }
-
 var salvoLocations = [];
+var counter = 0;
 
 function salvos() {
-  var counter = 0;
   var cells = document
     .getElementById("opponentTable")
     .getElementsByTagName("td");
   var node = document.getElementsByClassName("salvo");
   textContent = node.textContent;
-  //if (games.gameStatus == "shooting") {
+
   for (i = 0; i < cells.length; i++) {
     let keli = cells[i];
-    keli.addEventListener("click", function() {
+    keli.addEventListener("click", function () {
       let type = keli.getAttribute("class");
       let location = keli.getAttribute("id");
-
-      if (type == "crosshair" && this.textContent == "") {
+      console.log(games.gameStatus);
+      if (
+        type == "crosshair" &&
+        this.textContent == "" &&
+        games.gameStatus == "shooting"
+      ) {
         counter++;
 
         if (counter > 5) {
@@ -314,7 +312,6 @@ function salvos() {
           counter--;
         } else {
           keli.setAttribute("class", "salvo");
-
           salvoLocations.push(location);
         }
       } else if (type == "salvo" && this.textContent == "") {
@@ -331,14 +328,12 @@ function salvos() {
       console.log(counter);
     });
   }
-  // }
 }
 
 function playerSalvos() {
   var cells = document
     .getElementById("opponentTable")
     .getElementsByTagName("td");
-  //var salvoLocations = [];
 
   for (i = 0; i < games.salvos.length; i++) {
     for (y = 0; y < games.salvos[i].locations.length; y++) {
@@ -359,28 +354,28 @@ function postSalvos() {
   if (salvoLocations.length == 5) {
     let salvoData = {
       turnNumber: "",
-      salvoLocation: salvoLocations
+      salvoLocation: salvoLocations,
     };
     fetch("/api/games/players/" + param + "/salvos", {
       method: "POST",
       credentials: "include",
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(salvoData)
+      body: JSON.stringify(salvoData),
     })
-      .then(response => {
+      .then((response) => {
         if (response.status == 201) {
           return response.json();
         }
       })
-      .then(data => {
+      .then((data) => {
         console.log(data);
 
         window.location.reload();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("Request failure: ", error);
       });
   } else {
@@ -406,8 +401,6 @@ function bingoSalvos(shipLocations) {
             if (shipLocations.includes(cells[z].id)) {
               cells[z].innerHTML = opponents[i].turn;
               cells[z].classList.add("bingoSalvo");
-
-              console.log("string", cells[z].id);
             }
           }
         }
@@ -423,11 +416,11 @@ function drag(event) {
 }
 
 /* events fired on the draggable target */
-document.addEventListener("drag", function(event) {}, false);
+document.addEventListener("drag", function (event) {}, false);
 
 document.addEventListener(
   "dragstart",
-  function(event) {
+  function (event) {
     // store a ref. on the dragged elem
     dragged = event.target;
     // make it half transparent
@@ -438,7 +431,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragend",
-  function(event) {
+  function (event) {
     // reset the transparency
     event.target.style.opacity = "";
   },
@@ -448,7 +441,7 @@ document.addEventListener(
 /* events fired on the drop targets */
 document.addEventListener(
   "dragover",
-  function(event) {
+  function (event) {
     // prevent default to allow drop
     event.preventDefault();
   },
@@ -457,7 +450,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragenter",
-  function(event) {
+  function (event) {
     // highlight potential drop target when the draggable element enters it
 
     if (event.target.className == "empty") {
@@ -469,7 +462,7 @@ document.addEventListener(
 
 document.addEventListener(
   "dragleave",
-  function(event) {
+  function (event) {
     // reset background of potential drop target when the draggable element leaves it
     if (event.target.className == "empty") {
       event.target.style.background = "";
@@ -480,7 +473,7 @@ document.addEventListener(
 
 document.addEventListener(
   "drop",
-  function(event) {
+  function (event) {
     console.log("dropping");
     // prevent default action (open as link for some elements)
     event.preventDefault();
@@ -496,7 +489,6 @@ document.addEventListener(
     var splitLetter = event.target.id.slice(0, 1);
     indexOfLetter = rows.indexOf(splitLetter);
 
-    //console.log(splitNumber);
     console.log(indexOfLetter);
     shipType = draggableElement.className;
     var shipId = draggableElement.id;
@@ -535,6 +527,7 @@ document.addEventListener(
             dragged.parentNode.removeChild(dragged);
             event.target.appendChild(dragged);
           } else {
+            alert("invalid position");
             for (i = 0; i < actualShips.length; i++) {
               //when the ship is found
               if (shipType == actualShips[i].type) {
@@ -558,7 +551,7 @@ document.addEventListener(
       for (i = 0; i < actualShips.length; i++) {
         if (actualShips[i].type.includes(shipId)) {
           let locations = [];
-          // na liso shipType
+
           actualShips[i].position = "vertical";
 
           for (j = 0; j < actualShips[i].length; j++) {
@@ -583,9 +576,9 @@ document.addEventListener(
           ) {
             dragged.parentNode.removeChild(dragged);
             event.target.appendChild(dragged);
-            //event.target.tranform = "rotate(90deg)";
             event.target.style.background = "";
           } else {
+            alert("invalid position");
             event.target.style.background = "";
           }
         }
@@ -680,9 +673,10 @@ function vertical(element) {
       actualShips[i].position = "horizontal";
       console.log(actualShips[i].position);
       if (
-        element.classList.contains("vertical") &&
-        number + actualShips[i].length <= 11 &&
-        checkShipsPositionsVertical(shipId) == false
+        element.classList.contains("horizontal") ||
+        (element.classList.contains("vertical") &&
+          number + actualShips[i].length <= 11 &&
+          checkShipsPositionsVertical(shipId) == false)
       ) {
         console.log(number);
         element.classList.remove("vertical");
@@ -692,6 +686,7 @@ function vertical(element) {
         element.style.marginTop = "0px";
         //actualShips[i].position = "horizontal";
       } else {
+        alert("invalid position");
         for (i = 0; i < actualShips.length; i++) {
           //when the ship is found
           if (shipType1 == actualShips[i].type) {
@@ -725,7 +720,7 @@ function vertical(element) {
           element.classList.remove("horizontal");
           element.classList.add("vertical");
           actualShips[i].position = "vertical";
-          //element.setAttribute("draggable", false);
+
           console.log(actualShips[i].position);
           switch (
             ship.length //positioning the vertical
@@ -753,7 +748,6 @@ function vertical(element) {
           indexOfLetter + actualShips[i].length <= 11
         ) {
           locations.push(finalShipLocations);
-          //actualShips[i].shipLocation.push(finalShipLocations);
         }
       }
       previousLocations = actualShips[i].shipLocation;
@@ -768,11 +762,11 @@ function vertical(element) {
         indexOfLetter + actualShips[i].length > 11 ||
         checkShipsPositions(shipType) == true
       ) {
+        alert("invalid position");
         element.classList.remove("vertical");
         element.classList.add("horizontal");
         element.style.marginLeft = "0px";
         element.style.marginTop = "0px";
-        //element.setAttribute("draggable", true);
 
         for (i = 0; i < actualShips.length; i++) {
           //when the ship is found
@@ -805,19 +799,18 @@ function postShips() {
       credentials: "include",
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(actualShips)
+      body: JSON.stringify(actualShips),
     })
-      .then(response => {
+      .then((response) => {
         if (response.status == 201) {
           return response.json();
         } else {
           alert("Your ships are already placed!");
         }
       })
-      .then(data => {
-        //console.log(data)
+      .then((data) => {
         window.location.reload();
         // alert("Your ships are successfully placed!");
       });
@@ -827,18 +820,81 @@ function postShips() {
 }
 
 function gameStatus() {
-  if (games.playerHasShips == true) {
+  if (games.gameStatus == "waiting for opponent") {
+    document.getElementById("text").innerHTML = "WAIT FOR OPPONENT";
+    document.getElementById("text").style.display = "block";
     document.getElementById("sendShips").style.display = "none";
-  }
-  if (games.gameStatus == "shooting") {
-    document.getElementById("sendSalvos").style.display = "block";
-  } else if (
-    games.gameStatus == "waiting" ||
-    games.gameStatus == "waiting for opponent"
-  ) {
     document.getElementById("sendSalvos").style.display = "none";
-  } else {
+  }
+  if (
+    games.gameStatus == "waiting opponents ships" &&
+    games.playerHasShips == false
+  ) {
+    document.getElementById("sendShips").style.display = "block";
+    document.getElementById("sendSalvos").style.display = "none";
+    document.getElementById("text").innerHTML =
+      "PLACE YOUR SHIPS ON THE GRID (double click: vertical positions)";
+    document.getElementById("text").style.display = "block";
+  } else if (
+    games.gameStatus == "waiting opponents ships" &&
+    games.playerHasShips == true &&
+    games.opponentHasShips == false
+  ) {
+    document.getElementById("sendShips").style.display = "none";
+    document.getElementById("sendSalvos").style.display = "none";
+    document.getElementById("text").innerHTML =
+      "WAIT FOR OPPONENT TO PLACE THE SHIPS";
+    document.getElementById("text").style.display = "block";
+  } else if (
+    games.gameStatus == "waiting" &&
+    games.playerHasShips == false &&
+    games.opponentHasShips == true
+  ) {
+    document.getElementById("text").innerHTML =
+      "PLACE YOUR SHIPS ON THE GRID (double click: vertical positions)";
+    document.getElementById("text").style.display = "block";
+    document.getElementById("sendShips").style.display = "block";
+    document.getElementById("sendSalvos").style.display = "none";
+  }
+
+  if (games.gameStatus == "shooting") {
+    document.getElementById("sendShips").style.display = "none";
     document.getElementById("sendSalvos").style.display = "block";
+    document.getElementById("text").innerHTML =
+      "CHOOSE FIVE LOCATIONS ON OPPONENTS GRID";
+    document.getElementById("text").style.display = "block";
+  } else if (
+    games.gameStatus == "waiting" &&
+    games.playerHasShips == true &&
+    games.opponentHasShips == true
+  ) {
+    document.getElementById("sendShips").style.display = "none";
+    document.getElementById("sendSalvos").style.display = "none";
+    document.getElementById("text").innerHTML = "WAIT FOR OPPONENT TO PLAY";
+    document.getElementById("text").style.display = "block";
+  }
+
+  if (games.gameStatus == "player wins") {
+    document.getElementById("text").innerHTML = "You Won";
+    document.getElementById("text").style.display = "block";
+    document.getElementById("over").innerHTML = "Game Over";
+    document.getElementById("over").style.display = "block";
+    document.getElementById("sendShips").style.display = "none";
+    document.getElementById("sendSalvos").style.display = "none";
+  } else if (games.gameStatus == "opponent wins") {
+    document.getElementById("text").innerHTML = "You Lost";
+    document.getElementById("text").style.display = "block";
+    document.getElementById("over").innerHTML = "Game Over";
+    document.getElementById("over").style.display = "block";
+    document.getElementById("sendShips").style.display = "none";
+    document.getElementById("sendSalvos").style.display = "none";
+  } else if (games.gameStatus == "tie") {
+    document.getElementById("text").innerHTML = "TIE";
+    document.getElementById("text").style.display = "block";
+    document.getElementById("over").innerHTML = "Game Over";
+    document.getElementById("over").style.display = "block";
+    document.getElementById("sendShips").style.display = "none";
+    document.getElementById("sendSalvos").style.display = "none";
   }
 }
 
@@ -854,7 +910,7 @@ function bingoOpponentsSalvo() {
     .getElementsByTagName("td");
   if (games.hits != null) {
     var hits = games.hits;
-    console.log(hits);
+
     for (j = 0; j < hits.length; j++) {
       for (i = 0; i < cells.length; i++) {
         if (cells[i].id == hits[j]) {
@@ -870,19 +926,29 @@ function logOut() {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
   })
-    .then(function(response) {
+    .then(function (response) {
       console.log("logged out", response);
       return response.status;
     })
-    .then(status => {
+    .then((status) => {
       if (status == 200) {
         window.location.href = "games.html";
       } else {
         alert("something went wrong");
       }
     })
-    .catch(error => console.log(error));
+    .catch((error) => console.log(error));
+}
+
+function getTurn() {
+  let turn;
+  if (games.salvos.length == 0) {
+    turn = 1;
+  } else if (games.salvos.length > 0) {
+    turn = games.salvos.length + 1;
+  }
+  document.getElementById("getTurn").innerHTML = turn;
 }
