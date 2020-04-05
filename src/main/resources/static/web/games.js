@@ -92,7 +92,7 @@ function createList(games) {
       backtogame.setAttribute(
         "class",
         "backButton");
-      backtogame.innerHTML = "Go to Game";
+      backtogame.innerHTML = "Play";
 
       if (
         currentGamePlayerId == games[i].gamePlayers[0].id ||
