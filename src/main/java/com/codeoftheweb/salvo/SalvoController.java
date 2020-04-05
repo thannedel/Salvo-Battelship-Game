@@ -239,7 +239,7 @@ public boolean playerHasShips(GamePlayer gamePlayer){
         if (gamePlayer.getGame().getGamePlayers().size() == 2) {
             GamePlayer opponent = getOpponent(gamePlayer);
             if (opponent.getShips().isEmpty()) {
-                return "waiting";
+                return "waiting opponents ships";
             } else {
                 //opponent has ships
                 if (gamePlayer.getSalvos().size() == 0 && opponent.getSalvos().size() == 0) {
