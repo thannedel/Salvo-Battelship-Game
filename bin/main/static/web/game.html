@@ -6,18 +6,22 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" />
-  <link rel="stylesheet" href="styles/styles.css">
+  <link href="fonts/PressStart2P-Regular.ttf" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles/styles.css" />
   <title>Ship Locations!</title>
 </head>
 
 <body>
-
-
   <div class="header">
-    <button type="button" id="logoutButton" onclick="logOut()">Log Out</button>
+    <p class="logo">BATTLESHIP</p>
+    <button type="button" id="logoutButton" onclick="logOut()">
+      Log Out
+    </button>
   </div>
+
   <div class="table">
-    <div class=ships>
+    <div class="ships">
       <div class="shipHeader">Ships</div>
       <div>
         <img id="aircraft" src="img/aircraftabove.png" class="aircraft horizontal" draggable="true"
@@ -39,38 +43,35 @@
         <img id="patrolboat" src="img/patrol.png" class="patrolboat horizontal" draggable="true"
           ondragstart="drag(event)" ondblclick="vertical(this)" />
       </div>
-
     </div>
     <div id="playerTable" class="playerTable">
       <div id="player"></div>
-
     </div>
 
-    <div>vs</div>
-
-
-
+    <div class="vs">
+      <h4>vs</h4>
+      <div class="turn">
+        <h3>TURN:</h3>
+        <h3 id="getTurn"></h3>
+      </div>
+      <p id="text"></p>
+      <p id="over"></p>
+    </div>
 
     <div id="opponentTable">
-      <div id="opponent">
-      </div>
-
+      <div id="opponent"></div>
     </div>
 
-    <div class="shipsButton">
-      <button type="button" id="sendShips" onclick="postShips()">Done</button>
+    <div class="gamePannel">
+      <button type="button" id="sendShips" onclick="postShips()">
+        Confirm Ships
+      </button>
+      <button type="button" id="sendSalvos" onclick="postSalvos()">
+        Salvo
+      </button>
+      <!-- <p id="text"></p> -->
     </div>
-    <div class="salvosButton">
-      <button type="button" id="sendSalvos" onclick="postSalvos()">Salvo</button>
-    </div>
-
   </div>
-
-  <div id="gameStatus">
-    <h4 id="gameStatusText"></h4>
-  </div>
-
-
 
   <div class="background">
     <div class="water"></div>
