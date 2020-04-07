@@ -400,9 +400,9 @@ function bingoSalvos(shipLocations) {
           if (cells[z].id == opponents[i].locations[y]) {
             if (shipLocations.includes(cells[z].id)) {
               cells[z].innerHTML = opponents[i].turn;
-              /* cells[z].innerHTML = "X";
-              cells[z].style.color = "red"; */
-              cells.setAttribute("class", "bingoSalvo");
+              cells[z].innerHTML = "X";
+              cells[z].style.color = "red";
+              //cells.setAttribute("class", "bingoSalvo");
             }
           }
         }
