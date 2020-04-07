@@ -253,6 +253,7 @@ $("#createGame").click(function (event) {
     })
     .fail(function (data) {
       console.log("game creation failed");
+      alert("Please sign up first")
     })
     .always(function () {});
 });

@@ -1,56 +1,82 @@
 html {
-  font: normal 16px sans-serif;
+  /* font: normal 16px sans-serif; */
   color: #fff;
+}
+
+@font-face {
+  font-family: "Press Start 2p";
+  src: url(../fonts/PressStart2P-Regular.ttf);
 }
 
 body {
   margin: 0;
   height: 100vh;
   width: 100vw;
+  font-family: "Press Start 2p";
 }
 
-.header {
-  padding: 2.5%;
-  background-color: rgb(226, 238, 183);
+p {
+  font-size: 20px;
+  color: rgb(19, 5, 5);
+  letter-spacing: 0.2rem;
 }
 
-/* .table {
-  margin: 10%;
+/* .header {
   display: flex;
   justify-content: space-around;
+
+ 
+  background-image: linear-gradient(to bottom right, #f5f2eb, #cfbe97);
+  background-color: rgb(226, 238, 183);
 } */
+.header {
+  display: flex;
+  justify-content: flex-end;
+
+}
+
+.vertical {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
 
 .table {
   display: grid;
   grid-template-columns: 1.5fr 3.5fr 1.5fr 3.5fr;
+  grid-template-rows: repeat(2);
 }
 
 .table div {
   padding: 20px;
 }
 
-.marked {
-  background-color: rgb(0, 255, 34);
+.gamePannel {
+  grid-column: 2/3;
 }
 
 .salvo {
-  background-color: red;
+  color: red;
+  height: 10px;
+  width: 10px;
+  /* z-index: 2; */
 }
 
 .bingoSalvo {
-  background-color: blue;
+  background-image: url(../img/hitrsz.gif);
+  z-index: 2;
 }
 
 td,
 .empty {
-  height: 35px;
-  width: 35px;
+  height: 36px;
+  width: 36px;
   border: 1px solid rgba(15, 31, 122, 0.342);
 
-  background-color: rgba(153, 205, 50, 0.233);
+  background-color: rgba(62, 131, 90, 0.233);
 }
-
-
 
 #aircraft {
   position: absolute;
@@ -87,18 +113,137 @@ td,
   cursor: pointer;
 }
 
-.vertical {
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  transform: rotate(90deg);
-}
-
 .crosshair {
   background-color: rgba(153, 205, 50, 0.233);
 
   cursor: url(../img/targetres.png), auto;
+}
+
+.pathor {
+  background-image: url("../img/patrolboathorrsz.png");
+  position: absolute;
+  height: 35px;
+  width: 70px;
+  z-index: -5;
+}
+
+.subhor {
+  background-image: url("../img/submarinehorrsz.png");
+  position: absolute;
+  height: 35px;
+  width: 105px;
+  z-index: -5;
+}
+
+.airhor {
+  background-image: url("../img/airhorrsz.png");
+  z-index: -5;
+  height: 35px;
+  width: 175px;
+  position: absolute;
+}
+
+.bathor {
+  background-image: url("../img/battleshiphorrsz.png");
+  position: absolute;
+  height: 35px;
+  width: 140px;
+  z-index: -5;
+}
+
+.desthor {
+  background-image: url("../img/destroyerhorrsz.png");
+  position: absolute;
+  height: 35px;
+  width: 105px;
+  z-index: -5;
+}
+
+.patver {
+  background-image: url("../img/patrolboatverrsz.png");
+  position: absolute;
+  height: 70px;
+  width: 35px;
+  z-index: -5;
+}
+
+.subver {
+  background-image: url("../img/submarineverrsz.png");
+  position: absolute;
+  height: 105px;
+  width: 35px;
+  z-index: -5;
+}
+
+.airver {
+  background-image: url("../img/airverrsz.png");
+  position: absolute;
+  height: 175px;
+  width: 35px;
+  z-index: -5;
+}
+
+.batver {
+  background-image: url("../img/battleshipverrsz.png");
+  position: absolute;
+  height: 140px;
+  width: 35px;
+  z-index: -5;
+}
+
+.destver {
+  background-image: url("../img/destroyerverrsz.png");
+  position: absolute;
+  height: 105px;
+  width: 35px;
+  z-index: -5;
+}
+
+/*    buttons     */
+#logoutButton {
+  width: 100px;
+  height: 40px;
+
+  margin-top: 1rem;
+  border: none;
+  border-radius: 0.3rem;
+  background-color: #0275d8;
+  color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  color: rgb(247, 239, 239);
+  text-decoration: none;
+}
+
+#sendShips {
+  width: 10 rem;
+  padding: 0.8rem;
+  /* margin-top: 1rem; */
+  border: none;
+  border-radius: 0.3rem;
+  background-color: #180410;
+  color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  color: rgb(247, 239, 239);
+  text-decoration: none;
+}
+
+#sendSalvos {
+  width: 10 rem;
+  padding: 0.8rem;
+  /* margin-top: 1rem; */
+  border: none;
+  border-radius: 0.3rem;
+  background-color: #d81b02;
+  color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  color: rgb(247, 239, 239);
+  text-decoration: none;
 }
 
 .background {
@@ -123,4 +268,74 @@ td,
   width: 100%;
   background-size: cover;
   filter: url("#turbulence");
+}
+
+.gamePannel {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.turn {
+  display: flex;
+  justify-content: space-around;
+}
+
+#over {
+  animation-name: parpadeo;
+  animation-duration: 3s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+
+  -webkit-animation-name: parpadeo;
+  -webkit-animation-duration: 3s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+}
+
+@-moz-keyframes parpadeo {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes parpadeo {
+  0% {
+    opacity: 1.0;
+  }
+
+  50% {
+    opacity: 0.0;
+  }
+
+  100% {
+    opacity: 1.0;
+  }
+}
+
+@keyframes parpadeo {
+  0% {
+    opacity: 1.0;
+  }
+
+  50% {
+    opacity: 0.0;
+  }
+
+  100% {
+    opacity: 1.0;
+  }
+}
+
+.leaderIcon {
+  border-radius: 2%;
+  background-color: #d81b02;
 }

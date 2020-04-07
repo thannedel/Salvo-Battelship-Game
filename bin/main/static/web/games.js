@@ -92,7 +92,7 @@ function createList(games) {
       backtogame.setAttribute(
         "class",
         "backButton");
-      backtogame.innerHTML = "Go to Game";
+      backtogame.innerHTML = "Play";
 
       if (
         currentGamePlayerId == games[i].gamePlayers[0].id ||
@@ -253,6 +253,7 @@ $("#createGame").click(function (event) {
     })
     .fail(function (data) {
       console.log("game creation failed");
+      alert("Please sign up first")
     })
     .always(function () {});
 });

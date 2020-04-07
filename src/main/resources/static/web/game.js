@@ -399,8 +399,10 @@ function bingoSalvos(shipLocations) {
         for (z = 0; z < cells.length; z++) {
           if (cells[z].id == opponents[i].locations[y]) {
             if (shipLocations.includes(cells[z].id)) {
-              cells[z].innerHTML = opponents[i].turn;
-              cells[z].classList.add("bingoSalvo");
+              //cells[z].innerHTML = opponents[i].turn;
+              cells[z].innerHTML = "X";
+              cells[z].style.color = "red";
+              cells[z].style.fontSize = "25px";
             }
           }
         }
@@ -512,8 +514,6 @@ document.addEventListener(
         }
         previousLocations = actualShips[i].shipLocation;
         actualShips[i].shipLocation = locations;
-        console.log(previousLocations);
-        console.log(actualShips[i].shipLocation);
         event.target.style.background = "";
         var position = actualShips[i].position;
         console.log(position);
@@ -540,8 +540,7 @@ document.addEventListener(
     }
     if (
       draggableElement.classList.contains("vertical") &&
-      event.target.className == "empty" &&
-      checkShipsPositions(shipType) == false
+      event.target.className == "empty"
     ) {
       console.log(splitLetter);
       console.log(splitNumber);
@@ -560,9 +559,8 @@ document.addEventListener(
 
             if (indexOfLetter + actualShips[i].length <= 11) {
               actualShips[i].position = "vertical";
-              console.log(actualShips[i].position);
+
               locations.push(finalShipLocations);
-              console.log(locations);
             }
           }
           previousLocations = actualShips[i].shipLocation;
@@ -580,6 +578,12 @@ document.addEventListener(
           } else {
             alert("invalid position");
             event.target.style.background = "";
+            for (i = 0; i < actualShips.length; i++) {
+              //when the ship is found
+              if (actualShips[i].type.includes(shipId)) {
+                actualShips[i].shipLocation = previousLocations;
+              }
+            }
           }
         }
       }
@@ -826,10 +830,7 @@ function gameStatus() {
     document.getElementById("sendShips").style.display = "none";
     document.getElementById("sendSalvos").style.display = "none";
   }
-  if (
-    games.gameStatus == "waiting opponents ships" &&
-    games.playerHasShips == false
-  ) {
+  if (games.gameStatus == "firstPlayersShips") {
     document.getElementById("sendShips").style.display = "block";
     document.getElementById("sendSalvos").style.display = "none";
     document.getElementById("text").innerHTML =
@@ -837,7 +838,16 @@ function gameStatus() {
     document.getElementById("text").style.display = "block";
   } else if (
     games.gameStatus == "waiting opponents ships" &&
-    games.playerHasShips == true &&
+    games.opponentHasShips == false
+  ) {
+    document.getElementById("sendShips").style.display = "none";
+    document.getElementById("sendSalvos").style.display = "none";
+    document.getElementById("text").innerHTML =
+      "WAIT FOR OPPONENT TO PLACE THE SHIPS";
+    document.getElementById("text").style.display = "block";
+  }
+  if (
+    games.gameStatus == "secondsPlayersShips" &&
     games.opponentHasShips == false
   ) {
     document.getElementById("sendShips").style.display = "none";
@@ -846,6 +856,15 @@ function gameStatus() {
       "WAIT FOR OPPONENT TO PLACE THE SHIPS";
     document.getElementById("text").style.display = "block";
   } else if (
+    games.gameStatus == "secondsPlayersShips" &&
+    games.opponentHasShips == true
+  ) {
+    document.getElementById("sendShips").style.display = "block";
+    document.getElementById("sendSalvos").style.display = "none";
+    document.getElementById("text").innerHTML =
+      "PLACE YOUR SHIPS ON THE GRID (double click: vertical positions)";
+    document.getElementById("text").style.display = "block";
+  } /* else if (
     games.gameStatus == "waiting" &&
     games.playerHasShips == false &&
     games.opponentHasShips == true
@@ -855,7 +874,7 @@ function gameStatus() {
     document.getElementById("text").style.display = "block";
     document.getElementById("sendShips").style.display = "block";
     document.getElementById("sendSalvos").style.display = "none";
-  }
+  } */
 
   if (games.gameStatus == "shooting") {
     document.getElementById("sendShips").style.display = "none";

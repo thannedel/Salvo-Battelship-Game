@@ -237,7 +237,15 @@ public boolean playerHasShips(GamePlayer gamePlayer){
     }
     public String getGameStatus(GamePlayer gamePlayer) {
         if (gamePlayer.getGame().getGamePlayers().size() == 2) {
+
             GamePlayer opponent = getOpponent(gamePlayer);
+            if(gamePlayer.getShips().size()== 0){
+                if (goesFirst(gamePlayer)) {
+                    return "firstPlayersShips";
+                }else{
+                    return  "secondsPlayersShips";
+                }
+            }
             if (opponent.getShips().isEmpty()) {
                 return "waiting opponents ships";
             } else {
