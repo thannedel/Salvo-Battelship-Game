@@ -9,7 +9,8 @@ crosshair();
 var url = window.location.href;
 const gpId = paramObj(url);
 var key_url;
-var actualShips = [{
+var actualShips = [
+  {
     type: "aircraft horizontal",
     shipLocation: [],
     length: 5,
@@ -64,8 +65,8 @@ function loadJsonData() {
 function fetching() {
   const site = "/api/game_view/" + gpId;
   fetch(site, {
-      method: "GET",
-    })
+    method: "GET",
+  })
     .then(function (res) {
       if (res.status == 403) {
         alert("Not allowed to view opponents game");
@@ -356,14 +357,14 @@ function postSalvos() {
       salvoLocation: salvoLocations,
     };
     fetch("/api/games/players/" + param + "/salvos", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(salvoData),
-      })
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(salvoData),
+    })
       .then((response) => {
         if (response.status == 201) {
           return response.json();
@@ -387,7 +388,7 @@ function bingoSalvos(shipLocations) {
   var opponents = games.opponents.opponentSalvos;
   console.log(
     Object.entries(games.opponents).length === 0 &&
-    games.opponents.constructor === Object
+      games.opponents.constructor === Object
   );
   let noOpponent =
     Object.entries(games.opponents).length === 0 &&
@@ -398,9 +399,10 @@ function bingoSalvos(shipLocations) {
         for (z = 0; z < cells.length; z++) {
           if (cells[z].id == opponents[i].locations[y]) {
             if (shipLocations.includes(cells[z].id)) {
-              //cells[z].innerHTML = opponents[i].turn;
-              cells[z].innerHTML = "X";
-              cells[z].style.color = "red";
+              cells[z].innerHTML = opponents[i].turn;
+              /* cells[z].innerHTML = "X";
+              cells[z].style.color = "red"; */
+              cells.setAttribute("class", "bingoSalvo");
             }
           }
         }
@@ -797,14 +799,14 @@ function postShips() {
 
   if (result == 17) {
     fetch("/api/games/players/" + param + "/ships", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(actualShips),
-      })
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(actualShips),
+    })
       .then((response) => {
         if (response.status == 201) {
           return response.json();
@@ -941,12 +943,12 @@ function bingoOpponentsSalvo() {
 
 function logOut() {
   fetch("https://salvo-ship-game.herokuapp.com/api/logout", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    })
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  })
     .then(function (response) {
       console.log("logged out", response);
       return response.status;
