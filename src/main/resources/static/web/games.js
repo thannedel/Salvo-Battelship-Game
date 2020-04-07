@@ -9,7 +9,7 @@ fetch("/api/games").then(function (response) {
   });
 */
 
-site = " http://localhost:8080/api/games";
+site = "https://salvo-ship-game.herokuapp.com/api/games";
 
 var i, j, k;
 var index = 1;
@@ -168,7 +168,7 @@ function loginPost(username, password) {
 //logOut();
 
 function logOut() {
-  fetch("http://localhost:8080/api/logout", {
+  fetch("https://salvo-ship-game.herokuapp.com/api/logout", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -221,7 +221,7 @@ function signUp() {
 
 function joinGame(gameid) {
   console.log(gameid);
-  fetch(`http://localhost:8080/api/game/${gameid}/players`, {
+  fetch(`https://salvo-ship-game.herokuapp.com/api/game/${gameid}/players`, {
       method: "POST",
       headers: {
         Accept: "application/json",

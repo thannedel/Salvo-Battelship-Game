@@ -1,4 +1,4 @@
-//site = "'http://localhost:8080/api/game_view/1";
+//site = "'https://salvo-ship-game.herokuapp.com/api/game_view/1";
 var rows = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 var columns = ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
@@ -941,7 +941,7 @@ function bingoOpponentsSalvo() {
 }
 
 function logOut() {
-  fetch("http://localhost:8080/api/logout", {
+  fetch("https://salvo-ship-game.herokuapp.com/api/logout", {
     method: "POST",
     headers: {
       Accept: "application/json",

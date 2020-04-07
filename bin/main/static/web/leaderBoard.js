@@ -1,4 +1,4 @@
-site = " http://localhost:8080/api/games";
+site = " https://salvo-ship-game.herokuapp.com/api/games";
 
 var i, j, k;
 var index = 1;
