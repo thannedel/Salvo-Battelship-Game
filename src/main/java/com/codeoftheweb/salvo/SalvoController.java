@@ -53,7 +53,7 @@ public class SalvoController {
         System.out.println(gameRepository);
         return gameRepository
                 .findAll()
-                .stream()
+                .stream().sorted(Comparator.comparing(Game::getId).reversed())
                 .map(game -> gamePlayersList(game))
                 .collect(Collectors.toList());
     }
