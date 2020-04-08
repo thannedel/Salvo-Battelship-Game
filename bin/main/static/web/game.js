@@ -252,7 +252,6 @@ function displayShips() {
         document.getElementById("aircraft").style.display = "none";
         break;
       case bathor[0]:
-        cells[z].classList.remove("empty");
         cells[z].classList.add("bathor");
         document.getElementById("battleship").style.display = "none";
         break;
@@ -814,9 +813,9 @@ function postShips() {
         }
       })
       .then((data) => {
-        //window.location.reload();
+        window.location.reload();
         // alert("Your ships are successfully placed!");
-        fetching();
+        //fetching();
       });
   } else {
     alert("Place the rest of the ships!");
