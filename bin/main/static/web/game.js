@@ -240,8 +240,7 @@ function displayShips() {
   for (z = 0; z < cells.length; z++) {
     switch (cells[z].id) {
       case pathor[0]:
-        cells[z].classList.replace("empty", "pathor");
-
+        cells[z].setAttribute("class", "pathor");
         document.getElementById("patrolboat").style.display = "none";
         break;
       case subhor[0]:
