@@ -371,8 +371,8 @@ function postSalvos() {
       })
       .then((data) => {
         console.log(data);
+        fetching();
 
-        window.location.reload();
       })
       .catch((error) => {
         console.log("Request failure: ", error);
