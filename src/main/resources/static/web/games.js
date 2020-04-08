@@ -62,7 +62,7 @@ function createList(games) {
   console.log(games);
 
   for (var i = 0; i < games.length; i++) {
-    var row = document.createElement("tr").insertRow(0);
+    var row = document.createElement("tr");
 
     var date = new Date(games[i].created);
     var localDate = date.toLocaleString();
