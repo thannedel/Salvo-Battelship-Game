@@ -29,17 +29,19 @@ function fetching() {
       data = json;
       user = data.player;
       games = data.games;
-
       console.log(user);
-
       createList(games);
-
-
-      console.log(games);
+      refresh();
     })
     .catch(function (error) {
       console.log(error);
     });
+}
+
+function refresh() {
+  setTimeout(() => {
+    fetching();
+  }, 10000);
 }
 
 function getcurrentplayer(currentPlayerId) {
