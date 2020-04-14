@@ -877,7 +877,7 @@ function gameStatus() {
 }
 
 function logOut() {
-  fetch("https://localhost:8080/api/logout", {
+  fetch("https://salvo-ship-game.herokuapp.com/api/logout", {
       method: "POST",
       headers: {
         Accept: "application/json",
