@@ -9,7 +9,7 @@ fetch("/api/games").then(function (response) {
   });
 */
 
-site = "https://salvo-ship-game.herokuapp.com/api/games";
+site = "http://localhost:8080/api/games";
 
 var i, j, k;
 var index = 1;
@@ -29,8 +29,13 @@ function fetching() {
       data = json;
       user = data.player;
       games = data.games;
+
       console.log(user);
+
       createList(games);
+
+
+      console.log(games);
       refresh();
     })
     .catch(function (error) {
@@ -64,12 +69,13 @@ function createList(games) {
   console.log(games);
 
   for (var i = 0; i < games.length; i++) {
-    var row = document.createElement("tr");
+    //var row = document.createElement("tr");
+    var row = output.insertRow(0);
 
     var date = new Date(games[i].created);
     var localDate = date.toLocaleString();
 
-    var player1 = games[i].gamePlayers[0].player.email;
+    var player1 = games[i].gamePlayers[0].player.name;
     var player2;
     var action = "-";
     var currentGamePlayerId;
@@ -77,7 +83,7 @@ function createList(games) {
     var backtogame;
 
     if (games[i].gamePlayers.length > 1) {
-      player2 = games[i].gamePlayers[1].player.email;
+      player2 = games[i].gamePlayers[1].player.name;
       if (games[i].gamePlayers[0].player.id == getcurrentplayer()) {
         // gameplayer id of loggedin player
         currentGamePlayerId = games[i].gamePlayers[0].id;
@@ -171,7 +177,7 @@ function loginPost(username, password) {
 //logOut();
 
 function logOut() {
-  fetch("https://salvo-ship-game.herokuapp.com/api/logout", {
+  fetch("http://localhost:8080/api/logout", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -224,7 +230,7 @@ function signUp() {
 
 function joinGame(gameid) {
   console.log(gameid);
-  fetch(`https://salvo-ship-game.herokuapp.com/api/game/${gameid}/players`, {
+  fetch(`http://localhost:8080/api/game/${gameid}/players`, {
       method: "POST",
       headers: {
         Accept: "application/json",

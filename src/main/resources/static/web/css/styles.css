@@ -24,7 +24,6 @@ p {
 /* .header {
   display: flex;
   justify-content: space-around;
-
  
   background-image: linear-gradient(to bottom right, #f5f2eb, #cfbe97);
   background-color: rgb(226, 238, 183);
@@ -32,7 +31,6 @@ p {
 .header {
   display: flex;
   justify-content: flex-end;
-
 }
 
 .vertical {
@@ -275,7 +273,6 @@ td,
   justify-content: space-between;
 }
 
-
 .turn {
   display: flex;
   justify-content: space-around;
@@ -309,29 +306,29 @@ td,
 
 @-webkit-keyframes parpadeo {
   0% {
-    opacity: 1.0;
+    opacity: 1;
   }
 
   50% {
-    opacity: 0.0;
+    opacity: 0;
   }
 
   100% {
-    opacity: 1.0;
+    opacity: 1;
   }
 }
 
 @keyframes parpadeo {
   0% {
-    opacity: 1.0;
+    opacity: 1;
   }
 
   50% {
-    opacity: 0.0;
+    opacity: 0;
   }
 
   100% {
-    opacity: 1.0;
+    opacity: 1;
   }
 }
 

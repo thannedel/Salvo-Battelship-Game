@@ -9,8 +9,7 @@ crosshair();
 var url = window.location.href;
 const gpId = paramObj(url);
 var key_url;
-var actualShips = [
-  {
+var actualShips = [{
     type: "aircraft horizontal",
     shipLocation: [],
     length: 5,
@@ -65,8 +64,8 @@ function loadJsonData() {
 function fetching() {
   const site = "/api/game_view/" + gpId;
   fetch(site, {
-    method: "GET",
-  })
+      method: "GET",
+    })
     .then(function (res) {
       if (res.status == 403) {
         alert("Not allowed to view opponents game");
@@ -80,11 +79,11 @@ function fetching() {
       ships = data.ships;
 
       checkPlayer(gpId);
-      displayShips();
+
       gameStatus();
-
+      empty();
       markShipLocations();
-
+      karavia();
       playerSalvos();
       getTurn();
       bingoSalvos(shipLocations);
@@ -133,12 +132,12 @@ function checkPlayer(gpId) {
   for (i = 0; i < gamePlayers.length; i++) {
     if (gamePlayers.length > 1) {
       if (gamePlayers[i].id == gpId) {
-        player = gamePlayers[i].player.email;
+        player = gamePlayers[i].player.name;
       } else {
-        opponent = gamePlayers[i].player.email;
+        opponent = gamePlayers[i].player.name;
       }
     } else {
-      player = gamePlayers[i].player.email;
+      player = gamePlayers[i].player.name;
       opponent = "waiting for opponent";
     }
 
@@ -149,13 +148,7 @@ function checkPlayer(gpId) {
 
 function refresh() {
   setTimeout(() => {
-    /* if (
-      games.gameStatus == "waiting" ||
-      games.gameStatus == "waiting for opponent" ||
-      games.gameStatus == "shooting"
-    ) { */
     fetching();
-    //}
   }, 10000);
 }
 
@@ -178,110 +171,16 @@ function markShipLocations() {
   }
 }
 
-function displayShips() {
+function empty() {
   var cells = document.getElementById("playerTable").getElementsByTagName("td");
-  let desthor = [];
-  let pathor = [];
-  let airhor = [];
-  let bathor = [];
-  let subhor = [];
-  let destver = [];
-  let patver = [];
-  let airver = [];
-  let batver = [];
-  let subver = [];
   for (i = 0; i < cells.length; i++) {
     // give name to the classes for the drag n drop
     cells[i].setAttribute("class", "empty");
   }
-
-  for (i = 0; i < games.ships.length; i++) {
-    type = games.ships[i].type;
-    position = games.ships[i].position;
-    if (position == "horizontal") {
-      switch (type) {
-        case "aircraft horizontal":
-          airhor.push(games.ships[i].locations[0]);
-          break;
-        case "battleship horizontal":
-          bathor.push(games.ships[i].locations[0]);
-          break;
-        case "submarine horizontal":
-          subhor.push(games.ships[i].locations[0]);
-          break;
-        case "destroyer horizontal":
-          desthor.push(games.ships[i].locations[0]);
-          break;
-        case "patrolboat horizontal":
-          pathor.push(games.ships[i].locations[0]);
-          break;
-      }
-    } else if (position == "vertical") {
-      switch (type) {
-        case "aircraft horizontal":
-          airver.push(games.ships[i].locations[0]);
-          break;
-        case "battleship horizontal":
-          batver.push(games.ships[i].locations[0]);
-          break;
-        case "submarine horizontal":
-          subver.push(games.ships[i].locations[0]);
-          break;
-        case "destroyer horizontal":
-          destver.push(games.ships[i].locations[0]);
-          break;
-        case "patrolboat horizontal":
-          patver.push(games.ships[i].locations[0]);
-          break;
-      }
-    }
-  }
-
-  for (z = 0; z < cells.length; z++) {
-    switch (cells[z].id) {
-      case pathor[0]:
-        cells[z].setAttribute("class", "pathor");
-        document.getElementById("patrolboat").style.display = "none";
-        break;
-      case subhor[0]:
-        cells[z].setAttribute("class", "subhor");
-        document.getElementById("submarine").style.display = "none";
-        break;
-      case airhor[0]:
-        cells[z].setAttribute("class", "airhor");
-        document.getElementById("aircraft").style.display = "none";
-        break;
-      case bathor[0]:
-        cells[z].classList.add("bathor");
-        document.getElementById("battleship").style.display = "none";
-        break;
-      case desthor[0]:
-        cells[z].setAttribute("class", "desthor");
-        document.getElementById("destroyer").style.display = "none";
-        break;
-      case patver[0]:
-        cells[z].setAttribute("class", "patver");
-        document.getElementById("patrolboat").style.display = "none";
-        break;
-      case subver[0]:
-        cells[z].setAttribute("class", "subver");
-        document.getElementById("submarine").style.display = "none";
-        break;
-      case airver[0]:
-        cells[z].setAttribute("class", "airver");
-        document.getElementById("aircraft").style.display = "none";
-        break;
-      case batver[0]:
-        cells[z].setAttribute("class", "batver");
-        document.getElementById("battleship").style.display = "none";
-        break;
-      case destver[0]:
-        cells[z].setAttribute("class", "destver");
-        document.getElementById("destroyer").style.display = "none";
-        break;
-    }
-  }
 }
+
+// -------------    SALVOS   -----------------
+
 var salvoLocations = [];
 var counter = 0;
 
@@ -309,10 +208,10 @@ function salvos() {
           alert("you can only fire 5 salvos at one turn");
           counter--;
         } else {
-          keli.setAttribute("class", "salvo");
+          keli.setAttribute("class", "torpedo");
           salvoLocations.push(location);
         }
-      } else if (type == "salvo" && this.textContent == "") {
+      } else if (type == "torpedo" && this.textContent == "") {
         counter--;
         for (j = 0; j < salvoLocations.length; j++) {
           let salvo = salvoLocations[j];
@@ -328,23 +227,6 @@ function salvos() {
   }
 }
 
-function playerSalvos() {
-  var cells = document
-    .getElementById("opponentTable")
-    .getElementsByTagName("td");
-
-  for (i = 0; i < games.salvos.length; i++) {
-    for (y = 0; y < games.salvos[i].locations.length; y++) {
-      for (z = 0; z < cells.length; z++) {
-        if (games.salvos[i].locations[y] == cells[z].id) {
-          cells[z].innerHTML = games.salvos[i].turn;
-          cells[z].setAttribute("class", "salvo");
-        }
-      }
-    }
-  }
-}
-
 function postSalvos() {
   let param = paramObj(url);
   console.log("param in post salvos", param);
@@ -355,14 +237,14 @@ function postSalvos() {
       salvoLocation: salvoLocations,
     };
     fetch("/api/games/players/" + param + "/salvos", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(salvoData),
-    })
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(salvoData),
+      })
       .then((response) => {
         if (response.status == 201) {
           return response.json();
@@ -381,12 +263,31 @@ function postSalvos() {
   }
 }
 
+function playerSalvos() {
+  var cells = document
+    .getElementById("opponentTable")
+    .getElementsByTagName("td");
+
+  for (i = 0; i < games.salvos.length; i++) {
+    for (y = 0; y < games.salvos[i].locations.length; y++) {
+      for (z = 0; z < cells.length; z++) {
+        if (games.salvos[i].locations[y] == cells[z].id) {
+          cells[z].innerHTML = games.salvos[i].turn;
+          cells[z].style.color = "red";
+          cells[z].classList.remove("torpedo");
+          cells[z].setAttribute("class", "salvo");
+        }
+      }
+    }
+  }
+}
+
 function bingoSalvos(shipLocations) {
   var cells = document.getElementById("playerTable").getElementsByTagName("td");
   var opponents = games.opponents.opponentSalvos;
   console.log(
     Object.entries(games.opponents).length === 0 &&
-      games.opponents.constructor === Object
+    games.opponents.constructor === Object
   );
   let noOpponent =
     Object.entries(games.opponents).length === 0 &&
@@ -397,10 +298,10 @@ function bingoSalvos(shipLocations) {
         for (z = 0; z < cells.length; z++) {
           if (cells[z].id == opponents[i].locations[y]) {
             if (shipLocations.includes(cells[z].id)) {
-              cells[z].innerHTML = opponents[i].turn;
-              cells[z].innerHTML = "X";
-              cells[z].style.color = "red";
-              //cells.setAttribute("class", "bingoSalvo");
+              //cells[z].innerHTML = opponents[i].turn;
+              //cells[z].innerHTML = "X";
+              cells[z].style.color = "white";
+              cells[z].classList.add("bingoSalvoPlayer");
             }
           }
         }
@@ -408,6 +309,24 @@ function bingoSalvos(shipLocations) {
     }
   }
 }
+
+function bingoOpponentsSalvo() {
+  var cells = document
+    .getElementById("opponentTable")
+    .getElementsByTagName("td");
+  if (games.hits != null) {
+    var hits = games.hits;
+
+    for (j = 0; j < hits.length; j++) {
+      for (i = 0; i < cells.length; i++) {
+        if (cells[i].id == hits[j]) {
+          cells[i].setAttribute("class", "bingoSalvoOpponent");
+        }
+      }
+    }
+  }
+}
+
 
 var dragged;
 
@@ -783,6 +702,57 @@ function vertical(element) {
   }
 }
 
+function karavia() {
+  let cells = document.getElementById("playerTable").getElementsByTagName("td");
+  let ships = games.ships;
+
+  for (i = 0; i < ships.length; i++) {
+    let image = document.querySelectorAll(
+      "[data-type='" + ships[i].type + "']"
+    );
+    console.log(image);
+    let type = ships[i].type;
+    let firstCell = ships[i].locations[0];
+    let position = ships[i].position;
+    for (j = 0; j < cells.length; j++) {
+      if (cells[j].id == firstCell) {
+        cells[j].appendChild(image[0]);
+        image[0].setAttribute("draggable", "false");
+        image[0].setAttribute("class", type);
+        console.log(position);
+        if (position == "vertical") {
+          console.log(position);
+          image[0].style.transform = "rotate(90deg)";
+          switch (
+            type //positioning the vertical
+          ) {
+            case "patrolboat horizontal":
+              image[0].style.marginLeft = "-17px";
+              image[0].style.marginTop = "17px";
+              break;
+            case "submarine horizontal":
+              image[0].style.marginLeft = "-35px";
+              image[0].style.marginTop = "35px";
+              break;
+            case "destroyer horizontal":
+              image[0].style.marginLeft = "-35px";
+              image[0].style.marginTop = "35px";
+              break;
+            case "battleship horizontal":
+              image[0].style.marginLeft = "-52px";
+              image[0].style.marginTop = "52px";
+              break;
+            case "aircraft horizontal":
+              image[0].style.marginLeft = "-70px";
+              image[0].style.marginTop = "70px";
+              break;
+          }
+        }
+      }
+    }
+  }
+}
+
 function postShips() {
   let param = paramObj(url);
   console.log("param in post ships", param);
@@ -797,14 +767,14 @@ function postShips() {
 
   if (result == 17) {
     fetch("/api/games/players/" + param + "/ships", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(actualShips),
-    })
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(actualShips),
+      })
       .then((response) => {
         if (response.status == 201) {
           return response.json();
@@ -813,9 +783,9 @@ function postShips() {
         }
       })
       .then((data) => {
-        window.location.reload();
+        //window.location.reload();
         // alert("Your ships are successfully placed!");
-        //fetching();
+        fetching();
       });
   } else {
     alert("Place the rest of the ships!");
@@ -864,17 +834,6 @@ function gameStatus() {
       "PLACE YOUR SHIPS ON THE GRID (double click: vertical positions)";
     document.getElementById("text").style.display = "block";
   }
-  /* else if (
-     games.gameStatus == "waiting" &&
-     games.playerHasShips == false &&
-     games.opponentHasShips == true
-   ) {
-     document.getElementById("text").innerHTML =
-       "PLACE YOUR SHIPS ON THE GRID (double click: vertical positions)";
-     document.getElementById("text").style.display = "block";
-     document.getElementById("sendShips").style.display = "block";
-     document.getElementById("sendSalvos").style.display = "none";
-   } */
 
   if (games.gameStatus == "shooting") {
     document.getElementById("sendShips").style.display = "none";
@@ -917,37 +876,14 @@ function gameStatus() {
   }
 }
 
-function saveShips() {
-  for (i = 0; i < games.ships.length; i++) {
-    games[i].ships[0].setAttribute("class", games[i].type);
-  }
-}
-
-function bingoOpponentsSalvo() {
-  var cells = document
-    .getElementById("opponentTable")
-    .getElementsByTagName("td");
-  if (games.hits != null) {
-    var hits = games.hits;
-
-    for (j = 0; j < hits.length; j++) {
-      for (i = 0; i < cells.length; i++) {
-        if (cells[i].id == hits[j]) {
-          cells[i].setAttribute("class", "bingoSalvo");
-        }
-      }
-    }
-  }
-}
-
 function logOut() {
-  fetch("https://salvo-ship-game.herokuapp.com/api/logout", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-  })
+  fetch("https://localhost:8080/api/logout", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    })
     .then(function (response) {
       console.log("logged out", response);
       return response.status;
