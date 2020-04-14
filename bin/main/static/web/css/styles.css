@@ -24,7 +24,8 @@ p {
 /* .header {
   display: flex;
   justify-content: space-around;
- 
+
+
   background-image: linear-gradient(to bottom right, #f5f2eb, #cfbe97);
   background-color: rgb(226, 238, 183);
 } */
@@ -55,16 +56,26 @@ p {
   grid-column: 2/3;
 }
 
-.salvo {
-  color: red;
-  height: 10px;
-  width: 10px;
-  /* z-index: 2; */
+.torpedo {
+  background-image: url(../img/rsz_torpedo.png);
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-.bingoSalvo {
-  background-image: url(../img/hitrsz.gif);
-  /* z-index: 2; */
+.salvo {
+  background-image: url("../img/rsz_x.png");
+}
+
+.bingoSalvoPlayer {
+  background-image: url(../img/hitrszPlayers.png);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.bingoSalvoOpponent {
+  background-image: url(../img/hitrszOpponents.gif);
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 td,
@@ -76,39 +87,41 @@ td,
   background-color: rgba(62, 131, 90, 0.233);
 }
 
-#aircraft {
+.aircraft {
+  background-image: url("../img/airhorrsz.png");
   position: absolute;
   width: 175px;
   height: 35px;
-  cursor: pointer;
+  cursor: grab;
 }
 
-#battleship {
+.battleship {
   position: absolute;
   height: 35px;
   width: 140px;
-  cursor: pointer;
+  cursor: grab;
 }
 
-#submarine {
+.submarine {
   position: absolute;
   height: 35px;
   width: 105px;
-  cursor: pointer;
+  cursor: grab;
 }
 
-#destroyer {
+.destroyer {
   position: absolute;
   height: 35px;
   width: 105px;
-  cursor: pointer;
+  cursor: grab;
 }
 
-#patrolboat {
+.patrolboat {
   position: absolute;
   height: 35px;
   width: 70px;
-  cursor: pointer;
+  padding: 0px;
+  cursor: grab;
 }
 
 .crosshair {
@@ -122,78 +135,6 @@ td,
   position: absolute;
   height: 35px;
   width: 70px;
-  z-index: -5;
-}
-
-.subhor {
-  background-image: url("../img/submarinehorrsz.png");
-  position: absolute;
-  height: 35px;
-  width: 105px;
-  z-index: -5;
-}
-
-.airhor {
-  background-image: url("../img/airhorrsz.png");
-  z-index: -5;
-  height: 35px;
-  width: 175px;
-  position: absolute;
-}
-
-.bathor {
-  background-image: url("../img/battleshiphorrsz.png");
-  position: absolute;
-  height: 35px;
-  width: 140px;
-  z-index: -5;
-}
-
-.desthor {
-  background-image: url("../img/destroyerhorrsz.png");
-  position: absolute;
-  height: 35px;
-  width: 105px;
-  z-index: -5;
-}
-
-.patver {
-  background-image: url("../img/patrolboatverrsz.png");
-  position: absolute;
-  height: 70px;
-  width: 35px;
-  z-index: -5;
-}
-
-.subver {
-  background-image: url("../img/submarineverrsz.png");
-  position: absolute;
-  height: 105px;
-  width: 35px;
-  z-index: -5;
-}
-
-.airver {
-  background-image: url("../img/airverrsz.png");
-  position: absolute;
-  height: 175px;
-  width: 35px;
-  z-index: -5;
-}
-
-.batver {
-  background-image: url("../img/battleshipverrsz.png");
-  position: absolute;
-  height: 140px;
-  width: 35px;
-  z-index: -5;
-}
-
-.destver {
-  background-image: url("../img/destroyerverrsz.png");
-  position: absolute;
-  height: 105px;
-  width: 35px;
   z-index: -5;
 }
 
@@ -335,4 +276,10 @@ td,
 .leaderIcon {
   border-radius: 2%;
   background-color: #d81b02;
+}
+
+.chatField {
+  background-color: #556152;
+  width: 100%;
+  height: auto;
 }
