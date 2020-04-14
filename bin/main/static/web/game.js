@@ -710,7 +710,7 @@ function karavia() {
     let image = document.querySelectorAll(
       "[data-type='" + ships[i].type + "']"
     );
-    console.log(image);
+
     let type = ships[i].type;
     let firstCell = ships[i].locations[0];
     let position = ships[i].position;

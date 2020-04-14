@@ -48,7 +48,7 @@ function boardObject() {
                 playersIds.push(games[i].gamePlayers[j].player.id);
                 let playerScoreData = {
                     id: games[i].gamePlayers[j].player.id,
-                    email: games[i].gamePlayers[j].player.email,
+                    name: games[i].gamePlayers[j].player.name,
                     scores: [],
                     total: 0.0,
                     win: 0.0,
@@ -99,7 +99,7 @@ function createTable(playersArray) {
     leaderBoard.innerHTML = "";
     for (i = 0; i < playersArray.length; i++) {
         var tableRow = document.createElement("tr");
-        var user = playersArray[i].email;
+        var user = playersArray[i].name;
         var total = playersArray[i].total;
         var win = playersArray[i].win;
         var loss = playersArray[i].loss;
