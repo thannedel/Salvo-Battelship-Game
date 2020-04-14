@@ -24,24 +24,24 @@
     <div class="ships">
       <div class="shipHeader">Ships</div>
       <div>
-        <img id="aircraft" src="img/aircraftabove.png" class="aircraft horizontal" draggable="true"
+        <img id="aircraft" src="img/aircraftabove.png" class="aircraft horizontal" data-type="aircraft horizontal"
+          draggable="true" ondragstart="drag(event)" ondblclick="vertical(this)" />
+      </div>
+      <div>
+        <img id="battleship" src="img/battleship.png" class="battleship horizontal" data-type="battleship horizontal"
           ondragstart="drag(event)" ondblclick="vertical(this)" />
       </div>
       <div>
-        <img id="battleship" src="img/battleship.png" class="battleship horizontal" ondragstart="drag(event)"
-          ondblclick="vertical(this)" />
+        <img id="submarine" src="img/submarine.png" class="submarine horizontal" data-type="submarine horizontal"
+          draggable="true" ondragstart="drag(event)" ondblclick="vertical(this)" />
       </div>
       <div>
-        <img id="submarine" src="img/submarine.png" class="submarine horizontal" draggable="true"
-          ondragstart="drag(event)" ondblclick="vertical(this)" />
+        <img id="destroyer" src="img/destroyer.png" class="destroyer horizontal" data-type="destroyer horizontal"
+          draggable="true" ondragstart="drag(event)" ondblclick="vertical(this)" />
       </div>
       <div>
-        <img id="destroyer" src="img/destroyer.png" class="destroyer horizontal" draggable="true"
-          ondragstart="drag(event)" ondblclick="vertical(this)" />
-      </div>
-      <div>
-        <img id="patrolboat" src="img/patrol.png" class="patrolboat horizontal" draggable="true"
-          ondragstart="drag(event)" ondblclick="vertical(this)" />
+        <img id="patrolboat" src="img/patrolboat.png" class="patrolboat horizontal" data-type="patrolboat horizontal"
+          draggable="true" ondragstart="drag(event)" ondblclick="vertical(this)" />
       </div>
     </div>
     <div id="playerTable" class="playerTable">
@@ -69,7 +69,6 @@
       <button type="button" id="sendSalvos" onclick="postSalvos()">
         Salvo
       </button>
-      <!-- <p id="text"></p> -->
     </div>
   </div>
 

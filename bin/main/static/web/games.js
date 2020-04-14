@@ -19,8 +19,8 @@ fetching();
 
 function fetching() {
   var fetchConfig = fetch(this.site, {
-      method: "GET"
-    })
+    method: "GET",
+  })
     .then(function (res) {
       console.log(res);
       if (res.ok) return res.json();
@@ -29,8 +29,12 @@ function fetching() {
       data = json;
       user = data.player;
       games = data.games;
+
       console.log(user);
+
       createList(games);
+
+      console.log(games);
       refresh();
     })
     .catch(function (error) {
@@ -64,12 +68,13 @@ function createList(games) {
   console.log(games);
 
   for (var i = 0; i < games.length; i++) {
-    var row = document.createElement("tr");
+    //var row = document.createElement("tr");
+    var row = output.insertRow(0);
 
     var date = new Date(games[i].created);
     var localDate = date.toLocaleString();
 
-    var player1 = games[i].gamePlayers[0].player.email;
+    var player1 = games[i].gamePlayers[0].player.name;
     var player2;
     var action = "-";
     var currentGamePlayerId;
@@ -77,7 +82,7 @@ function createList(games) {
     var backtogame;
 
     if (games[i].gamePlayers.length > 1) {
-      player2 = games[i].gamePlayers[1].player.email;
+      player2 = games[i].gamePlayers[1].player.name;
       if (games[i].gamePlayers[0].player.id == getcurrentplayer()) {
         // gameplayer id of loggedin player
         currentGamePlayerId = games[i].gamePlayers[0].id;
@@ -92,9 +97,7 @@ function createList(games) {
         "href",
         "/web/game.html?gp=" + currentGamePlayerId
       );
-      backtogame.setAttribute(
-        "class",
-        "backButton");
+      backtogame.setAttribute("class", "backButton");
       backtogame.innerHTML = "Play";
 
       if (
@@ -123,7 +126,7 @@ function createList(games) {
     index = i + 1;
     var kelia = [index, localDate, player1, player2, action];
 
-    kelia.forEach(keli => {
+    kelia.forEach((keli) => {
       var tablekelia = document.createElement("td");
       tablekelia.append(keli);
       row.append(tablekelia);
@@ -133,7 +136,6 @@ function createList(games) {
   }
   console.log("current game player id", currentGamePlayerId);
 }
-
 
 login();
 //loginPost();
@@ -146,50 +148,46 @@ function login() {
     let password = document.getElementById("passwordLogin").value;
     console.log(username);
     loginPost(username, password);
-
   });
 }
 
 function loginPost(username, password) {
   $.post("/api/login", {
-      username: username,
-      password: password
-    })
+    username: username,
+    password: password,
+  })
     .done(function () {
       console.log("Logged in!");
 
       window.location.reload();
-
     })
     .fail(function () {
       alert("You have to sign up first!");
     });
 }
 
-
-
 //logOut();
 
 function logOut() {
   fetch("https://salvo-ship-game.herokuapp.com/api/logout", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded"
-      }
-    })
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  })
     .then(function (response) {
       console.log("logged out", response);
       return response.status;
     })
-    .then(status => {
+    .then((status) => {
       if (status == 200) {
         window.location.href = "games.html";
       } else {
         alert("something went wrong");
       }
     })
-    .catch(error => console.log(error));
+    .catch((error) => console.log(error));
 }
 //signUp();
 
@@ -198,17 +196,18 @@ function signUp() {
   var newPassword = document.getElementById("password").value;
   var eMail = document.getElementById("email").value;
   fetch("/api/players", {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      method: "POST",
-      body: "username=" + newName + "&password=" + newPassword + "&email=" + eMail
-    })
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    method: "POST",
+    body:
+      "username=" + newName + "&password=" + newPassword + "&email=" + eMail,
+  })
     .then(function (res) {
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       console.log("Request success: ", data);
       if (data.username) {
         alert("Welcome " + newName + ", you can login now");
@@ -225,23 +224,23 @@ function signUp() {
 function joinGame(gameid) {
   console.log(gameid);
   fetch(`https://salvo-ship-game.herokuapp.com/api/game/${gameid}/players`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
-        credentials: "include"
-      }
-    })
-    .then(response => {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+      credentials: "include",
+    },
+  })
+    .then((response) => {
       console.log(response);
       return response.json();
     })
-    .then(games => {
+    .then((games) => {
       if (games.gpid) {
         window.location.href = "game.html?gp=" + games.gpid;
       }
     })
-    .catch(error => console.log(error));
+    .catch((error) => console.log(error));
 }
 
 $("#createGame").click(function (event) {
@@ -256,7 +255,7 @@ $("#createGame").click(function (event) {
     })
     .fail(function (data) {
       console.log("game creation failed");
-      alert("Please sign up first")
+      alert("Please sign up first");
     })
     .always(function () {});
 });
