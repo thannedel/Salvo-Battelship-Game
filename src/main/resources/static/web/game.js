@@ -82,12 +82,14 @@ function fetching() {
 
       gameStatus();
       empty();
-      markShipLocations();
+      //markShipLocations();
       karavia();
       playerSalvos();
       getTurn();
       bingoSalvos(shipLocations);
       bingoOpponentsSalvo();
+      PostObject();
+      displayMessages();
       refresh();
     })
     .catch(function (error) {
@@ -95,6 +97,7 @@ function fetching() {
     });
 }
 salvos();
+//PostObject();
 
 function createTable(table) {
   for (i = 0; i < rows.length; i++) {
@@ -148,6 +151,8 @@ function checkPlayer(gpId) {
 
 function refresh() {
   setTimeout(() => {
+    listData = [];
+    chat = "";
     fetching();
   }, 10000);
 }
@@ -326,7 +331,6 @@ function bingoOpponentsSalvo() {
     }
   }
 }
-
 
 var dragged;
 
@@ -907,3 +911,122 @@ function getTurn() {
   }
   document.getElementById("getTurn").innerHTML = turn;
 }
+
+function postComments() {
+  let param = paramObj(url);
+  console.log("post", param);
+  let comment = document.getElementById("message").value;
+  console.log(comment);
+  //let name = games.gamePlayers[0].player.name;
+  var postData = {
+    name: name,
+    date: new Date(),
+    comment: comment,
+  };
+  console.log(postData);
+  fetch("/api/games/players/" + param + "/posts", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    })
+    .then((response) => {
+      if (response.status == 201) {
+        return response.json();
+      }
+    })
+    .then((data) => {
+      listData = [];
+      fetching();
+    })
+    .catch((error) => {
+      console.log("Request failure: ", error);
+    });
+}
+var listData = [];
+
+function PostObject() {
+  var posts = games.posts;
+
+  console.log("posts", posts);
+
+  for (j = 0; j < posts.length; j++) {
+    for (i = 0; i < posts[j].length; i++) {
+      var obj = {
+        player_id: "",
+        name: "",
+        date: "",
+        comment: "",
+      };
+      obj.player_id = posts[j][i]["player_id"];
+      obj.name = posts[j][i]["name"];
+      obj.date = posts[j][i]["created"];
+      obj.comment = posts[j][i]["comment"];
+      listData.push(obj);
+    }
+  }
+  listData.sort(function (obj1, obj2) {
+    return obj1.date - obj2.date;
+  });
+  console.log("listData", listData);
+
+
+}
+//chat = "";
+
+function displayMessages() {
+
+  let param = paramObj(url);
+  console.log("param in messages", param);
+  var chat = document.getElementById("posts");
+  chat.innerHTML = "";
+  console.log(chat);
+  console.log(listData);
+  if (listData.length > 0) {
+    for (i = 0; i < listData.length; i++) {
+      let date = new Date(listData[i].date);
+      console.log(date.toLocaleString());
+      if (listData[i].player_id == param) {
+        chat.innerHTML += `
+    <div class="msg left-msg">
+        <div class="msg-img" style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg);">
+        </div>
+
+          <div class="msg-bubble">
+            <div class="msg-info">
+              <div class = "msg-info-name" >${listData[i].name}</div>
+              <div class = "msg-info-time" >${date.toLocaleString()}</div>
+            </div>
+            <div class = "msg-text">${listData[i].comment}</div>
+          </div>
+    </div>`;
+      } else {
+        chat.innerHTML += `
+      <div class="msg right-msg">
+          <div class = "msg-img" style = "background-image: url(https://image.flaticon.com/icons/svg/145/145867.svg);" >
+        </div>
+
+        <div class = "msg-bubble">
+        <div class = "msg-info">
+        <div class = "msg-info-name" >${listData[i].name} </div> 
+        <div class = "msg-info-time" >${date.toLocaleString()}</div> 
+        </div> 
+        <div class = "msg-text">${listData[i].comment}</div> 
+        </div>
+        </div>`;
+      }
+    }
+  }
+  let box = document.querySelector(".msger-chat");
+  box.scrollTop = box.scrollHeight;
+}
+
+/* function formatDate(date) {
+  const h = "0" + date.getHours();
+  const m = "0" + date.getMinutes();
+
+  return `${h.slice(-2)}:${m.slice(-2)}`;
+} */

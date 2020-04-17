@@ -35,7 +35,7 @@ public class SalvoApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
+	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository, PostRepository postRepository) {
 		return (args) -> {
 			//  players
 			Player p1 = new Player("Jack", "Zadauer@gmail", passwordEncoder().encode("13"));
@@ -160,6 +160,21 @@ public class SalvoApplication {
 			Salvo salvo8 = new Salvo(2, new ArrayList<>(Arrays.asList("J7","D2")));
 			gamePlayer8.addSalvo(salvo8);
 			salvoRepository.save(salvo8);
+
+
+
+
+			Date secondCommentDate = Date.from(date.toInstant().plusSeconds(50));
+			Date thirdCommentDate = Date.from(date.toInstant().plusSeconds(70));
+			Post post1 = new Post(new Date(), "first comment");
+			gamePlayer1.addPost(post1);
+			postRepository.save(post1);
+			Post post2 = new Post(secondCommentDate,"proto comment b paikti");
+			gamePlayer4.addPost(post2);
+			postRepository.save(post2);
+			Post post3 = new Post(thirdCommentDate,"second comment a paikti");
+			gamePlayer1.addPost(post3);
+			postRepository.save(post3);
 //-------------------------------------scores-------------------------------------------------------
 			//Date firstFinish = Date.from(date.toInstant().plusSeconds(1800));
 			Score score1 = new Score(1.0,game1, p1);

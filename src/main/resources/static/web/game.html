@@ -69,9 +69,33 @@
       <button type="button" id="sendSalvos" onclick="postSalvos()">
         Salvo
       </button>
+      <!-- <p id="text"></p> -->
     </div>
   </div>
 
+  <section class="chat">
+    <div class="msger">
+      <header class="msger-header">
+        <div class="msger-header-title">
+          <i class="fas fa-comment-alt"></i> SimpleChat
+        </div>
+        <div class="msger-header-options">
+          <span><i class="fas fa-cog"></i></span>
+        </div>
+      </header>
+
+      <main id="posts" class="msger-chat">
+
+      </main>
+
+      <div class="msger-inputarea">
+        <input id="message" class="msger-input" type="text" placeholder="Enter your message..." />
+        <button type="submit" class="msger-send-btn" onclick="postComments()">
+          Send post
+        </button>
+      </div>
+    </div>
+  </section>
   <div class="background">
     <div class="water"></div>
   </div>

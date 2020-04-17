@@ -28,6 +28,8 @@ public class SalvoController {
     private SalvoRepository salvoRepository;
     @Autowired
     private ScoreRepository scoreRepository;
+    @Autowired
+    private PostRepository postRepository;
     /* @RequestMapping("/games")
      public List<Long> getGames() {
          List<Long> gamesId = new ArrayList<>();
@@ -37,6 +39,7 @@ public class SalvoController {
      }*/
 
     @RequestMapping("/games")
+
     public Map<String, Object> returnGames(Authentication authentication) {
         Map<String, Object> gamesMap = new LinkedHashMap<>();
         if (!(isGuest(authentication))) {
@@ -83,6 +86,7 @@ public class SalvoController {
         dto.put("scores", GamePlayerScores(game.getScores()));
         return dto;
     }
+
 
     private List<Map> GamePlayerScores(Set<Score> scores) {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
@@ -170,7 +174,14 @@ public class SalvoController {
         });
         return salvos;
     }
-
+   public Map<String, Object> getPosts(Post post){
+    Map<String, Object> dto = new LinkedHashMap<>();
+    dto.put("player_id", post.getGamePlayer().getId());
+    dto.put("name", post.getGamePlayer().getPlayer().getUsername());
+       dto.put("created", post.date.getTime());
+    dto.put("comment", post.getComment());
+    return dto;
+}
 
     @RequestMapping("/game_view/{gamePlayerId}")
     public ResponseEntity<Map<String, Object>> getGame(@PathVariable Long gamePlayerId, Authentication authentication) {
@@ -192,6 +203,10 @@ public class SalvoController {
                 gameViewInfo.put("salvos", currentGamePlayer.getSalvos().stream()
                         .map(salvo -> getSalvoInfo(salvo))
                         .collect(Collectors.toList()));
+                gameViewInfo.put("posts", currentGamePlayer.getGame().getGamePlayers().stream().sorted(Comparator.comparing(GamePlayer::getId))
+                        .map(gamePlayer -> gamePlayer.getPosts().stream()/*.sorted(Comparator.comparing(Post::getDate))*/
+                                .map(post -> getPosts(post))
+                                .collect(Collectors.toSet())).collect(Collectors.toList()));
                 // gameViewInfo.put("salvos", salvoInfo(currentGamePlayer));
                 gameViewInfo.put("opponents", getOpponentSalvoInfo(currentGamePlayer));
                 gameViewInfo.put("hits", getHits(currentGamePlayer));
@@ -482,13 +497,23 @@ public GamePlayer getOpponent(GamePlayer gamePlayer){
         }
     }
 
+
+
+@RequestMapping(path = "/games/players/{gamePlayerId}/posts", method = RequestMethod.POST)
+public ResponseEntity<Map<String, Object>> sendPosts(@PathVariable long gamePlayerId, @RequestBody Post post, Authentication authentication) {
+    Player player = playerRepository.findByUsername(authentication.getName());
+    GamePlayer currentGamePlayer = gamePlayerRepository.getOne(gamePlayerId);
+    if (isGuest(authentication) || currentGamePlayer == null || !currentGamePlayer.getPlayer().equals(player)) {
+        return new ResponseEntity<>(makeMap("error", "action not allowed"), HttpStatus.UNAUTHORIZED);
+    } else {
+        post.setGamePlayer(currentGamePlayer);
+        currentGamePlayer.addPost(post);
+        postRepository.save(post);
+        System.out.println(post);
+        return new ResponseEntity<>(makeMap("success", "added comment"), HttpStatus.CREATED);
     }
-
-
-
-
-
-
+}
+}
 
         /*
 @Autowired
