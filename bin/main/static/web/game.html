@@ -89,8 +89,9 @@
       </main>
 
       <div class="msger-inputarea">
-        <input id="message" class="msger-input" type="text" placeholder="Enter your message..." />
-        <button type="submit" class="msger-send-btn" onclick="postComments()">
+        <input id="message" onfocus="this.value=''" class="msger-input" type="text"
+          placeholder="Enter your message..." />
+        <button id="postButton" type="submit" class="msger-send-btn" onclick="postComments()">
           Send post
         </button>
       </div>
