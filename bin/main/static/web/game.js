@@ -82,7 +82,7 @@ function fetching() {
 
       gameStatus();
       empty();
-      //markShipLocations();
+      markShipLocations();
       karavia();
       playerSalvos();
       getTurn();
