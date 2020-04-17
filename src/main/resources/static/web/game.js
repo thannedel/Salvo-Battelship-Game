@@ -915,14 +915,16 @@ function getTurn() {
 function postComments() {
   let param = paramObj(url);
   console.log("post", param);
-  let comment = document.getElementById("message").value;
-  console.log(comment);
+  let comments = document.getElementById("message").value;
+
+  console.log(comments);
   //let name = games.gamePlayers[0].player.name;
   var postData = {
     name: name,
     date: new Date(),
-    comment: comment,
+    comment: comments,
   };
+
   console.log(postData);
   fetch("/api/games/players/" + param + "/posts", {
       method: "POST",
@@ -941,6 +943,10 @@ function postComments() {
     .then((data) => {
       listData = [];
       fetching();
+      setTimeout(() => {
+        scrollToBottom();
+      }, 500);
+
     })
     .catch((error) => {
       console.log("Request failure: ", error);
@@ -1020,13 +1026,18 @@ function displayMessages() {
       }
     }
   }
+
+}
+
+function scrollToBottom() {
   let box = document.querySelector(".msger-chat");
   box.scrollTop = box.scrollHeight;
 }
 
-/* function formatDate(date) {
-  const h = "0" + date.getHours();
-  const m = "0" + date.getMinutes();
-
-  return `${h.slice(-2)}:${m.slice(-2)}`;
-} */
+var input = document.getElementById("message");
+input.addEventListener("keyup", function (event) {
+  if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("postButton").click();
+  }
+});
