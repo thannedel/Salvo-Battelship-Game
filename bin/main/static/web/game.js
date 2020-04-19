@@ -1000,7 +1000,7 @@ function displayMessages() {
       if (listData[i].player_id == param) {
         chat.innerHTML += `
     <div class="msg left-msg">
-        <div class="msg-img" style="background-image: url(https://source.unsplash.com/battleship);">
+        <div class="msg-img" style="background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Steering_wheel_ship.svg/1200px-Steering_wheel_ship.svg.png);">
         </div>
 
           <div class="msg-bubble">
@@ -1014,7 +1014,7 @@ function displayMessages() {
       } else {
         chat.innerHTML += `
       <div class="msg right-msg">
-          <div class = "msg-img" style = "background-image: url(https://source.unsplash.com/battleship);" >
+          <div class = "msg-img" style = "background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Pirate_ship.svg/1200px-Pirate_ship.svg.png);" >
         </div>
 
         <div class = "msg-bubble">
