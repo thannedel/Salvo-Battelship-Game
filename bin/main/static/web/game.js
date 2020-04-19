@@ -1000,7 +1000,7 @@ function displayMessages() {
       if (listData[i].player_id == param) {
         chat.innerHTML += `
     <div class="msg left-msg">
-        <div class="msg-img" style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg);">
+        <div class="msg-img" style="background-image: url(https://source.unsplash.com/battleship);">
         </div>
 
           <div class="msg-bubble">
@@ -1014,7 +1014,7 @@ function displayMessages() {
       } else {
         chat.innerHTML += `
       <div class="msg right-msg">
-          <div class = "msg-img" style = "background-image: url(https://image.flaticon.com/icons/svg/145/145867.svg);" >
+          <div class = "msg-img" style = "background-image: url(https://source.unsplash.com/battleship);" >
         </div>
 
         <div class = "msg-bubble">
