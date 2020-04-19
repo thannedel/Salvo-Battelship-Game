@@ -9,7 +9,8 @@ crosshair();
 var url = window.location.href;
 const gpId = paramObj(url);
 var key_url;
-var actualShips = [{
+var actualShips = [
+  {
     type: "aircraft horizontal",
     shipLocation: [],
     length: 5,
@@ -64,8 +65,8 @@ function loadJsonData() {
 function fetching() {
   const site = "/api/game_view/" + gpId;
   fetch(site, {
-      method: "GET",
-    })
+    method: "GET",
+  })
     .then(function (res) {
       if (res.status == 403) {
         alert("Not allowed to view opponents game");
@@ -82,6 +83,7 @@ function fetching() {
 
       gameStatus();
       empty();
+
       markShipLocations();
       karavia();
       playerSalvos();
@@ -90,6 +92,7 @@ function fetching() {
       bingoOpponentsSalvo();
       PostObject();
       displayMessages();
+      checkNewMessage();
       refresh();
     })
     .catch(function (error) {
@@ -161,16 +164,18 @@ var shipLocations = [];
 
 function markShipLocations() {
   var cells = document.getElementById("playerTable").getElementsByTagName("td");
-  for (i = 0; i < games.ships.length; i++) {
-    for (y = 0; y < games.ships[i].locations.length; y++) {
-      shipLocations.push(games.ships[i].locations[y]);
+  if (games.ships.length > 0) {
+    for (i = 0; i < games.ships.length; i++) {
+      for (y = 0; y < games.ships[i].locations.length; y++) {
+        shipLocations.push(games.ships[i].locations[y]);
+      }
     }
-  }
 
-  for (z = 0; z < cells.length; z++) {
-    for (j = 0; j < shipLocations.length; j++) {
-      if (cells[z].id == shipLocations[j]) {
-        cells[z].classList.add("marked");
+    for (z = 0; z < cells.length; z++) {
+      for (j = 0; j < shipLocations.length; j++) {
+        if (cells[z].id == shipLocations[j]) {
+          cells[z].classList.add("marked");
+        }
       }
     }
   }
@@ -242,14 +247,14 @@ function postSalvos() {
       salvoLocation: salvoLocations,
     };
     fetch("/api/games/players/" + param + "/salvos", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(salvoData),
-      })
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(salvoData),
+    })
       .then((response) => {
         if (response.status == 201) {
           return response.json();
@@ -292,7 +297,7 @@ function bingoSalvos(shipLocations) {
   var opponents = games.opponents.opponentSalvos;
   console.log(
     Object.entries(games.opponents).length === 0 &&
-    games.opponents.constructor === Object
+      games.opponents.constructor === Object
   );
   let noOpponent =
     Object.entries(games.opponents).length === 0 &&
@@ -723,9 +728,8 @@ function karavia() {
         cells[j].appendChild(image[0]);
         image[0].setAttribute("draggable", "false");
         image[0].setAttribute("class", type);
-        console.log(position);
+
         if (position == "vertical") {
-          console.log(position);
           image[0].style.transform = "rotate(90deg)";
           switch (
             type //positioning the vertical
@@ -771,14 +775,14 @@ function postShips() {
 
   if (result == 17) {
     fetch("/api/games/players/" + param + "/ships", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(actualShips),
-      })
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(actualShips),
+    })
       .then((response) => {
         if (response.status == 201) {
           return response.json();
@@ -882,12 +886,12 @@ function gameStatus() {
 
 function logOut() {
   fetch("https://salvo-ship-game.herokuapp.com/api/logout", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    })
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  })
     .then(function (response) {
       console.log("logged out", response);
       return response.status;
@@ -927,14 +931,14 @@ function postComments() {
 
   console.log(postData);
   fetch("/api/games/players/" + param + "/posts", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    })
+    method: "POST",
+    credentials: "include",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(postData),
+  })
     .then((response) => {
       if (response.status == 201) {
         return response.json();
@@ -943,10 +947,10 @@ function postComments() {
     .then((data) => {
       listData = [];
       fetching();
+
       setTimeout(() => {
         scrollToBottom();
       }, 500);
-
     })
     .catch((error) => {
       console.log("Request failure: ", error);
@@ -978,19 +982,17 @@ function PostObject() {
     return obj1.date - obj2.date;
   });
   console.log("listData", listData);
-
-
 }
 //chat = "";
 
 function displayMessages() {
-
   let param = paramObj(url);
   console.log("param in messages", param);
   var chat = document.getElementById("posts");
   chat.innerHTML = "";
   console.log(chat);
   console.log(listData);
+
   if (listData.length > 0) {
     for (i = 0; i < listData.length; i++) {
       let date = new Date(listData[i].date);
@@ -1026,7 +1028,19 @@ function displayMessages() {
       }
     }
   }
+}
 
+var length1 = 0;
+var checkLength = [];
+function checkNewMessage() {
+  length = listData.length;
+  if (length > length1) {
+    checkLength.push(length);
+    length1 = length;
+    scrollToBottom();
+  }
+  console.log(checkLength);
+  checkLength = [];
 }
 
 function scrollToBottom() {

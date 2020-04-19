@@ -278,15 +278,13 @@ td,
   background-color: #d81b02;
 }
 
-
 .chat {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   background-image: var(--body-bg);
-  font-family: Helvetica,
-    sans-serif;
+  font-family: Helvetica, sans-serif;
   color: black;
 }
 
