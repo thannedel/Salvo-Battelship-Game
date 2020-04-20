@@ -945,9 +945,8 @@ function postComments() {
       }
     })
     .then((data) => {
-      listData = [];
       fetching();
-
+      listData = [];
       setTimeout(() => {
         scrollToBottom();
       }, 500);
@@ -1038,6 +1037,7 @@ function checkNewMessage() {
     checkLength.push(length);
     length1 = length;
     scrollToBottom();
+    mySound.play();
   }
   console.log(checkLength);
   checkLength = [];
@@ -1055,3 +1055,24 @@ input.addEventListener("keyup", function (event) {
     document.getElementById("postButton").click();
   }
 });
+
+var mySound;
+
+function soundNewMessage() {
+  mySound = new sound("audio/clearly.mp3");
+}
+
+function sound(src) {
+  this.sound = document.createElement("audio");
+  this.sound.src = src;
+  this.sound.setAttribute("preload", "auto");
+  this.sound.setAttribute("controls", "none");
+  this.sound.style.display = "none";
+  document.body.appendChild(this.sound);
+  this.play = function () {
+    this.sound.play();
+  };
+  this.stop = function () {
+    this.sound.pause();
+  };
+}

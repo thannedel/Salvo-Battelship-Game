@@ -945,9 +945,8 @@ function postComments() {
       }
     })
     .then((data) => {
-      listData = [];
       fetching();
-
+      listData = [];
       setTimeout(() => {
         scrollToBottom();
       }, 500);
