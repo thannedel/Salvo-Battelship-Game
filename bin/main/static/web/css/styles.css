@@ -1,6 +1,8 @@
 html {
   /* font: normal 16px sans-serif; */
   color: #fff;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 @font-face {
@@ -54,6 +56,34 @@ p {
 
 .gamePannel {
   grid-column: 2/3;
+}
+
+.chatButton {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+#chatButton {
+  background-color: #fce305;
+  color: white;
+  width: 10 rem;
+  padding: 0.6rem;
+  margin-right: 20px;
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
+.chatUpButton {
+  background-color: #efb1ff;
+  color: white;
+  width: 10 rem;
+  padding: 0.4rem;
+
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
 }
 
 .torpedo {
@@ -153,6 +183,7 @@ td,
   cursor: pointer;
   color: rgb(247, 239, 239);
   text-decoration: none;
+  margin-right: 20px;
 }
 
 #sendShips {

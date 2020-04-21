@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" />
   <link href="fonts/PressStart2P-Regular.ttf" rel="stylesheet" />
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="css/styles.css" />
   <title>Ship Locations!</title>
 </head>
@@ -69,34 +69,15 @@
       <button type="button" id="sendSalvos" onclick="postSalvos()">
         Salvo
       </button>
-      <!-- <p id="text"></p> -->
+
     </div>
+
   </div>
 
-  <section class="chat">
-    <div class="msger">
-      <header class="msger-header">
-        <div class="msger-header-title">
-          <i class="fas fa-comment-alt"></i> Marconi Telegraph
-        </div>
-        <div class="msger-header-options">
-          <span><i class="fas fa-cog"></i></span>
-        </div>
-      </header>
+  <div class="chatButton"><a href="#chat"><button id="chatButton" style=font-size:24px><i
+          class="fa fa-comment-o"></i></button></a>
+  </div>
 
-      <main id="posts" class="msger-chat">
-
-      </main>
-
-      <div class="msger-inputarea">
-        <input id="message" onfocus="this.value=''" class="msger-input" type="text"
-          placeholder="Enter your message..." />
-        <button id="postButton" type="submit" class="msger-send-btn" onclick="postComments()">
-          Send post
-        </button>
-      </div>
-    </div>
-  </section>
   <div class="background">
     <div class="water"></div>
   </div>
@@ -108,7 +89,29 @@
         values="0.02 0.06;0.04 0.08;0.02 0.06" repeatCount="indefinite" />
     </filter>
   </svg>
+  <section class="chat" id="chat">
+    <div class="msger">
+      <header class="msger-header">
+        <div class="msger-header-title">
+          <i class="fas fa-comment-alt"></i> Marconi Telegraph
+        </div>
+        <div class="msger-header-options">
+          <span><a href="#"><button class="chatUpButton"><i class="fa fa-arrow-circle-up"
+                  style="font-size:24px"></i></button></a></span>
+        </div>
+      </header>
 
+      <main id="posts" class="msger-chat"></main>
+
+      <div class="msger-inputarea">
+        <input id="message" onfocus="this.value=''" class="msger-input" type="text"
+          placeholder="Enter your message..." />
+        <button id="postButton" type="submit" class="msger-send-btn" onclick="postComments()">
+          Send post
+        </button>
+      </div>
+    </div>
+  </section>
   <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
 
   <script src="game.js"></script>
